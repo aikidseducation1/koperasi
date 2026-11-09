@@ -37,9 +37,10 @@
                     <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </div>
                 <h1 class="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-white">Koperasi Keluarga</h1>
-                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">Super Admin WA: 082298688189 (PIN: 1234)</p>
+                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">Masukkan Nomor WhatsApp & PIN Keamanan Terdaftar</p>
             </div>
 
+            <div id="loginLockoutBanner" class="hidden mb-3 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-bold text-center"></div>
             <form id="loginForm" class="space-y-3.5" onsubmit="window.handleLogin(event)">
                 <div>
                     <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Nomor HP / WhatsApp</label>
@@ -61,8 +62,11 @@
                     </button>
                 </div>
             </form>
-            <div class="mt-5 text-center border-t border-slate-100 dark:border-slate-800 pt-3">
-                <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">&copy; 2026 aufah tech. All rights reserved.</p>
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-center space-y-2">
+                <button type="button" onclick="window.bukaModalRegistrasiMandiri()" class="w-full py-2.5 px-4 rounded-xl bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold text-xs transition border border-blue-200 dark:border-slate-700">
+                    📝 Belum punya akun? Daftar Anggota Baru
+                </button>
+                <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium pt-1">&copy; 2026 aufah tech. All rights reserved.</p>
             </div>
         </div>
     </div>
@@ -140,6 +144,9 @@
                         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                             <button onclick="window.bukaModalTransaksi()" class="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 text-xs shrink-0">
                                 <span>💰</span> Setor / Tarik
+                            </button>
+                            <button onclick="window.bukaModalTransferP2P()" class="flex-1 sm:flex-initial bg-teal-600 hover:bg-teal-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 text-xs shrink-0">
+                                <span>⚡</span> Transfer Sesama
                             </button>
                             <button onclick="window.bukaModalPinjaman()" class="flex-1 sm:flex-initial bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 text-xs shrink-0">
                                 <span>🤝</span> Pinjam Dana
@@ -552,9 +559,25 @@
                             <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">Daftar Anggota Keluarga</h2>
                             <p class="text-xs text-slate-500 dark:text-slate-400">Kelola kontak, email, jabatan, rekening, hapus anggota, dan reset PIN.</p>
                         </div>
-                        <button id="btnTambahAnggota" onclick="window.bukaModalAnggota()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs hidden shrink-0">
-                            + Tambah Anggota
-                        </button>
+                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                            <button id="btnTagihanWajibKolektif" onclick="window.terbitkanTagihanWajibBulanan()" class="flex-1 sm:flex-initial bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3.5 py-2 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 text-xs hidden shrink-0">
+                                ⚡ Terbitkan Tagihan Wajib Bulan Ini
+                            </button>
+                            <button id="btnTambahAnggota" onclick="window.bukaModalAnggota()" class="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs hidden shrink-0">
+                                + Tambah Anggota
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="boxPendingRegistrasiAnggota" class="hidden bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800 rounded-2xl p-4 space-y-3">
+                        <div class="flex flex-wrap justify-between items-center gap-2">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">📝 Antrean Pendaftaran Calon Anggota Baru</h3>
+                                <span id="badgePendingRegCount" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-900">0 Menunggu</span>
+                            </div>
+                            <button type="button" onclick="window.tolakSemuaCalonAnggota()" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] shadow-sm">🗑️ Tolak & Bersihkan Semua Antrean</button>
+                        </div>
+                        <div id="listPendingRegistrasiBody" class="grid grid-cols-1 md:grid-cols-2 gap-2.5"></div>
                     </div>
 
                     <div id="gridAnggota" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -567,6 +590,24 @@
                             <p class="text-xs text-slate-500 dark:text-slate-400">Daftar bank dan nomor rekening untuk tujuan transfer setoran anggota.</p>
                         </div>
                         <button onclick="window.bukaModalBank()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-md transition shrink-0">+ Tambah Rekening</button>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-white">📲 Barcode QRIS Resmi Koperasi Keluarga</h3>
+                            <p class="text-[11px] text-slate-500">Unggah gambar QRIS Koperasi agar anggota dapat langsung memindai barcode saat melakukan setoran atau bayar cicilan.</p>
+                            <div class="pt-2 flex flex-wrap items-center gap-2">
+                                <label class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer shadow-sm">
+                                    📷 Upload Gambar QRIS
+                                    <input type="file" id="inputUploadQris" accept="image/*" onchange="window.simpanGambarQrisKoperasi(event)" class="hidden">
+                                </label>
+                                <button type="button" onclick="window.tampilkanModalQris()" class="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 border border-emerald-200 font-bold text-xs">🔍 Perbesar QRIS</button>
+                            </div>
+                        </div>
+                        <div onclick="window.tampilkanModalQris()" class="w-28 h-28 rounded-2xl border-2 border-dashed border-emerald-400 flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-800 cursor-pointer shrink-0">
+                            <span id="qrisPlaceholderText" class="text-[10px] text-slate-400 text-center px-2 font-semibold">Klik / Upload QRIS</span>
+                            <img id="qrisPreviewThumb" src="" alt="QRIS Koperasi" class="w-full h-full object-contain hidden">
+                        </div>
                     </div>
 
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5">
@@ -721,18 +762,46 @@
                     </div>
                 </div>
 
+                <div id="tab-ad-art" class="space-y-4 sm:space-y-5 w-full hidden">
+                    <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">📚 AD/ART (Aturan Dasar) & Notulensi Rapat Keluarga</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Pedoman aturan resmi koperasi keluarga serta arsip keputusan musyawarah keluarga.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button id="btnEditAdArt" onclick="window.bukaModalEditAdArt()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl text-xs shadow-sm transition shrink-0">✏️ Edit Pasal AD/ART</button>
+                            <button id="btnTambahNotulensi" onclick="window.bukaModalNotulensi()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-md transition shrink-0">+ Catat Notulensi Rapat</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3">
+                        <h3 class="text-sm sm:text-base font-bold text-emerald-700 dark:text-emerald-400">⚖️ Anggaran Dasar & Aturan Rumah Tangga (AD/ART) Koperasi Keluarga</h3>
+                        <div id="kontenAdArtBox" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line bg-slate-50 dark:bg-slate-800/70 p-4 rounded-xl border border-slate-200 dark:border-slate-700"></div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3">
+                        <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">📝 Arsip Notulensi & Keputusan Musyawarah Keluarga</h3>
+                        <div id="gridNotulensiRapat" class="space-y-3"></div>
+                    </div>
+                </div>
+
                 <div id="tab-profil-saya" class="space-y-4 max-w-2xl mx-auto hidden w-full">
                     <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-3">Pengaturan Profil & Tampilan</h2>
                         
-                        <div class="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border flex items-center justify-between">
+                        <div class="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border flex flex-wrap items-center justify-between gap-2">
                             <div>
-                                <p class="text-xs font-bold text-slate-800 dark:text-white">Mode Tampilan (Siang / Malam)</p>
-                                <p class="text-[10px] text-slate-400">Sesuaikan kenyamanan mata Anda.</p>
+                                <p class="text-xs font-bold text-slate-800 dark:text-white">Mode Tampilan & Kartu Identitas Anggota</p>
+                                <p class="text-[10px] text-slate-400">Sesuaikan tema layar atau cetak Kartu Anggota Digital resmi Anda.</p>
                             </div>
-                            <button onclick="window.toggleDarkMode()" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0">
-                                <span>🌓</span> Ganti Mode
-                            </button>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="window.bukaKartuAnggotaDigital()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0">
+                                    <span>🪪</span> Cetak Kartu Anggota
+                                </button>
+                                <button type="button" onclick="window.toggleDarkMode()" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0">
+                                    <span>🌓</span> Ganti Mode
+                                </button>
+                            </div>
                         </div>
 
                         <form id="mandiriProfilForm" class="space-y-3" onsubmit="window.simpanProfilMandiri(event)">
@@ -808,6 +877,56 @@
                                 <input type="url" id="inputGasWebhookUrl" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                                 <button type="button" onclick="window.simpanDanSyncGoogleSheets()" class="px-3.5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-sm shrink-0">☁️ Simpan & Sync Sheets</button>
                                 <button type="button" onclick="window.tarikDataDariGoogleSheets()" class="px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm shrink-0">📥 Tarik dari Sheets</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-emerald-200 dark:border-emerald-900/60 space-y-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                            <div>
+                                <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">🔐 Perisai Keamanan Pendaftaran & Koneksi Firebase Cloud</h3>
+                                <p class="text-[11px] text-slate-500">Atur Kode Undangan Keluarga anti-akun iseng, token rahasia API, serta koneksi mandiri ke proyek Firebase Firestore.</p>
+                            </div>
+                            <span id="badgeSecurityStatus" class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">🛡️ Proteksi Berlapis Aktif</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border space-y-1.5">
+                                <label class="block text-[10px] font-bold uppercase text-slate-500">🔑 Kode Undangan Keluarga</label>
+                                <div class="flex gap-1.5">
+                                    <input type="text" id="inputKodeUndangan" placeholder="KELUARGA2026" class="w-full bg-white dark:bg-slate-900 border rounded-lg px-2.5 py-1.5 text-xs font-extrabold uppercase outline-none">
+                                    <button type="button" onclick="window.simpanPengaturanKeamanan()" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold shrink-0">Simpan</button>
+                                </div>
+                                <p class="text-[10px] text-slate-400">Wajib diisi oleh calon anggota baru saat mendaftar mandiri.</p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border space-y-1.5">
+                                <label class="block text-[10px] font-bold uppercase text-slate-500">🚪 Status Pendaftaran Mandiri</label>
+                                <button type="button" id="btnTogglePendaftaranMandiri" onclick="window.toggleBukaPendaftaran()" class="w-full py-2 px-3 rounded-lg font-extrabold text-xs bg-emerald-600 text-white shadow-sm transition">
+                                    ✅ Pendaftaran Mandiri: DIBUKA
+                                </button>
+                                <p class="text-[10px] text-slate-400">Matikan saklar ini jika tidak sedang menerima anggota baru.</p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border space-y-1.5">
+                                <label class="block text-[10px] font-bold uppercase text-slate-500">🛡️ Token Rahasia Sinkronisasi Sheets</label>
+                                <div class="flex gap-1.5">
+                                    <input type="text" id="inputApiSecretToken" placeholder="KOP-KELUARGA-2026" class="w-full bg-white dark:bg-slate-900 border rounded-lg px-2.5 py-1.5 text-xs font-mono outline-none">
+                                    <button type="button" onclick="window.simpanPengaturanKeamanan()" class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold shrink-0">Simpan</button>
+                                </div>
+                                <p class="text-[10px] text-slate-400">Mencegah pihak luar menembak URL Web App Sheets Anda.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-amber-50/70 dark:bg-slate-800/80 border border-amber-200 dark:border-slate-700 space-y-2">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                                <label class="text-[11px] font-extrabold text-amber-900 dark:text-amber-300">🔥 Konfigurasi Firebase Cloud Mandiri (Opsional — Realtime Firestore)</label>
+                                <span id="lblDetailStatusFirebase" class="text-[10px] font-bold text-slate-500">Status: Memeriksa koneksi...</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500">Secara bawaan aplikasi menyimpan data di <strong>LocalStorage Browser</strong> & dapat disinkronkan ke <strong>Google Sheets</strong>. Jika Anda ingin menghubungkan ke proyek <strong>Firebase Firestore</strong> pribadi, tempelkan objek JSON <code>firebaseConfig</code> dari Firebase Console di bawah ini:</p>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <input type="text" id="inputCustomFirebaseConfig" placeholder='{"apiKey":"AIza...","authDomain":"...","projectId":"koperasi-..."}' class="flex-1 bg-white dark:bg-slate-900 border rounded-xl px-3 py-2 text-xs font-mono outline-none">
+                                <button type="button" onclick="window.simpanCustomFirebaseConfig()" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shrink-0">🔗 Hubungkan Firebase</button>
                             </div>
                         </div>
                     </div>
@@ -1185,8 +1304,14 @@
                         <option value="Simpanan Sukarela">Simpanan Sukarela</option>
                     </select>
                 </div>
-                <div id="groupBankTujuan">
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Rekening Tujuan Transfer</label>
+                <div id="groupBankTujuan" class="space-y-1.5">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-[10px] font-bold uppercase text-slate-500">Pilih Rekening Tujuan Transfer</label>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="window.salinRekeningTerpilihModal()" class="text-[10px] font-bold text-emerald-600 hover:underline">📋 Salin No. Rek</button>
+                            <button type="button" onclick="window.tampilkanModalQris()" class="text-[10px] font-bold text-blue-600 hover:underline">📲 Lihat QRIS</button>
+                        </div>
+                    </div>
                     <select id="transaksiBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
@@ -1240,6 +1365,193 @@
                 <div class="flex justify-end gap-2">
                     <button type="button" onclick="document.getElementById('modalPengumuman').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Transfer Saldo Sukarela Antar-Anggota (P2P Internal) -->
+    <div id="modalTransferP2P" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border w-full max-w-md p-5 space-y-3">
+            <h3 class="font-bold text-base text-slate-800 dark:text-white">⚡ Transfer Saldo Sukarela Antar-Anggota</h3>
+            <div id="infoSaldoP2PBox" class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 text-xs text-teal-900 dark:text-teal-200"></div>
+            <form id="formTransferP2P" class="space-y-3" onsubmit="window.simpanTransferP2P(event)">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Anggota Penerima</label>
+                    <select id="p2pAnggotaTujuan" required class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal Transfer (Rp)</label>
+                    <input type="number" id="p2pNominal" required min="10000" placeholder="50000" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs font-bold outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Catatan / Pesan Keluarga</label>
+                    <input type="text" id="p2pCatatan" placeholder="Contoh: Tambahan tabungan keponakan / hadiah" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="document.getElementById('modalTransferP2P').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md">Kirim Saldo Sekarang</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Pendaftaran Calon Anggota Mandiri (Self-Registration) -->
+    <div id="modalRegistrasiMandiri" class="fixed inset-0 bg-slate-900/70 z-[60] hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border w-full max-w-md p-5 space-y-3 max-h-[92vh] overflow-y-auto">
+            <h3 class="font-bold text-base text-slate-800 dark:text-white">📝 Pendaftaran Calon Anggota Keluarga Baru</h3>
+            <p class="text-[11px] text-slate-500">Data Anda akan dikirim ke antrean verifikasi Admin/Pengurus sebelum akun diaktifkan.</p>
+            <form id="formRegistrasiMandiri" class="space-y-3" onsubmit="window.simpanRegistrasiMandiri(event)">
+                <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-2">
+                    <div>
+                        <label class="block text-[10px] font-extrabold uppercase text-amber-800 dark:text-amber-300 mb-1">🔑 Kode Undangan Keluarga (Wajib)</label>
+                        <input type="text" id="regKodeUndangan" required placeholder="Masukkan Kode Undangan dari Pengurus" class="w-full bg-white dark:bg-slate-800 border border-amber-300 rounded-xl p-2 text-xs font-bold outline-none uppercase">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold uppercase text-amber-800 dark:text-amber-300 mb-1">👨‍👩‍👧‍👦 Anggota Aktif Pengundang / Penjamin</label>
+                        <select id="regPenjaminNama" required class="w-full bg-white dark:bg-slate-800 border border-amber-300 rounded-xl p-2 text-xs outline-none"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Lengkap</label>
+                    <input type="text" id="regNama" required placeholder="Contoh: Ahmad Fauzi" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Keluarga (KK)</label>
+                    <input type="text" id="regKeluarga" required placeholder="Contoh: Keluarga Besar Aufah" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">No. WhatsApp (Login)</label>
+                        <input type="text" id="regKontak" required placeholder="0812..." class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">PIN Keamanan</label>
+                        <input type="password" id="regPin" required placeholder="4-6 digit" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs font-bold outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Email</label>
+                    <input type="email" id="regEmail" required placeholder="nama@email.com" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Ahli Waris</label>
+                        <input type="text" id="regAhliWaris" required placeholder="Penerima manfaat" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Hubungan Waris</label>
+                        <input type="text" id="regHubunganWaris" required placeholder="Istri / Suami / Anak" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                    </div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border flex items-center justify-between gap-2">
+                    <label id="lblRegCaptcha" class="text-xs font-extrabold text-slate-700 dark:text-slate-200">🛡️ Verifikasi Anti-Bot: 4 + 3 = ?</label>
+                    <input type="number" id="regCaptchaInput" required placeholder="Hasil" class="w-24 bg-white dark:bg-slate-900 border rounded-lg p-1.5 text-xs font-bold text-center outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="document.getElementById('modalRegistrasiMandiri').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Kirim Pendaftaran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Kartu Anggota Digital -->
+    <div id="modalKartuAnggota" class="fixed inset-0 bg-slate-900/75 z-[65] hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border w-full max-w-md p-5 space-y-4">
+            <div id="kartuAnggotaCardBox" class="p-5 rounded-2xl bg-gradient-to-br from-emerald-700 via-emerald-800 to-slate-900 text-white shadow-xl space-y-4 relative overflow-hidden"></div>
+            <div class="flex justify-end gap-2 no-print">
+                <button type="button" onclick="document.getElementById('modalKartuAnggota').classList.add('hidden')" class="px-4 py-2 rounded-xl border text-xs font-semibold">Tutup</button>
+                <button type="button" onclick="window.print()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs">🖨️ Cetak Kartu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Surat Perjanjian / Akad Pinjaman Keluarga -->
+    <div id="modalAkadPinjaman" class="fixed inset-0 bg-slate-900/75 z-[65] hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border w-full max-w-2xl p-6 space-y-4 max-h-[92vh] overflow-y-auto">
+            <div class="text-center border-b border-slate-200 dark:border-slate-700 pb-3">
+                <span class="px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-100 text-amber-800">Dokumen Kesepakatan Keluarga</span>
+                <h3 class="font-black text-base text-slate-900 dark:text-white mt-1">SURAT PERJANJIAN (AKAD) PINJAMAN KOPERASI KELUARGA</h3>
+                <p id="akadPinjamanNomor" class="text-[11px] text-slate-500">Nomor Akad: #AKAD-001</p>
+            </div>
+            <div id="akadPinjamanContentBody" class="space-y-3 text-xs leading-relaxed text-slate-700 dark:text-slate-300"></div>
+            <div class="grid grid-cols-2 gap-6 pt-6 border-t border-slate-200 dark:border-slate-700 text-center text-xs">
+                <div class="space-y-12">
+                    <p class="font-bold">Pihak Pertama (Pengurus Koperasi)</p>
+                    <div class="border-t border-slate-400 w-40 mx-auto pt-1 font-bold">( Super Admin )</div>
+                </div>
+                <div class="space-y-12">
+                    <p class="font-bold">Pihak Kedua (Anggota Peminjam)</p>
+                    <div id="akadNamaPeminjamSign" class="border-t border-slate-400 w-40 mx-auto pt-1 font-bold">( ________________ )</div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-3 no-print">
+                <button type="button" onclick="document.getElementById('modalAkadPinjaman').classList.add('hidden')" class="px-4 py-2 rounded-xl border text-xs font-semibold">Tutup</button>
+                <button type="button" onclick="window.print()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs">🖨️ Cetak Surat Akad</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit AD/ART Koperasi -->
+    <div id="modalEditAdArt" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border w-full max-w-lg p-5 space-y-3">
+            <h3 class="font-bold text-base text-slate-800 dark:text-white">Edit Pasal AD/ART Koperasi Keluarga</h3>
+            <form onsubmit="window.simpanAdArtBaru(event)" class="space-y-3">
+                <textarea id="inputTeksAdArt" rows="8" required class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-3 text-xs outline-none leading-relaxed"></textarea>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modalEditAdArt').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan AD/ART</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tambah / Edit Notulensi Rapat Keluarga -->
+    <div id="modalNotulensi" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border w-full max-w-lg p-5 space-y-3">
+            <h3 id="modalNotulensiTitle" class="font-bold text-base text-slate-800 dark:text-white">Catat Notulensi Musyawarah Keluarga</h3>
+            <form id="formNotulensi" onsubmit="window.simpanNotulensiRapat(event)" class="space-y-3">
+                <input type="hidden" id="editNotulensiId" value="">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Judul / Agenda Rapat</label>
+                    <input type="text" id="notulensiJudul" required placeholder="Contoh: Rapat Penetapan Iuran & Acara Silaturahmi" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Hasil Keputusan Musyawarah</label>
+                    <textarea id="notulensiIsi" rows="4" required placeholder="Tuliskan poin-poin hasil kesepakatan rapat keluarga..." class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modalNotulensi').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan Notulensi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Super Admin Edit Baris Anak (Riwayat Cicilan / Setoran Arisan) -->
+    <div id="modalEditSubItem" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border w-full max-w-sm p-5 space-y-3">
+            <h3 id="modalEditSubItemTitle" class="font-bold text-base text-slate-800 dark:text-white">Edit Rincian Item</h3>
+            <form id="formEditSubItem" onsubmit="window.simpanEditSubItem(event)" class="space-y-3">
+                <input type="hidden" id="subItemTipe" value="">
+                <input type="hidden" id="subItemParentId" value="">
+                <input type="hidden" id="subItemChildId" value="">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Tanggal</label>
+                    <input type="date" id="subItemTanggal" required class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal Total (Rp)</label>
+                    <input type="number" id="subItemNominal" required min="1000" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs font-bold outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Catatan / Nama</label>
+                    <input type="text" id="subItemCatatan" required class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modalEditSubItem').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
@@ -1419,7 +1731,20 @@
         import { getFirestore, doc, setDoc, onSnapshot, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'koperasi-keluarga-v25-pro';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "mock", projectId: "mock" };
+        function getActiveFirebaseConfig() {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try { return JSON.parse(__firebase_config); } catch (e) {}
+            }
+            const savedCustom = localStorage.getItem('koperasi_custom_firebase_config');
+            if (savedCustom) {
+                try {
+                    const parsed = JSON.parse(savedCustom);
+                    if (parsed && parsed.apiKey && parsed.projectId) return parsed;
+                } catch (e) {}
+            }
+            return { apiKey: "mock", projectId: "mock" };
+        }
+        const firebaseConfig = getActiveFirebaseConfig();
         const LOCAL_STORAGE_KEY = 'koperasi_keluarga_v25_state';
 
         let db = null;
@@ -1428,11 +1753,28 @@
 
         const defaultInitialState = {
             currentUser: null,
+            currentUserId: null,
             currentRole: 'member',
             activeTab: 'dashboard',
             totalShu: 2500000,
             gasWebhookUrl: '',
+            qrisImage: '',
+            kodeUndanganKeluarga: 'KELUARGA2026',
+            bukaPendaftaranMandiri: true,
+            apiSecretToken: 'KOP-KELUARGA-2026',
+            customFirebaseConfigJson: '',
             periodeShuTerbagikan: [],
+            adArtText: "PASAL 1 — KEANGGOTAAN & SIMPANAN\n1. Setiap anggota keluarga wajib menyetor Simpanan Pokok (sekali saat bergabung) dan Simpanan Wajib secara rutin setiap bulan.\n2. Simpanan Pokok dan Simpanan Wajib tidak dapat ditarik selama masih berstatus anggota aktif.\n3. Simpanan Sukarela dapat disetor dan ditarik kapan saja selama tidak sedang menjadi jaminan pinjaman aktif.\n\nPASAL 2 — ATURAN PINJAMAN & ANGSURAN\n1. Plafon maksimal pinjaman adalah 3x dari total saldo simpanan anggota.\n2. Jasa pinjaman ditetapkan sebesar 1% flat per bulan untuk memperkuat SHU Koperasi.\n3. Selama memiliki sisa hutang aktif, tabungan anggota sebesar sisa pokok hutang dikunci sebagai jaminan.\n\nPASAL 3 — PEMBAGIAN SHU & DANA SOSIAL (ZIS)\n1. SHU Bersih dialokasikan 40% Jasa Modal, 20% Jasa Pinjaman, 25% Cadangan Koperasi, dan 15% Dana Sosial/ZIS.\n2. Seluruh saldo tabungan anggota dilindungi dan tercatat beserta nama Ahli Waris resmi.",
+            notulensiRapat: [
+                {
+                    id: 'not1',
+                    tanggal: '2026-01-05',
+                    judul: 'Musyawarah Pembentukan & Penetapan Aturan Koperasi Keluarga',
+                    isi: 'Disepakati iuran Simpanan Pokok Rp250.000 - Rp500.000, Simpanan Wajib bulanan, plafon pinjaman darurat maksimal 3x tabungan dengan jasa 1%/bulan, serta pembentukan Kotak Amal ZIS Keluarga.',
+                    penulis: 'Super Admin'
+                }
+            ],
+            calonAnggota: [],
             pengumuman: "Selamat datang di Koperasi Keluarga v25.0 Pro! Sistem telah dilengkapi proteksi Zero-Loophole & Audit Trail.",
             rekeningBank: [
                 { id: 'b1', nama: 'BCA', nomor: '1234567890', pemilik: 'Koperasi Keluarga aufah' },
@@ -1911,14 +2253,39 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             }
         };
 
+        function restoreSavedSessionAndTab() {
+            if (appState.currentUserId) {
+                const savedUser = (appState.anggota || []).find(a => a.id === appState.currentUserId);
+                if (savedUser) {
+                    currentUserSession = savedUser;
+                    if (savedUser.kontak !== '082298688189') {
+                        appState.currentRole = savedUser.role || 'member';
+                    } else if (!appState.currentRole) {
+                        appState.currentRole = 'admin';
+                    }
+                    const loginEl = document.getElementById('loginScreen');
+                    if (loginEl) loginEl.classList.add('hidden');
+                    const targetTab = appState.activeTab || 'dashboard';
+                    window.switchTab(targetTab);
+                    populateProfilMandiri();
+                    return true;
+                }
+            }
+            return false;
+        }
+
         async function initFirebaseAndSync() {
             loadStateFromLocalStorage();
+            restoreSavedSessionAndTab();
             try {
+                const lblFbDetail = document.getElementById('lblDetailStatusFirebase');
                 if (firebaseConfig.apiKey === "mock") {
                     document.getElementById('firebaseStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0';
                     document.getElementById('firebaseStatusText').textContent = 'LocalStorage Aktif';
+                    if (lblFbDetail) lblFbDetail.textContent = 'Mode: LocalStorage + Google Sheets (Belum ada Firebase Kustom)';
                     return;
                 }
+                if (lblFbDetail) lblFbDetail.textContent = `Tersambung ke Firebase Cloud (Project: ${firebaseConfig.projectId})`;
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -1935,9 +2302,15 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
                     if (docSnap.exists()) {
                         const cloudData = docSnap.data();
                         if (cloudData && cloudData.anggota) {
+                            const keepUserId = appState.currentUserId;
+                            const keepRole = appState.currentRole;
+                            const keepTab = appState.activeTab || "dashboard";
                             appState = {
                                 ...appState,
                                 ...cloudData,
+                                currentUserId: keepUserId,
+                                currentRole: keepRole,
+                                activeTab: keepTab,
                                 votings: cloudData.votings || appState.votings || [],
                                 rekeningBank: cloudData.rekeningBank || appState.rekeningBank || [],
                                 bebanOperasional: cloudData.bebanOperasional || appState.bebanOperasional || [],
@@ -1977,7 +2350,11 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(appState)
+                body: JSON.stringify({
+                    updatedAt: new Date().toISOString(),
+                    secretToken: appState.apiSecretToken || 'KOP-KELUARGA-2026',
+                    data: appState
+                })
                 });
                 const statusTxt = document.getElementById('firebaseStatusText');
                 if (statusTxt) statusTxt.textContent = 'Google Sheets Synced';
@@ -2005,28 +2382,69 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
 
         window.handleLogin = (e) => {
             e.preventDefault();
+            const lockUntil = Number(localStorage.getItem('koperasi_login_lock_until') || 0);
+            const now = Date.now();
+            const banner = document.getElementById('loginLockoutBanner');
+            if (lockUntil > now) {
+                const sisaDetik = Math.ceil((lockUntil - now) / 1000);
+                if (banner) {
+                    banner.classList.remove('hidden');
+                    banner.textContent = `🔒 Terlalu banyak percobaan salah! Login dikunci sementara selama ${sisaDetik} detik.`;
+                }
+                window.showToast(`Akun dikunci sementara! Coba lagi dalam ${sisaDetik} detik.`, 'error');
+                return;
+            } else if (banner) {
+                banner.classList.add('hidden');
+            }
+
             const kontak = document.getElementById('loginKontak').value.trim();
             const pin = document.getElementById('loginPin').value.trim();
 
+            const pendingFound = (appState.calonAnggota || []).find(c => c.kontak === kontak);
+            if (pendingFound) {
+                window.showToast(`Pendaftaran atas nama ${pendingFound.nama} masih menunggu persetujuan Admin/Pengurus!`, 'info');
+                return;
+            }
             const found = appState.anggota.find(a => a.kontak === kontak && a.pin === pin);
             if (found) {
+                localStorage.removeItem('koperasi_failed_pin_count');
+                localStorage.removeItem('koperasi_login_lock_until');
+                if (banner) banner.classList.add('hidden');
                 currentUserSession = found;
+                appState.currentUserId = found.id;
                 appState.currentRole = found.kontak === '082298688189' ? 'admin' : found.role;
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('loginForm').reset();
                 window.catatLogAudit('LOGIN', `Masuk ke aplikasi sebagai ${appState.currentRole.toUpperCase()}`);
                 saveStateToLocalStorage();
                 window.showToast(`Selamat datang, ${found.nama}!`);
-                renderApp();
+                window.switchTab(appState.activeTab || 'dashboard');
             } else {
-                window.showToast('Nomor WA atau PIN salah! (Super Admin: 082298688189 / PIN: 1234)', 'error');
+                const failCount = Number(localStorage.getItem('koperasi_failed_pin_count') || 0) + 1;
+                localStorage.setItem('koperasi_failed_pin_count', String(failCount));
+                if (failCount >= 5) {
+                    const until = Date.now() + 60000;
+                    localStorage.setItem('koperasi_login_lock_until', String(until));
+                    localStorage.setItem('koperasi_failed_pin_count', '0');
+                    window.catatLogAudit('KEAMANAN_LOGIN', `Percobaan PIN gagal 5x untuk nomor ${kontak} — dikunci 60 detik`);
+                    saveStateToCloud();
+                    if (banner) {
+                        banner.classList.remove('hidden');
+                        banner.textContent = '🔒 Percobaan PIN salah 5x berturut-turut! Sistem dikunci selama 60 detik untuk mencegah peretasan.';
+                    }
+                    window.showToast('Percobaan gagal 5x! Login dikunci selama 60 detik.', 'error');
+                } else {
+                    window.showToast(`Nomor WhatsApp atau PIN salah! (Percobaan ${failCount}/5)`, 'error');
+                }
             }
         };
 
         window.handleLogout = () => {
             window.catatLogAudit('LOGOUT', 'Keluar dari sesi aplikasi');
-            saveStateToLocalStorage();
             currentUserSession = null;
+            appState.currentUserId = null;
+            appState.activeTab = 'dashboard';
+            saveStateToLocalStorage();
             document.getElementById('loginScreen').classList.remove('hidden');
             window.showToast('Berhasil keluar dari sesi.', 'info');
         };
@@ -2039,8 +2457,21 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
         };
 
         window.switchTab = (tabId) => {
+            const tabs = ['dashboard', 'persetujuan', 'simpanan', 'pinjaman', 'zis', 'arisan', 'gamifikasi', 'anggota', 'bank', 'shu', 'ad-art', 'profil-saya'];
+            const adminOnlyTabs = ['persetujuan', 'anggota', 'bank', 'shu'];
+            if (appState.currentRole !== 'admin' && adminOnlyTabs.includes(tabId)) {
+                tabId = 'dashboard';
+            }
             appState.activeTab = tabId;
-            const tabs = ['dashboard', 'persetujuan', 'simpanan', 'pinjaman', 'zis', 'arisan', 'gamifikasi', 'anggota', 'bank', 'shu', 'profil-saya'];
+            saveStateToLocalStorage();
+            document.querySelectorAll('#sidebar button[onclick*="switchTab"]').forEach(btn => {
+                const isMatch = btn.getAttribute('onclick').includes(`'${tabId}'`);
+                if (isMatch) {
+                    btn.classList.add('bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-300', 'ring-1', 'ring-emerald-200', 'dark:ring-emerald-800');
+                } else {
+                    btn.classList.remove('bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-300', 'ring-1', 'ring-emerald-200', 'dark:ring-emerald-800');
+                }
+            });
             tabs.forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if (el) {
@@ -2122,6 +2553,7 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
         window.switchMode = (mode) => {
             if (currentUserSession && currentUserSession.kontak === '082298688189') {
                 appState.currentRole = mode;
+                saveStateToLocalStorage();
                 window.showToast(`Beralih ke tampilan ${mode === 'admin' ? 'Admin' : 'Anggota'}`, 'info');
                 renderApp();
             }
@@ -2208,12 +2640,14 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
                 { id: 'arisan', label: 'Arisan & Program', icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' },
                 { id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' },
                 { id: 'shu', label: 'Sisa Hasil Usaha (SHU)', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+                { id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
                 { id: 'profil-saya', label: 'Profil, Backup & Audit', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
             ];
 
             if (role === 'admin') {
                 navs.splice(1, 0, { id: 'persetujuan', label: 'Persetujuan Transaksi', badge: pendingTrx.length, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0 z' });
-                navs.splice(navs.length - 1, 0, { id: 'anggota', label: 'Daftar Anggota Keluarga', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
+                const pendingRegLen = (appState.calonAnggota || []).length;
+                navs.splice(navs.length - 1, 0, { id: 'anggota', label: 'Daftar Anggota Keluarga', badge: pendingRegLen, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
                 navs.splice(navs.length - 1, 0, { id: 'bank', label: 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
             }
 
@@ -2228,7 +2662,11 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             `).join('');
 
             document.getElementById('teksPengumuman').textContent = appState.pengumuman;
-            const adminToggleIds = ['btnEditPengumuman', 'btnBukaModalVoting', 'btnSettingPinjam', 'btnSettingShu', 'btnDistribusiShu', 'btnResetKunciShu', 'btnTambahPemasukanUsaha', 'thAksiPemasukanUsaha', 'btnTambahArisan', 'btnTambahBeban', 'thAksiBeban', 'adminShuControl', 'btnTambahAnggota', 'btnSalurkanZis'];
+            // Proteksi Anti-Tamper Role: Pastikan akun benar-benar memiliki hak Admin di database
+            if (currentUserSession && currentUserSession.kontak !== '082298688189' && currentUserSession.role !== 'admin' && appState.currentRole === 'admin') {
+                appState.currentRole = 'member';
+            }
+            const adminToggleIds = ['btnEditPengumuman', 'btnBukaModalVoting', 'btnSettingPinjam', 'btnSettingShu', 'btnDistribusiShu', 'btnResetKunciShu', 'btnTambahPemasukanUsaha', 'thAksiPemasukanUsaha', 'btnTambahArisan', 'btnEditAdArt', 'btnTambahNotulensi', 'btnTambahBeban', 'thAksiBeban', 'adminShuControl', 'btnTambahAnggota', 'btnTagihanWajibKolektif', 'btnSalurkanZis'];
             adminToggleIds.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -2299,6 +2737,7 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             renderAnggotaTab();
             renderBankTab();
             renderShuTab();
+            window.renderAdArtTab();
             renderAuditTrailTable();
             renderCharts(approvedTrx);
         };
@@ -2720,8 +3159,14 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
 
         // Validasi Ketat saat Admin Menyetujui Penarikan (Anti-Overdraft & Collateral Lock)
         window.updateStatusTransaksi = (id, statusBaru) => {
+            if (!window.verifyAdminIntegrity()) return;
             const t = appState.transaksi.find(x => x.id === id);
             if (!t) return;
+
+            if (statusBaru === 'Disetujui' && t.tipe === 'Penarikan' && currentUserSession.kontak !== '082298688189' && t.anggotaId === currentUserSession.id) {
+                window.showToast('Proteksi Keamanan (Four-Eyes Principle): Pengurus tidak dapat menyetujui penarikan miliknya sendiri. Hubungi Super Admin!', 'error');
+                return;
+            }
 
             if (statusBaru === 'Disetujui' && t.tipe === 'Penarikan') {
                 const batas = window.hitungBatasPenarikanAnggota(t.anggotaId, t.kategori);
@@ -2822,6 +3267,9 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                     <td class="py-3 px-4 text-slate-500">${window.escapeHtml(t.keterangan || '-')}</td>
                     <td class="py-3 px-4 text-center no-print space-x-1.5 whitespace-nowrap">
                         <button onclick="window.bukaKwitansiTransaksi('${t.id}')" class="text-emerald-600 hover:underline font-bold text-xs" title="Cetak Kwitansi">🧾 Struk</button>
+                        ${t.status === 'Menunggu' && t.anggotaId === currentUserSession?.id ? `
+                            <button onclick="window.batalkanPengajuanMandiri('transaksi', '${t.id}')" class="text-amber-600 hover:underline font-bold text-xs" title="Batalkan Pengajuan">❌ Batalkan</button>
+                        ` : ''}
                         ${currentUserSession?.kontak === '082298688189' ? `
                             <button onclick="window.bukaModalEditTransaksi('${t.id}')" class="text-blue-600 hover:underline font-bold text-xs">✏️ Edit</button>
                             <button onclick="window.hapusTransaksi('${t.id}')" class="text-rose-500 hover:text-rose-700 font-bold text-xs">Hapus</button>
@@ -3067,10 +3515,13 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                                 ${role === 'admin' && p.status === 'Disetujui' ? `
                                     <button onclick="window.kirimPengingatCicilanWa('${p.id}')" class="px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold hover:bg-emerald-100" title="Kirim Pengingat WA">📲 WA</button>
                                 ` : ''}
+                                <button onclick="window.bukaModalAkadPinjaman('${p.id}')" class="px-2 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 text-[10px] font-bold hover:bg-amber-100" title="Cetak Surat Perjanjian Akad Pinjaman">📜 Akad</button>
                                 ${role === 'admin' ? `
                                     <button onclick="window.bukaModalEditPinjaman('${p.id}')" class="px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 text-[10px] font-bold" title="Edit Pinjaman">✏️</button>
                                     <button onclick="window.hapusPinjaman('${p.id}')" class="px-2 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 text-[10px] font-bold" title="Hapus Pinjaman">🗑️</button>
                                 ` : ''}
+                                ${window.hitungBulanTunggakanPinjaman(p) > 0 ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-600 text-white animate-pulse">⚠️ Menunggak ${window.hitungBulanTunggakanPinjaman(p)} Bln</span>` : ''}
+                                ${p.status === 'Menunggu' && p.anggotaId === currentUserSession?.id ? `<button onclick="window.batalkanPengajuanMandiri('pinjaman', '${p.id}')" class="px-2 py-0.5 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold">❌ Batalkan</button>` : ''}
                                 <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${p.status === 'Lunas' ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' : p.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : p.status === 'Ditolak' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}">${window.escapeHtml(p.status)}</span>
                             </div>
                         </div>
@@ -3120,6 +3571,10 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                                                 <button onclick="window.verifikasiCicilanPinjaman('${p.id}', '${c.id}', 'Disetujui')" class="px-2 py-0.5 bg-emerald-600 text-white rounded font-bold">Setujui</button>
                                                 <button onclick="window.verifikasiCicilanPinjaman('${p.id}', '${c.id}', 'Ditolak')" class="px-2 py-0.5 bg-rose-600 text-white rounded font-bold">Tolak</button>
                                             ` : ''}
+                                            ${role === 'admin' ? `
+                                                <button onclick="window.bukaModalEditSubItem('cicilan', '${p.id}', '${c.id}')" class="text-blue-600 hover:underline font-bold" title="Edit Cicilan">✏️</button>
+                                                <button onclick="window.hapusSubItem('cicilan', '${p.id}', '${c.id}')" class="text-rose-600 hover:underline font-bold" title="Hapus Cicilan">🗑️</button>
+                                            ` : ''}
                                         </div>
                                     </div>
                                 `}).join('')}
@@ -3168,8 +3623,16 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         window.updateStatusPinjaman = (id, status) => {
+            if (!window.verifyAdminIntegrity()) return;
             const p = appState.pinjaman.find(x => x.id === id);
             if (p) {
+                if (status === 'Disetujui' && currentUserSession.kontak !== '082298688189' && p.anggotaId === currentUserSession.id) {
+                    window.showToast('Proteksi Keamanan (Four-Eyes Principle): Pengurus tidak dapat menyetujui pinjaman miliknya sendiri. Hubungi Super Admin!', 'error');
+                    return;
+                }
+                if (status === 'Disetujui' && !p.tanggalDisetujui) {
+                    p.tanggalDisetujui = new Date().toISOString().slice(0, 10);
+                }
                 if (status === 'Disetujui') {
                     const kasInfo = window.hitungKasLikuidKoperasi();
                     if (Number(p.nominal) > kasInfo.kasLikuidTersedia) {
@@ -3747,6 +4210,30 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         }
 
         function renderAnggotaTab() {
+            const pendingBox = document.getElementById('boxPendingRegistrasiAnggota');
+            const pendingListEl = document.getElementById('listPendingRegistrasiBody');
+            const pendingBadge = document.getElementById('badgePendingRegCount');
+            const listCalon = appState.calonAnggota || [];
+            if (pendingBox && pendingListEl) {
+                if (listCalon.length > 0) {
+                    pendingBox.classList.remove('hidden');
+                    if (pendingBadge) pendingBadge.textContent = `${listCalon.length} Menunggu`;
+                    pendingListEl.innerHTML = listCalon.map(c => `
+                        <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-300 flex justify-between items-center gap-2 text-xs">
+                            <div>
+                                <div class="font-bold text-slate-800 dark:text-white">${window.escapeHtml(c.nama)} <span class="text-[10px] text-emerald-600">(${window.escapeHtml(c.namaKeluarga)})</span></div>
+                                <div class="text-[10px] text-slate-500">WA: ${window.escapeHtml(c.kontak)} • Waris: ${window.escapeHtml(c.ahliWaris || '-')}</div>
+                            </div>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button onclick="window.verifikasiCalonAnggota('${c.id}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Terima</button>
+                                <button onclick="window.verifikasiCalonAnggota('${c.id}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    pendingBox.classList.add('hidden');
+                }
+            }
             const container = document.getElementById('gridAnggota');
             container.innerHTML = appState.anggota.map(a => {
                 const saldoReal = window.hitungSaldoAnggota(a.id);
@@ -3779,7 +4266,7 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                         </div>
                         ${a.kontak !== '082298688189' ? `
                             <div class="flex items-center gap-2">
-                                ${saldoReal > 0 && hutangAktif === 0 ? `<button onclick="window.tutupAkunAnggota('${a.id}')" class="text-amber-600 font-bold hover:underline" title="Cairkan Semua Simpanan">🔓 Tutup Akun</button>` : ''}
+                                ${(saldoReal > 0 || hutangAktif > 0) ? `<button onclick="window.tutupAkunAnggota('${a.id}')" class="text-amber-600 font-bold hover:underline" title="Settlement Pelunasan Hutang & Pencairan Akhir">🔓 Settlement</button>` : ''}
                                 <button onclick="window.hapusAnggota('${a.id}')" class="text-rose-600 font-bold hover:underline">Hapus</button>
                             </div>
                         ` : '<span class="text-[10px] text-slate-400 italic">Utama</span>'}
@@ -3810,22 +4297,77 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
 
         // Fitur Tutup Akun & Pencairan Seluruh Simpanan (Pokok + Wajib + Sukarela) jika Bebas Hutang
         window.tutupAkunAnggota = (id) => {
+            if (!window.verifyAdminIntegrity()) return;
             const target = appState.anggota.find(a => a.id === id);
             if (!target) return;
-            const hutangAktif = (appState.pinjaman || [])
-                .filter(p => (p.status === 'Disetujui' || p.status === 'Menunggu') && p.anggotaId === id)
-                .reduce((acc, p) => acc + window.hitungSisaPokokPinjaman(p), 0);
-
-            if (hutangAktif > 0) {
-                window.showToast(`Tidak dapat menutup akun ${target.nama}! Masih ada sisa pinjaman aktif sebesar ${window.formatRupiah(hutangAktif)}.`, 'error');
-                return;
-            }
-
+            const pinjamanAktifList = (appState.pinjaman || []).filter(p => p.status === 'Disetujui' && p.anggotaId === id);
+            const hutangAktif = pinjamanAktifList.reduce((acc, p) => acc + window.hitungSisaPokokPinjaman(p), 0);
             const rincian = window.hitungRincianSimpananAnggota(id);
-            if (rincian.total <= 0) {
-                window.showToast(`Saldo ${target.nama} sudah Rp 0. Anda dapat langsung menekan tombol Hapus.`, 'info');
+
+            if (rincian.total < hutangAktif) {
+                const kurangBayar = hutangAktif - rincian.total;
+                window.showToast(`Gagal Settlement: Total Simpanan ${target.nama} (${window.formatRupiah(rincian.total)}) lebih kecil dari Sisa Hutang (${window.formatRupiah(hutangAktif)}). Anggota wajib melunasi kekurangan ${window.formatRupiah(kurangBayar)} terlebih dahulu!`, 'error');
                 return;
             }
+
+            if (rincian.total <= 0 && hutangAktif <= 0) {
+                window.showToast(`Saldo & Hutang ${target.nama} sudah Rp 0. Anda dapat langsung menekan tombol Hapus.`, 'info');
+                return;
+            }
+
+            const hakBersih = Math.max(0, rincian.total - hutangAktif);
+            window.showConfirmModal(
+                `Wizard Settlement & Tutup Akun: ${target.nama}`,
+                `Rincian Settlement Akhir:\n• Total Simpanan: ${window.formatRupiah(rincian.total)}\n• Potong Pelunasan Sisa Hutang: -${window.formatRupiah(hutangAktif)}\n• Sisa Hak Bersih Dicairkan ke Anggota: ${window.formatRupiah(hakBersih)}\n\nLanjutkan proses pelunasan & pengosongan saldo hingga Rp 0?`,
+                () => {
+                    const waktuStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+                    const tglStr = waktuStr.slice(0, 10);
+                    // 1. Lunasi seluruh pinjaman aktif anggota
+                    pinjamanAktifList.forEach(p => {
+                        const sisa = window.hitungSisaPokokPinjaman(p);
+                        if (sisa > 0) {
+                            if (!p.riwayatCicilan) p.riwayatCicilan = [];
+                            p.riwayatCicilan.push({
+                                id: 'cic_settle_' + Date.now() + '_' + p.id,
+                                tanggal: tglStr,
+                                bulanBayar: Math.max(1, p.tenor - (p.tenorTerbayar || 0)),
+                                pokok: sisa,
+                                bunga: 0,
+                                total: sisa,
+                                status: 'Disetujui',
+                                catatan: 'Pelunasan Potong Simpanan (Settlement Tutup Akun)'
+                            });
+                            p.pokokTerbayar = p.nominal;
+                            p.tenorTerbayar = p.tenor;
+                            p.status = 'Lunas';
+                        }
+                    });
+                    // 2. Kosongkan masing-masing kategori simpanan anggota
+                    ['Simpanan Pokok', 'Simpanan Wajib', 'Simpanan Sukarela'].forEach(kat => {
+                        const nilai = kat === 'Simpanan Pokok' ? rincian.pokok : kat === 'Simpanan Wajib' ? rincian.wajib : rincian.sukarela;
+                        if (nilai > 0) {
+                            appState.transaksi.push({
+                                id: 't_close_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                                waktu: waktuStr,
+                                anggotaId: target.id,
+                                nama: target.nama,
+                                tipe: 'Penarikan',
+                                kategori: kat,
+                                nominal: nilai,
+                                status: 'Disetujui',
+                                bukti: '',
+                                bankTujuan: 'Settlement Tutup Akun',
+                                keterangan: `Settlement Tutup Akun (Potong Hutang ${window.formatRupiah(hutangAktif)}, Cair Bersih ${window.formatRupiah(hakBersih)})`
+                            });
+                        }
+                    });
+                    window.catatLogAudit('SETTLEMENT_ANGGOTA', `Settlement tutup akun ${target.nama}: Simpanan ${window.formatRupiah(rincian.total)}, Potong Hutang ${window.formatRupiah(hutangAktif)}, Cair Bersih ${window.formatRupiah(hakBersih)}`);
+                    saveStateToCloud();
+                    renderApp();
+                    window.showToast(`Settlement ${target.nama} selesai! Saldo & Hutang kini Rp 0.`);
+                }
+            );
+            return;
 
             window.showConfirmModal(
                 `Tutup Akun & Cairkan Simpanan: ${target.nama}`,
@@ -3976,11 +4518,40 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         function renderBankTab() {
+            const inpKode = document.getElementById('inputKodeUndangan');
+            if (inpKode) inpKode.value = appState.kodeUndanganKeluarga || 'KELUARGA2026';
+            const inpToken = document.getElementById('inputApiSecretToken');
+            if (inpToken) inpToken.value = appState.apiSecretToken || 'KOP-KELUARGA-2026';
+            const inpFb = document.getElementById('inputCustomFirebaseConfig');
+            if (inpFb && !inpFb.value) inpFb.value = localStorage.getItem('koperasi_custom_firebase_config') || appState.customFirebaseConfigJson || '';
+            const btnToggleReg = document.getElementById('btnTogglePendaftaranMandiri');
+            if (btnToggleReg) {
+                const isOpen = appState.bukaPendaftaranMandiri !== false;
+                btnToggleReg.textContent = isOpen ? '✅ Pendaftaran Mandiri: DIBUKA' : '🔒 Pendaftaran Mandiri: DITUTUP';
+                btnToggleReg.className = isOpen
+                    ? 'w-full py-2 px-3 rounded-lg font-extrabold text-xs bg-emerald-600 text-white shadow-sm transition'
+                    : 'w-full py-2 px-3 rounded-lg font-extrabold text-xs bg-rose-600 text-white shadow-sm transition';
+            }
+            const thumb = document.getElementById('qrisPreviewThumb');
+            const ph = document.getElementById('qrisPlaceholderText');
+            if (thumb && ph) {
+                if (appState.qrisImage) {
+                    thumb.src = appState.qrisImage;
+                    thumb.classList.remove('hidden');
+                    ph.classList.add('hidden');
+                } else {
+                    thumb.classList.add('hidden');
+                    ph.classList.remove('hidden');
+                }
+            }
             const tbody = document.getElementById('tabelBankBody');
             tbody.innerHTML = appState.rekeningBank.map(b => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                     <td class="py-3 px-3 font-bold">${window.escapeHtml(b.nama)}</td>
-                    <td class="py-3 px-3 font-mono text-slate-600 dark:text-slate-300">${window.escapeHtml(b.nomor)}</td>
+                    <td class="py-3 px-3 font-mono text-slate-600 dark:text-slate-300">
+                        ${window.escapeHtml(b.nomor)}
+                        <button onclick="window.salinTeksKeClipboard('${b.nomor}', 'Nomor rekening ${b.nama}')" class="ml-1.5 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-sans font-bold text-emerald-600 hover:bg-emerald-50">📋 Salin</button>
+                    </td>
                     <td class="py-3 px-3 text-slate-500">${window.escapeHtml(b.pemilik)}</td>
                     <td class="py-3 px-3 text-center space-x-2">
                         <button onclick="window.bukaModalEditBank('${b.id}')" class="text-emerald-600 hover:underline font-bold text-xs">✏️ Edit</button>
@@ -4161,9 +4732,15 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                                 <div class="space-y-1 max-h-28 overflow-y-auto pr-1">
                                     <span class="text-[10px] font-bold uppercase text-slate-400 block">Riwayat Setoran Peserta (${ar.pesertaSetor.length}):</span>
                                     ${ar.pesertaSetor.map(ps => `
-                                        <div class="flex justify-between text-[10px] bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded">
+                                        <div class="flex justify-between items-center text-[10px] bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded">
                                             <span>${window.escapeHtml(ps.tanggal)} — <strong>${window.escapeHtml(ps.nama)}</strong></span>
-                                            <strong class="text-emerald-600">+${window.formatRupiah(ps.nominal)}</strong>
+                                            <div class="flex items-center gap-1.5">
+                                                <strong class="text-emerald-600">+${window.formatRupiah(ps.nominal)}</strong>
+                                                ${role === 'admin' ? `
+                                                    <button onclick="window.bukaModalEditSubItem('arisan', '${ar.id}', '${ps.id}')" class="text-blue-600 hover:underline font-bold" title="Edit Setoran">✏️</button>
+                                                    <button onclick="window.hapusSubItem('arisan', '${ar.id}', '${ps.id}')" class="text-rose-600 hover:underline font-bold" title="Hapus Setoran">🗑️</button>
+                                                ` : ''}
+                                            </div>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -4287,16 +4864,55 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         window.kocokUndianArisan = (arisanId) => {
+            if (!window.verifyAdminIntegrity()) return;
             const ar = (appState.arisanPrograms || []).find(x => x.id === arisanId);
             if (!ar) return;
-            const kandidat = appState.anggota.map(a => a.nama);
-            if (kandidat.length === 0) return;
-            const pemenang = kandidat[Math.floor(Math.random() * kandidat.length)];
-            ar.pemenangTerakhir = `${pemenang} (${new Date().toISOString().slice(0, 10)})`;
-            window.catatLogAudit('UNDIAN_ARISAN', `Mengocok undian ${ar.nama}: Pemenang adalah ${pemenang}`);
+            if (!ar.riwayatPemenang) ar.riwayatPemenang = [];
+
+            // Utamakan peserta yang sudah menyetor pada putaran ini; jika kosong ambil semua anggota
+            const penabungPutaran = [...new Set((ar.pesertaSetor || []).map(ps => ps.nama))];
+            const populasiDasar = penabungPutaran.length > 0 ? penabungPutaran : appState.anggota.map(a => a.nama);
+
+            // Saring agar anggota yang sudah menang di siklus ini tidak menang dua kali
+            let kandidatBelumMenang = populasiDasar.filter(nama => !ar.riwayatPemenang.includes(nama));
+            if (kandidatBelumMenang.length === 0) {
+                ar.riwayatPemenang = [];
+                kandidatBelumMenang = populasiDasar;
+                window.showToast('Seluruh peserta sudah pernah menang! Siklus putaran baru dimulai otomatis.', 'info');
+            }
+            if (kandidatBelumMenang.length === 0) return;
+
+            const pemenangNama = kandidatBelumMenang[Math.floor(Math.random() * kandidatBelumMenang.length)];
+            const pemenangObj = appState.anggota.find(a => a.nama === pemenangNama);
+            const danaCair = Number(ar.terkumpul) || 0;
+            const tglNow = new Date().toISOString().slice(0, 10);
+            const waktuNow = new Date().toISOString().slice(0, 16).replace('T', ' ');
+
+            ar.riwayatPemenang.push(pemenangNama);
+            ar.pemenangTerakhir = `${pemenangNama} (${tglNow}) — Cair ${window.formatRupiah(danaCair)}`;
+
+            if (danaCair > 0 && pemenangObj) {
+                appState.transaksi.push({
+                    id: 't_arisan_win_' + Date.now(),
+                    waktu: waktuNow,
+                    anggotaId: pemenangObj.id,
+                    nama: pemenangObj.nama,
+                    tipe: 'Setoran',
+                    kategori: 'Simpanan Sukarela',
+                    nominal: danaCair,
+                    status: 'Disetujui',
+                    bukti: '',
+                    bankTujuan: 'Pencairan Undian Arisan',
+                    keterangan: `Pencairan otomatis pemenang ${ar.nama} (${tglNow})`
+                });
+                ar.terkumpul = 0;
+                ar.pesertaSetor = [];
+            }
+
+            window.catatLogAudit('UNDIAN_ARISAN', `Undian ${ar.nama} dimenangkan oleh ${pemenangNama} (Cair ke Sukarela: ${window.formatRupiah(danaCair)})`);
             saveStateToCloud();
             renderApp();
-            window.showToast(`🎉 Selamat! Pemenang undian ${ar.nama} adalah: ${pemenang}!`);
+            window.showToast(`🎉 Pemenang ${ar.nama}: ${pemenangNama}! Dana ${window.formatRupiah(danaCair)} otomatis masuk ke Saldo Sukarela pemenang.`);
         };
 
         window.bukaModalLaporanRat = () => {
@@ -4770,9 +5386,15 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                         window.showToast('Format file JSON tidak valid!', 'error');
                         return;
                     }
+                    const keepUserId = appState.currentUserId;
+                    const keepRole = appState.currentRole;
+                    const keepTab = appState.activeTab || "dashboard";
                     appState = {
                         ...structuredClone(defaultInitialState),
-                        ...parsed
+                        ...parsed,
+                        currentUserId: keepUserId || parsed.currentUserId || null,
+                        currentRole: keepRole || parsed.currentRole || "member",
+                        activeTab: keepTab || parsed.activeTab || "dashboard"
                     };
                     if (currentUserSession) {
                         currentUserSession = appState.anggota.find(a => a.id === currentUserSession.id) || appState.anggota[0];
@@ -4829,9 +5451,15 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                 const res = await fetch(url, { method: 'GET', redirect: 'follow' });
                 const json = await res.json();
                 if (json && json.status === 'success' && json.data && Array.isArray(json.data.anggota)) {
+                    const keepUserId = appState.currentUserId;
+                    const keepRole = appState.currentRole;
+                    const keepTab = appState.activeTab || "dashboard";
                     appState = {
                         ...structuredClone(defaultInitialState),
                         ...json.data,
+                        currentUserId: keepUserId,
+                        currentRole: keepRole,
+                        activeTab: keepTab,
                         gasWebhookUrl: url
                     };
                     saveStateToLocalStorage();
@@ -4848,6 +5476,712 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             } catch (err) {
                 if (!silent) window.showToast('Gagal menarik data dari Google Sheets. Pastikan akses Web App disetel ke Anyone.', 'error');
             }
+        };
+
+
+        // Salin Nomor Rekening (Clipboard dengan fallback execCommand)
+        window.salinTeksKeClipboard = (teks, label = 'Teks') => {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(teks).then(() => {
+                        window.showToast(`${label} (${teks}) berhasil disalin!`);
+                    }).catch(() => {
+                        window.fallbackCopyText(teks, label);
+                    });
+                } else {
+                    window.fallbackCopyText(teks, label);
+                }
+            } catch (e) {
+                window.fallbackCopyText(teks, label);
+            }
+        };
+
+        window.fallbackCopyText = (teks, label) => {
+            const ta = document.createElement('textarea');
+            ta.value = teks;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta);
+            window.showToast(`${label} (${teks}) berhasil disalin!`);
+        };
+
+        window.salinRekeningTerpilihModal = () => {
+            const namaBank = document.getElementById('transaksiBankTujuan')?.value;
+            const bankObj = (appState.rekeningBank || []).find(b => b.nama === namaBank) || (appState.rekeningBank || [])[0];
+            if (!bankObj) {
+                window.showToast('Belum ada rekening bank terdaftar.', 'error');
+                return;
+            }
+            window.salinTeksKeClipboard(bankObj.nomor, `No. Rek ${bankObj.nama}`);
+        };
+
+        window.simpanGambarQrisKoperasi = async (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            appState.qrisImage = await window.kompresGambarBukti(file);
+            window.catatLogAudit('UPLOAD_QRIS', 'Memperbarui gambar Barcode QRIS Koperasi');
+            saveStateToCloud();
+            renderApp();
+            window.showToast('Gambar Barcode QRIS Koperasi berhasil disimpan!');
+        };
+
+        window.tampilkanModalQris = () => {
+            if (!appState.qrisImage) {
+                window.showToast('Barcode QRIS belum diunggah oleh Admin di menu Rekening Bank Koperasi.', 'info');
+                return;
+            }
+            window.lihatFotoBukti(appState.qrisImage);
+        };
+
+        // Transfer Saldo Simpanan Sukarela Antar-Anggota (P2P Internal)
+        window.bukaModalTransferP2P = () => {
+            const batas = window.hitungBatasPenarikanAnggota(currentUserSession.id, 'Simpanan Sukarela');
+            document.getElementById('infoSaldoP2PBox').innerHTML = `
+                <div class="font-bold">Pengirim: ${window.escapeHtml(currentUserSession.nama)}</div>
+                <div>Saldo Sukarela Bebas Jaminan yang Bisa Ditransfer: <strong class="underline">${window.formatRupiah(batas.maxBisaDitarik)}</strong></div>
+            `;
+            const sel = document.getElementById('p2pAnggotaTujuan');
+            const others = appState.anggota.filter(a => a.id !== currentUserSession.id);
+            if (others.length === 0) {
+                window.showToast('Belum ada anggota tujuan lain yang terdaftar!', 'error');
+                return;
+            }
+            sel.innerHTML = others.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
+            document.getElementById('formTransferP2P').reset();
+            document.getElementById('modalTransferP2P').classList.remove('hidden');
+        };
+
+        window.simpanTransferP2P = (e) => {
+            e.preventDefault();
+            const tujuanId = document.getElementById('p2pAnggotaTujuan').value;
+            const nominal = parseFloat(document.getElementById('p2pNominal').value) || 0;
+            const catatan = document.getElementById('p2pCatatan').value.trim();
+
+            if (tujuanId === currentUserSession.id) {
+                window.showToast('Tidak dapat mentransfer ke akun sendiri!', 'error');
+                return;
+            }
+            const tujuanObj = appState.anggota.find(a => a.id === tujuanId);
+            if (!tujuanObj) return;
+
+            const batas = window.hitungBatasPenarikanAnggota(currentUserSession.id, 'Simpanan Sukarela');
+            if (nominal <= 0 || nominal > batas.maxBisaDitarik) {
+                window.showToast(`Saldo Simpanan Sukarela bebas jaminan tidak mencukupi (Maks: ${window.formatRupiah(batas.maxBisaDitarik)})!`, 'error');
+                return;
+            }
+
+            const waktuStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            const refCode = Date.now();
+            // 1. Catat Penarikan Sukarela Pengirim
+            appState.transaksi.push({
+                id: 't_p2p_out_' + refCode,
+                waktu: waktuStr,
+                anggotaId: currentUserSession.id,
+                nama: currentUserSession.nama,
+                tipe: 'Penarikan',
+                kategori: 'Simpanan Sukarela',
+                nominal,
+                status: 'Disetujui',
+                bukti: '',
+                bankTujuan: 'Transfer Internal P2P',
+                keterangan: `Transfer ke ${tujuanObj.nama}${catatan ? ': ' + catatan : ''}`
+            });
+            // 2. Catat Setoran Sukarela Penerima
+            appState.transaksi.push({
+                id: 't_p2p_in_' + refCode,
+                waktu: waktuStr,
+                anggotaId: tujuanObj.id,
+                nama: tujuanObj.nama,
+                tipe: 'Setoran',
+                kategori: 'Simpanan Sukarela',
+                nominal,
+                status: 'Disetujui',
+                bukti: '',
+                bankTujuan: 'Transfer Internal P2P',
+                keterangan: `Terima transfer dari ${currentUserSession.nama}${catatan ? ': ' + catatan : ''}`
+            });
+
+            window.catatLogAudit('TRANSFER_P2P', `${currentUserSession.nama} mentransfer Saldo Sukarela ${window.formatRupiah(nominal)} ke ${tujuanObj.nama}`);
+            saveStateToCloud();
+            document.getElementById('modalTransferP2P').classList.add('hidden');
+            renderApp();
+            window.showToast(`Berhasil mentransfer ${window.formatRupiah(nominal)} ke ${tujuanObj.nama}!`);
+        };
+
+        // Pendaftaran Calon Anggota Mandiri (4-Layer Anti-Spam Gatekeeper)
+        window._regCaptchaAnswer = 7;
+        window.bukaModalRegistrasiMandiri = () => {
+            if (appState.bukaPendaftaranMandiri === false) {
+                window.showToast('🔒 Pendaftaran mandiri sedang ditutup oleh Pengurus Koperasi. Silakan hubungi Admin Keluarga!', 'error');
+                return;
+            }
+            document.getElementById('formRegistrasiMandiri').reset();
+            const selPenjamin = document.getElementById('regPenjaminNama');
+            if (selPenjamin) {
+                selPenjamin.innerHTML = `<option value="">-- Pilih Anggota Keluarga Pengundang --</option>` +
+                    (appState.anggota || []).map(a => `<option value="${window.escapeHtml(a.nama)}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
+            }
+            const numA = Math.floor(Math.random() * 9) + 2;
+            const numB = Math.floor(Math.random() * 9) + 1;
+            window._regCaptchaAnswer = numA + numB;
+            const lblCap = document.getElementById('lblRegCaptcha');
+            if (lblCap) lblCap.textContent = `🛡️ Hitung Cepat Anti-Bot: ${numA} + ${numB} = ?`;
+            document.getElementById('modalRegistrasiMandiri').classList.remove('hidden');
+        };
+
+        window.simpanRegistrasiMandiri = (e) => {
+            e.preventDefault();
+            if (appState.bukaPendaftaranMandiri === false) {
+                window.showToast('Pendaftaran mandiri sedang ditutup oleh Admin!', 'error');
+                return;
+            }
+            const kodeInput = (document.getElementById('regKodeUndangan')?.value || '').trim().toUpperCase();
+            const kodeValid = (appState.kodeUndanganKeluarga || 'KELUARGA2026').trim().toUpperCase();
+            if (kodeInput !== kodeValid) {
+                window.catatLogAudit('SPAM_REG_DITOLAK', `Percobaan daftar dengan Kode Undangan salah: ${kodeInput}`);
+                saveStateToCloud();
+                window.showToast('Kode Undangan Keluarga salah! Mintalah kode resmi di grup WhatsApp Keluarga.', 'error');
+                return;
+            }
+
+            const capJawab = Number(document.getElementById('regCaptchaInput')?.value || 0);
+            if (capJawab !== window._regCaptchaAnswer) {
+                window.showToast('Jawaban hitungan verifikasi Anti-Bot salah!', 'error');
+                return;
+            }
+
+            // Cek batas 1 pengajuan aktif per perangkat
+            const lastDeviceKontak = localStorage.getItem('koperasi_device_pending_reg');
+            if (lastDeviceKontak && (appState.calonAnggota || []).some(c => c.kontak === lastDeviceKontak)) {
+                window.showToast('Perangkat ini sudah memiliki pengajuan pendaftaran yang sedang menunggu verifikasi Admin!', 'error');
+                return;
+            }
+
+            if ((appState.calonAnggota || []).length >= 15) {
+                window.showToast('Antrean pendaftaran sedang penuh. Hubungi Pengurus untuk verifikasi!', 'error');
+                return;
+            }
+
+            const penjaminNama = document.getElementById('regPenjaminNama')?.value || '-';
+            const nama = document.getElementById('regNama').value.trim();
+            const namaKeluarga = document.getElementById('regKeluarga').value.trim();
+            const kontak = document.getElementById('regKontak').value.trim();
+            const pin = document.getElementById('regPin').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const ahliWaris = document.getElementById('regAhliWaris').value.trim();
+            const hubunganWaris = document.getElementById('regHubunganWaris').value.trim();
+
+            if (!/^08[0-9]{8,13}$/.test(kontak)) {
+                window.showToast('Format Nomor WhatsApp tidak valid (Gunakan awalan 08..., 10-15 digit angka)!', 'error');
+                return;
+            }
+
+            if (appState.anggota.some(a => a.kontak === kontak || a.nama.toLowerCase() === nama.toLowerCase()) ||
+                (appState.calonAnggota || []).some(c => c.kontak === kontak || c.nama.toLowerCase() === nama.toLowerCase())) {
+                window.showToast('Nama atau Nomor WhatsApp tersebut sudah terdaftar / sedang dalam antrean verifikasi!', 'error');
+                return;
+            }
+            if (!appState.calonAnggota) appState.calonAnggota = [];
+            appState.calonAnggota.push({
+                id: 'reg_' + Date.now(),
+                tanggalDaftar: new Date().toISOString().slice(0, 10),
+                nama,
+                namaKeluarga,
+                kontak,
+                pin,
+                email,
+                ahliWaris,
+                hubunganWaris,
+                penjaminNama
+            });
+            localStorage.setItem('koperasi_device_pending_reg', kontak);
+            window.catatLogAudit('REGISTRASI_MANDIRI', `Calon anggota mendaftar: ${nama} (${kontak}) • Pengundang: ${penjaminNama}`);
+            saveStateToCloud();
+            document.getElementById('modalRegistrasiMandiri').classList.add('hidden');
+            window.showToast('Pendaftaran berhasil dikirim! Silakan tunggu persetujuan Admin/Pengurus.');
+        };
+
+        window.tolakSemuaCalonAnggota = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            const jml = (appState.calonAnggota || []).length;
+            if (jml === 0) return;
+            window.showConfirmModal('Bersihkan Semua Antrean Pendaftar', `Yakin ingin menolak dan menghapus seluruh ${jml} antrean calon anggota sekaligus?`, () => {
+                appState.calonAnggota = [];
+                localStorage.removeItem('koperasi_device_pending_reg');
+                window.catatLogAudit('BERSIHKAN_ANTREAN_REG', `Menolak & membersihkan massal ${jml} antrean pendaftar baru`);
+                saveStateToCloud();
+                renderApp();
+                window.showToast('Seluruh antrean pendaftaran berhasil dibersihkan!');
+            });
+        };
+
+        window.verifikasiCalonAnggota = (regId, disetujui) => {
+            const calon = (appState.calonAnggota || []).find(c => c.id === regId);
+            if (!calon) return;
+            appState.calonAnggota = (appState.calonAnggota || []).filter(c => c.id !== regId);
+            if (disetujui) {
+                appState.anggota.push({
+                    id: 'a_' + Date.now(),
+                    nama: calon.nama,
+                    namaKeluarga: calon.namaKeluarga,
+                    kontak: calon.kontak,
+                    email: calon.email,
+                    pin: calon.pin || '1234',
+                    role: 'member',
+                    ahliWaris: calon.ahliWaris || '-',
+                    hubunganWaris: calon.hubunganWaris || '-',
+                    saldo: 0,
+                    simpananPokok: 0,
+                    simpananWajib: 0,
+                    simpananSukarela: 0
+                });
+                window.catatLogAudit('TERIMA_CALON_ANGGOTA', `Menyetujui pendaftaran anggota baru: ${calon.nama}`);
+                window.showToast(`Akun anggota ${calon.nama} telah diaktifkan!`);
+            } else {
+                window.catatLogAudit('TOLAK_CALON_ANGGOTA', `Menolak pendaftaran calon anggota: ${calon.nama}`);
+                window.showToast(`Pendaftaran ${calon.nama} ditolak.`, 'info');
+            }
+            saveStateToCloud();
+            renderApp();
+        };
+
+        // Generator Surat Perjanjian / Akad Pinjaman Keluarga
+        window.bukaModalAkadPinjaman = (pinjamanId) => {
+            const p = (appState.pinjaman || []).find(x => x.id === pinjamanId);
+            if (!p) return;
+            const a = appState.anggota.find(x => x.id === p.anggotaId) || {};
+            const r = window.hitungRincianSimpananAnggota(p.anggotaId);
+            const ratePersen = p.bungaPersen !== undefined ? Number(p.bungaPersen) : Number(appState.pinjamanSetting?.bungaPersen ?? 1);
+            const pokokPerBln = p.nominal / p.tenor;
+            const jasaPerBln = p.nominal * (ratePersen / 100);
+            const totalCicilanBln = pokokPerBln + jasaPerBln;
+
+            document.getElementById('akadPinjamanNomor').textContent = `Nomor Akad: #AKAD-${p.id.toUpperCase()} • Status: ${p.status.toUpperCase()}`;
+            document.getElementById('akadNamaPeminjamSign').textContent = `( ${p.nama} )`;
+            document.getElementById('akadPinjamanContentBody').innerHTML = `
+                <p>Pada hari ini, kami yang bertanda tangan di bawah ini menyatakan kesepakatan pinjam-meminjam dana kekeluargaan pada <strong>Koperasi Keluarga v25.0 Pro</strong> dengan rincian sebagai berikut:</p>
+                <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border space-y-1.5">
+                    <div class="flex justify-between"><span>Nama Peminjam (Pihak Kedua):</span><strong>${window.escapeHtml(p.nama)} (${window.escapeHtml(a.namaKeluarga || '-')})</strong></div>
+                    <div class="flex justify-between"><span>Nomor WhatsApp / Kontak:</span><strong>${window.escapeHtml(a.kontak || '-')}</strong></div>
+                    <div class="flex justify-between"><span>Ahli Waris / Penjamin Keluarga:</span><strong>${window.escapeHtml(a.ahliWaris || '-')} (${window.escapeHtml(a.hubunganWaris || '-')})</strong></div>
+                    <div class="flex justify-between"><span>Saldo Simpanan Terkunci (Jaminan):</span><strong class="text-blue-600">${window.formatRupiah(r.total)}</strong></div>
+                    <div class="flex justify-between pt-1 border-t"><span>Pokok Pinjaman Dicairkan:</span><strong class="text-emerald-600 font-black">${window.formatRupiah(p.nominal)}</strong></div>
+                    <div class="flex justify-between"><span>Tenor & Jasa Bulanan:</span><strong>${p.tenor} Bulan (Jasa ${ratePersen}% Flat / Bulan)</strong></div>
+                    <div class="flex justify-between"><span>Kewajiban Angsuran per Bulan:</span><strong class="text-amber-600 font-black">${window.formatRupiah(totalCicilanBln)} / bulan</strong></div>
+                    <div class="flex justify-between"><span>Keperluan Penggunaan Dana:</span><strong>${window.escapeHtml(p.keperluan || '-')}</strong></div>
+                </div>
+                <p class="text-[11px] text-slate-500"><strong>Ketentuan Akad Kekeluargaan:</strong> Pihak Kedua bersedia mengangsur tepat waktu setiap bulan dan menyetujui bahwa saldo tabungan di koperasi menjadi jaminan aktif hingga pinjaman dinyatakan <strong>Lunas</strong>.</p>
+            `;
+            document.getElementById('modalAkadPinjaman').classList.remove('hidden');
+        };
+
+        // Modul AD/ART & Notulensi Rapat Keluarga
+        window.renderAdArtTab = () => {
+            const boxAdArt = document.getElementById('kontenAdArtBox');
+            if (boxAdArt) {
+                boxAdArt.textContent = appState.adArtText || defaultInitialState.adArtText;
+            }
+            const gridNot = document.getElementById('gridNotulensiRapat');
+            if (!gridNot) return;
+            const isSuperAdmin = currentUserSession.kontak === '082298688189';
+            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const list = appState.notulensiRapat || [];
+            if (list.length === 0) {
+                gridNot.innerHTML = `<p class="text-xs text-slate-400 italic py-4 text-center">Belum ada arsip notulensi musyawarah keluarga.</p>`;
+                return;
+            }
+            gridNot.innerHTML = list.map(n => `
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2 relative">
+                    <div class="flex justify-between items-start gap-2">
+                        <div>
+                            <span class="font-mono text-[10px] text-emerald-600 font-bold">📅 ${window.escapeHtml(n.tanggal)} • Oleh: ${window.escapeHtml(n.penulis || 'Pengurus')}</span>
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm">${window.escapeHtml(n.judul)}</h4>
+                        </div>
+                        ${role === 'admin' ? `
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button onclick="window.bukaModalEditNotulensi('${n.id}')" class="px-2 py-1 rounded bg-blue-50 text-blue-700 text-[10px] font-bold">✏️ Edit</button>
+                                <button onclick="window.hapusNotulensiRapat('${n.id}')" class="px-2 py-1 rounded bg-rose-50 text-rose-700 text-[10px] font-bold">🗑️</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">${window.escapeHtml(n.isi)}</p>
+                </div>
+            `).join('');
+        };
+
+        window.bukaModalEditAdArt = () => {
+            document.getElementById('inputTeksAdArt').value = appState.adArtText || defaultInitialState.adArtText;
+            document.getElementById('modalEditAdArt').classList.remove('hidden');
+        };
+
+        window.simpanAdArtBaru = (e) => {
+            e.preventDefault();
+            appState.adArtText = document.getElementById('inputTeksAdArt').value.trim();
+            window.catatLogAudit('EDIT_AD_ART', 'Memperbarui dokumen Pasal AD/ART Koperasi Keluarga');
+            saveStateToCloud();
+            document.getElementById('modalEditAdArt').classList.add('hidden');
+            renderApp();
+            window.showToast('Pasal AD/ART berhasil diperbarui!');
+        };
+
+        window.bukaModalNotulensi = () => {
+            document.getElementById('formNotulensi').reset();
+            document.getElementById('editNotulensiId').value = '';
+            document.getElementById('modalNotulensiTitle').textContent = 'Catat Notulensi Musyawarah Keluarga';
+            document.getElementById('modalNotulensi').classList.remove('hidden');
+        };
+
+        window.bukaModalEditNotulensi = (id) => {
+            const n = (appState.notulensiRapat || []).find(x => x.id === id);
+            if (!n) return;
+            document.getElementById('editNotulensiId').value = n.id;
+            document.getElementById('modalNotulensiTitle').textContent = 'Edit Notulensi Musyawarah';
+            document.getElementById('notulensiJudul').value = n.judul || '';
+            document.getElementById('notulensiIsi').value = n.isi || '';
+            document.getElementById('modalNotulensi').classList.remove('hidden');
+        };
+
+        window.simpanNotulensiRapat = (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('editNotulensiId').value;
+            const judul = document.getElementById('notulensiJudul').value.trim();
+            const isi = document.getElementById('notulensiIsi').value.trim();
+            if (!appState.notulensiRapat) appState.notulensiRapat = [];
+
+            if (editId) {
+                const existing = appState.notulensiRapat.find(x => x.id === editId);
+                if (existing) {
+                    existing.judul = judul;
+                    existing.isi = isi;
+                    window.catatLogAudit('EDIT_NOTULENSI', `Memperbarui notulensi rapat: ${judul}`);
+                    saveStateToCloud();
+                    document.getElementById('modalNotulensi').classList.add('hidden');
+                    renderApp();
+                    window.showToast('Notulensi rapat berhasil diperbarui!');
+                    return;
+                }
+            }
+
+            appState.notulensiRapat.unshift({
+                id: 'not_' + Date.now(),
+                tanggal: new Date().toISOString().slice(0, 10),
+                judul,
+                isi,
+                penulis: currentUserSession.nama
+            });
+            window.catatLogAudit('TAMBAH_NOTULENSI', `Mencatat notulensi rapat baru: ${judul}`);
+            saveStateToCloud();
+            document.getElementById('modalNotulensi').classList.add('hidden');
+            renderApp();
+            window.showToast('Notulensi rapat berhasil disimpan!');
+        };
+
+        window.hapusNotulensiRapat = (id) => {
+            window.showConfirmModal('Hapus Notulensi Rapat', 'Yakin ingin menghapus catatan notulensi rapat ini?', () => {
+                appState.notulensiRapat = (appState.notulensiRapat || []).filter(x => x.id !== id);
+                window.catatLogAudit('HAPUS_NOTULENSI', `Menghapus notulensi rapat ID: ${id}`);
+                saveStateToCloud();
+                renderApp();
+                window.showToast('Notulensi rapat dihapus.');
+            });
+        };
+
+        // Super Admin Edit & Hapus Baris Anak (Riwayat Cicilan Pinjaman & Setoran Peserta Arisan)
+        window.rekalkulasiIndukPinjaman = (p) => {
+            if (!p) return;
+            const approvedList = (p.riwayatCicilan || []).filter(c => (c.status || 'Disetujui') === 'Disetujui');
+            p.tenorTerbayar = approvedList.reduce((acc, c) => acc + (Number(c.bulanBayar) || 1), 0);
+            p.pokokTerbayar = Math.min(p.nominal, approvedList.reduce((acc, c) => acc + (Number(c.pokok) || 0), 0));
+            p.bungaTerbayar = approvedList.reduce((acc, c) => acc + (Number(c.bunga) || 0), 0);
+            if (p.tenorTerbayar >= p.tenor || (p.nominal - p.pokokTerbayar) <= 100) {
+                p.pokokTerbayar = p.nominal;
+                p.status = 'Lunas';
+            } else if (p.status === 'Lunas') {
+                p.status = 'Disetujui';
+            }
+        };
+
+        window.bukaModalEditSubItem = (tipe, parentId, childId) => {
+            document.getElementById('subItemTipe').value = tipe;
+            document.getElementById('subItemParentId').value = parentId;
+            document.getElementById('subItemChildId').value = childId;
+
+            if (tipe === 'cicilan') {
+                const p = (appState.pinjaman || []).find(x => x.id === parentId);
+                const c = (p?.riwayatCicilan || []).find(x => x.id === childId);
+                if (!c) return;
+                document.getElementById('modalEditSubItemTitle').textContent = `Edit Riwayat Cicilan: ${p.nama}`;
+                document.getElementById('subItemTanggal').value = c.tanggal || '';
+                document.getElementById('subItemNominal').value = c.total || 0;
+                document.getElementById('subItemCatatan').value = c.catatan || '';
+            } else if (tipe === 'arisan') {
+                const ar = (appState.arisanPrograms || []).find(x => x.id === parentId);
+                const ps = (ar?.pesertaSetor || []).find(x => x.id === childId);
+                if (!ps) return;
+                document.getElementById('modalEditSubItemTitle').textContent = `Edit Setoran Arisan: ${ar.nama}`;
+                document.getElementById('subItemTanggal').value = ps.tanggal || '';
+                document.getElementById('subItemNominal').value = ps.nominal || 0;
+                document.getElementById('subItemCatatan').value = ps.nama || '';
+            }
+            document.getElementById('modalEditSubItem').classList.remove('hidden');
+        };
+
+        window.simpanEditSubItem = (e) => {
+            e.preventDefault();
+            const tipe = document.getElementById('subItemTipe').value;
+            const parentId = document.getElementById('subItemParentId').value;
+            const childId = document.getElementById('subItemChildId').value;
+            const tanggal = document.getElementById('subItemTanggal').value;
+            const nominal = parseFloat(document.getElementById('subItemNominal').value) || 0;
+            const catatan = document.getElementById('subItemCatatan').value.trim();
+
+            if (tipe === 'cicilan') {
+                const p = (appState.pinjaman || []).find(x => x.id === parentId);
+                const c = (p?.riwayatCicilan || []).find(x => x.id === childId);
+                if (p && c) {
+                    const ratioPokok = c.total > 0 ? (c.pokok / c.total) : 0.9;
+                    c.tanggal = tanggal;
+                    c.total = nominal;
+                    c.pokok = Math.round(nominal * ratioPokok);
+                    c.bunga = Math.max(0, nominal - c.pokok);
+                    c.catatan = catatan;
+                    window.rekalkulasiIndukPinjaman(p);
+                    window.catatLogAudit('EDIT_ITEM_CICILAN', `Super Admin mengedit item cicilan ${p.nama} menjadi ${window.formatRupiah(nominal)}`);
+                }
+            } else if (tipe === 'arisan') {
+                const ar = (appState.arisanPrograms || []).find(x => x.id === parentId);
+                const ps = (ar?.pesertaSetor || []).find(x => x.id === childId);
+                if (ar && ps) {
+                    ps.tanggal = tanggal;
+                    ps.nominal = nominal;
+                    ps.nama = catatan;
+                    ar.terkumpul = (ar.pesertaSetor || []).reduce((acc, item) => acc + (Number(item.nominal) || 0), 0);
+                    window.catatLogAudit('EDIT_SETORAN_ARISAN', `Super Admin mengedit setoran arisan ${ps.nama} menjadi ${window.formatRupiah(nominal)}`);
+                }
+            }
+
+            saveStateToCloud();
+            document.getElementById('modalEditSubItem').classList.add('hidden');
+            renderApp();
+            window.showToast('Rincian item berhasil diperbarui!');
+        };
+
+        window.hapusSubItem = (tipe, parentId, childId) => {
+            window.showConfirmModal('Hapus Rincian Item', 'Yakin ingin menghapus baris riwayat ini?', () => {
+                if (tipe === 'cicilan') {
+                    const p = (appState.pinjaman || []).find(x => x.id === parentId);
+                    if (p && p.riwayatCicilan) {
+                        p.riwayatCicilan = p.riwayatCicilan.filter(x => x.id !== childId);
+                        window.rekalkulasiIndukPinjaman(p);
+                        window.catatLogAudit('HAPUS_ITEM_CICILAN', `Super Admin menghapus item cicilan pada pinjaman ${p.nama}`);
+                    }
+                } else if (tipe === 'arisan') {
+                    const ar = (appState.arisanPrograms || []).find(x => x.id === parentId);
+                    if (ar && ar.pesertaSetor) {
+                        ar.pesertaSetor = ar.pesertaSetor.filter(x => x.id !== childId);
+                        ar.terkumpul = ar.pesertaSetor.reduce((acc, item) => acc + (Number(item.nominal) || 0), 0);
+                        window.catatLogAudit('HAPUS_SETORAN_ARISAN', `Super Admin menghapus item setoran pada program ${ar.nama}`);
+                    }
+                }
+                saveStateToCloud();
+                renderApp();
+                window.showToast('Baris riwayat berhasil dihapus.');
+            });
+        };
+
+
+        // Perisai Keamanan & Verifikasi Hak Akses Admin (Anti-Hack / Anti-Console Tampering)
+        window.verifyAdminIntegrity = () => {
+            if (!currentUserSession) {
+                window.showToast('Sesi tidak valid! Silakan login terlebih dahulu.', 'error');
+                return false;
+            }
+            const realMember = (appState.anggota || []).find(a => a.id === currentUserSession.id);
+            const isAuthorizedAdmin = realMember && (realMember.kontak === '082298688189' || realMember.role === 'admin');
+            if (!isAuthorizedAdmin) {
+                appState.currentRole = 'member';
+                window.catatLogAudit('PERINGATAN_KEAMANAN', `Percobaan akses fitur Admin tanpa otorisasi oleh ${currentUserSession.nama}`);
+                saveStateToCloud();
+                renderApp();
+                window.showToast('Akses Ditolak! Akun Anda tidak memiliki otoritas Pengurus/Admin.', 'error');
+                return false;
+            }
+            return true;
+        };
+
+        // Deteksi Otomatis Bulan Tunggakan Pinjaman (Overdue Alert)
+        window.hitungBulanTunggakanPinjaman = (p) => {
+            if (!p || p.status !== 'Disetujui') return 0;
+            const refDateStr = p.tanggalDisetujui || p.tanggalPengajuan || (p.riwayatCicilan && p.riwayatCicilan[0]?.tanggal);
+            if (!refDateStr) return 0;
+            const start = new Date(refDateStr);
+            if (isNaN(start.getTime())) return 0;
+            const now = new Date();
+            const monthsDiff = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+            const seharusnyaBayar = Math.min(Number(p.tenor) || 1, Math.max(0, monthsDiff));
+            const sudahBayar = Number(p.tenorTerbayar) || 0;
+            return Math.max(0, seharusnyaBayar - sudahBayar);
+        };
+
+        // Pembatalan Pengajuan Mandiri oleh Anggota (Sebelum Disetujui Admin)
+        window.batalkanPengajuanMandiri = (jenis, id) => {
+            window.showConfirmModal('Batalkan Pengajuan', 'Yakin ingin membatalkan pengajuan yang masih berstatus Menunggu ini?', () => {
+                if (jenis === 'transaksi') {
+                    const t = (appState.transaksi || []).find(x => x.id === id);
+                    if (!t || t.status !== 'Menunggu' || t.anggotaId !== currentUserSession?.id) return;
+                    appState.transaksi = appState.transaksi.filter(x => x.id !== id);
+                    window.catatLogAudit('BATAL_PENGAJUAN', `${currentUserSession.nama} membatalkan pengajuan ${t.tipe} sebesar ${window.formatRupiah(t.nominal)}`);
+                } else if (jenis === 'pinjaman') {
+                    const p = (appState.pinjaman || []).find(x => x.id === id);
+                    if (!p || p.status !== 'Menunggu' || p.anggotaId !== currentUserSession?.id) return;
+                    appState.pinjaman = appState.pinjaman.filter(x => x.id !== id);
+                    window.catatLogAudit('BATAL_PINJAMAN', `${currentUserSession.nama} membatalkan pengajuan pinjaman sebesar ${window.formatRupiah(p.nominal)}`);
+                }
+                saveStateToCloud();
+                renderApp();
+                window.showToast('Pengajuan berhasil dibatalkan.');
+            });
+        };
+
+        // Generator Tagihan Simpanan Wajib Kolektif Bulanan (1-Klik Admin)
+        window.terbitkanTagihanWajibBulanan = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            const periodeBulanIni = new Date().toISOString().slice(0, 7);
+            const waktuSekarang = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            const nominalWajibDefault = 100000;
+
+            const belumSetor = (appState.anggota || []).filter(a => {
+                return !(appState.transaksi || []).some(t =>
+                    t.anggotaId === a.id &&
+                    t.kategori === 'Simpanan Wajib' &&
+                    t.tipe === 'Setoran' &&
+                    t.status !== 'Ditolak' &&
+                    (t.waktu || '').startsWith(periodeBulanIni)
+                );
+            });
+
+            if (belumSetor.length === 0) {
+                window.showToast(`Seluruh anggota sudah memiliki catatan Simpanan Wajib untuk periode ${periodeBulanIni}!`, 'info');
+                return;
+            }
+
+            window.showConfirmModal(
+                `Terbitkan Tagihan Simpanan Wajib (${periodeBulanIni})`,
+                `Ditemukan ${belumSetor.length} anggota yang belum menyetor Simpanan Wajib pada bulan ${periodeBulanIni}. Terbitkan draf tagihan Simpanan Wajib (${window.formatRupiah(nominalWajibDefault)}/anggota) ke antrean Persetujuan?`,
+                () => {
+                    belumSetor.forEach((a, idx) => {
+                        appState.transaksi.push({
+                            id: 't_wajib_' + Date.now() + '_' + idx,
+                            waktu: waktuSekarang,
+                            anggotaId: a.id,
+                            nama: a.nama,
+                            tipe: 'Setoran',
+                            kategori: 'Simpanan Wajib',
+                            nominal: nominalWajibDefault,
+                            status: 'Menunggu',
+                            bukti: '',
+                            bankTujuan: 'Tagihan Kolektif Bulanan',
+                            keterangan: `Tagihan Simpanan Wajib Periode ${periodeBulanIni}`
+                        });
+                    });
+                    window.catatLogAudit('TAGIHAN_WAJIB_KOLEKTIF', `Menerbitkan ${belumSetor.length} draf tagihan Simpanan Wajib periode ${periodeBulanIni}`);
+                    saveStateToCloud();
+                    renderApp();
+                    window.showToast(`${belumSetor.length} draf tagihan Simpanan Wajib berhasil diterbitkan!`);
+                }
+            );
+        };
+
+        // Pengaturan Perisai Keamanan & Konfigurasi Firebase Kustom
+        window.simpanPengaturanKeamanan = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            const kode = (document.getElementById('inputKodeUndangan')?.value || '').trim().toUpperCase();
+            const token = (document.getElementById('inputApiSecretToken')?.value || '').trim();
+            if (!kode) {
+                window.showToast('Kode Undangan Keluarga tidak boleh kosong!', 'error');
+                return;
+            }
+            appState.kodeUndanganKeluarga = kode;
+            appState.apiSecretToken = token || 'KOP-KELUARGA-2026';
+            window.catatLogAudit('UPDATE_KEAMANAN', `Memperbarui Kode Undangan Keluarga (${kode}) & Token API`);
+            saveStateToCloud();
+            renderApp();
+            window.showToast('Pengaturan Perisai Keamanan berhasil disimpan!');
+        };
+
+        window.toggleBukaPendaftaran = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            appState.bukaPendaftaranMandiri = appState.bukaPendaftaranMandiri === false ? true : false;
+            const statusStr = appState.bukaPendaftaranMandiri ? 'DIBUKA' : 'DITUTUP';
+            window.catatLogAudit('SAKLAR_PENDAFTARAN', `Mengubah status Pendaftaran Mandiri menjadi ${statusStr}`);
+            saveStateToCloud();
+            renderApp();
+            window.showToast(`Pendaftaran Anggota Mandiri kini ${statusStr}!`);
+        };
+
+        window.simpanCustomFirebaseConfig = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            const raw = (document.getElementById('inputCustomFirebaseConfig')?.value || '').trim();
+            if (!raw) {
+                localStorage.removeItem('koperasi_custom_firebase_config');
+                appState.customFirebaseConfigJson = '';
+                saveStateToLocalStorage();
+                window.showToast('Konfigurasi Firebase Kustom dihapus. Beralih ke mode LocalStorage + Google Sheets.', 'info');
+                return;
+            }
+            try {
+                const parsed = JSON.parse(raw);
+                if (!parsed.apiKey || !parsed.projectId) {
+                    window.showToast('JSON Firebase harus memiliki properti "apiKey" dan "projectId"!', 'error');
+                    return;
+                }
+                localStorage.setItem('koperasi_custom_firebase_config', JSON.stringify(parsed));
+                appState.customFirebaseConfigJson = JSON.stringify(parsed);
+                window.catatLogAudit('FIREBASE_CONFIG', `Menghubungkan proyek Firebase Firestore: ${parsed.projectId}`);
+                saveStateToLocalStorage();
+                window.showToast(`Berhasil menyimpan konfigurasi Firebase (${parsed.projectId})! Memuat ulang koneksi...`);
+                setTimeout(() => window.location.reload(), 1000);
+            } catch (e) {
+                window.showToast('Format JSON Firebase tidak valid! Pastikan format {"apiKey":"...","projectId":"..."} benar.', 'error');
+            }
+        };
+
+        // Generator Kartu Anggota Digital (Member Card)
+        window.bukaKartuAnggotaDigital = () => {
+            if (!currentUserSession) return;
+            const r = window.hitungRincianSimpananAnggota(currentUserSession.id);
+            const box = document.getElementById('kartuAnggotaCardBox');
+            if (!box) return;
+            box.innerHTML = `
+                <div class="flex justify-between items-start border-b border-emerald-500/40 pb-3">
+                    <div>
+                        <span class="text-[9px] uppercase tracking-widest text-emerald-200 font-bold block">Kartu Identitas Resmi</span>
+                        <h4 class="text-base font-black tracking-tight">KOPERASI KELUARGA v25.0 PRO</h4>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-400 text-slate-950 uppercase">${currentUserSession.kontak === '082298688189' ? 'Super Admin' : currentUserSession.role === 'admin' ? 'Pengurus' : 'Anggota Aktif'}</span>
+                </div>
+                <div class="space-y-1">
+                    <div class="text-lg font-black">${window.escapeHtml(currentUserSession.nama)}</div>
+                    <div class="text-xs text-emerald-200 font-semibold">${window.escapeHtml(currentUserSession.namaKeluarga)} • ID: #${window.escapeHtml(currentUserSession.id.toUpperCase())}</div>
+                    <div class="text-[11px] text-emerald-100/80">📱 WA: ${window.escapeHtml(currentUserSession.kontak)} • 🛡️ Ahli Waris: ${window.escapeHtml(currentUserSession.ahliWaris || '-')}</div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-emerald-500/40 text-[10px]">
+                    <div class="bg-white/10 p-2 rounded-xl">
+                        <span class="text-emerald-200 block">Pokok</span>
+                        <strong class="font-extrabold">${window.formatRupiah(r.pokok)}</strong>
+                    </div>
+                    <div class="bg-white/10 p-2 rounded-xl">
+                        <span class="text-emerald-200 block">Wajib</span>
+                        <strong class="font-extrabold">${window.formatRupiah(r.wajib)}</strong>
+                    </div>
+                    <div class="bg-white/10 p-2 rounded-xl">
+                        <span class="text-emerald-200 block">Sukarela</span>
+                        <strong class="font-extrabold">${window.formatRupiah(r.sukarela)}</strong>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalKartuAnggota').classList.remove('hidden');
         };
 
         let cashflowChartInstance = null;
@@ -4901,10 +6235,12 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             });
         }
 
-        window.onload = () => {
-            initFirebaseAndSync();
-            populateProfilMandiri();
+        window.onload = async () => {
+            await initFirebaseAndSync();
+            if (!restoreSavedSessionAndTab()) {
+                populateProfilMandiri();
+            }
         };
     </script>
 </body>
-</html>
+</html>l
