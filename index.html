@@ -343,7 +343,12 @@
                         </div>
                     </div>
 
+                    <div id="boxAntreanLintasModul" class="hidden space-y-3"></div>
+
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+                        <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                            <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">💰 Antrean Verifikasi Simpanan & Penarikan</h3>
+                        </div>
                         <div class="overflow-x-auto w-full">
                             <table class="w-full text-left border-collapse min-w-[700px]">
                                 <thead>
@@ -864,9 +869,11 @@
                             </div>
                         </form>
                     </div>
+                </div>
 
-                    <!-- Pembatasan Role: Seluruh Pengaturan Website, Database, Keamanan & Audit Trail Hanya Tampil untuk Admin / Super Admin -->
-                    <div id="adminSystemSettingsWrapper" class="space-y-4 hidden">
+                <!-- Tab Khusus Admin & Super Admin: Pengaturan Sistem, Keamanan, Opname Bank, Database & Audit Trail -->
+                <div id="tab-pengaturan" class="space-y-4 sm:space-y-5 w-full hidden">
+                    <div id="adminSystemSettingsWrapper" class="space-y-4 sm:space-y-5">
                     <div id="superAdminDatabaseCard" class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4">
                         <div class="flex flex-wrap justify-between items-center gap-2">
                             <div>
@@ -2712,8 +2719,8 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
         };
 
         window.switchTab = (tabId) => {
-            const tabs = ['dashboard', 'persetujuan', 'simpanan', 'pinjaman', 'zis', 'arisan', 'gamifikasi', 'anggota', 'bank', 'shu', 'ad-art', 'profil-saya'];
-            const adminOnlyTabs = ['persetujuan', 'anggota', 'bank'];
+            const tabs = ['dashboard', 'persetujuan', 'simpanan', 'pinjaman', 'zis', 'arisan', 'gamifikasi', 'anggota', 'bank', 'shu', 'ad-art', 'pengaturan', 'profil-saya'];
+            const adminOnlyTabs = ['persetujuan', 'anggota', 'bank', 'pengaturan'];
             if (appState.currentRole !== 'admin' && adminOnlyTabs.includes(tabId)) {
                 tabId = 'dashboard';
             }
@@ -2887,33 +2894,63 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             const pendingLoans = (appState.pinjaman || []).filter(p => p.status === 'Menunggu');
 
             const navContainer = document.getElementById('sidebarNavContainer');
-            let navs = [
-                { id: 'dashboard', label: 'Dashboard Utama', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-                { id: 'simpanan', label: 'Buku Simpanan & Kas', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-                { id: 'pinjaman', label: 'Simpan Pinjam', badge: role === 'admin' ? (pendingLoans.length + pendingCicilanCount) : 0, icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
-                { id: 'zis', label: 'ZIS & Dana Sosial', icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
-                { id: 'arisan', label: 'Arisan & Program', icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' },
-                { id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' },
-                { id: 'shu', label: 'Sisa Hasil Usaha (SHU)', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-                { id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-                { id: 'profil-saya', label: role === 'admin' ? 'Profil, Pengaturan & Audit' : 'Profil & Kartu Saya', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
+            const pendingZisLen = (appState.zis || []).filter(z => z.status === 'Menunggu').length;
+            const pendingRegLen = (appState.calonAnggota || []).length;
+            const totalAllPending = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisLen + pendingRegLen;
+
+            const navGroups = [
+                {
+                    groupTitle: '📊 UTAMA & KEUANGAN',
+                    items: [
+                        { id: 'dashboard', label: 'Dashboard Utama', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+                        { id: 'simpanan', label: 'Buku Simpanan & Kas', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                        { id: 'pinjaman', label: 'Simpan Pinjam', badge: role === 'admin' ? (pendingLoans.length + pendingCicilanCount) : 0, icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
+                        { id: 'shu', label: 'Sisa Hasil Usaha (SHU)', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' }
+                    ]
+                },
+                {
+                    groupTitle: '🤝 PROGRAM & KOMUNITAS',
+                    items: [
+                        { id: 'arisan', label: 'Arisan & Program', icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' },
+                        { id: 'zis', label: 'ZIS & Dana Sosial', badge: role === 'admin' ? pendingZisLen : 0, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
+                        { id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' },
+                        { id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' }
+                    ]
+                }
             ];
 
             if (role === 'admin') {
-                navs.splice(1, 0, { id: 'persetujuan', label: 'Persetujuan Transaksi', badge: pendingTrx.length, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0 z' });
-                const pendingRegLen = (appState.calonAnggota || []).length;
-                navs.splice(navs.length - 1, 0, { id: 'anggota', label: 'Daftar Anggota Keluarga', badge: pendingRegLen, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
-                navs.splice(navs.length - 1, 0, { id: 'bank', label: 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
+                navGroups.push({
+                    groupTitle: '🛡️ PANEL PENGURUS & ADMIN',
+                    items: [
+                        { id: 'persetujuan', label: 'Persetujuan Transaksi', badge: totalAllPending, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0 z' },
+                        { id: 'anggota', label: 'Daftar Anggota Keluarga', badge: pendingRegLen, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
+                        { id: 'bank', label: 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' },
+                        { id: 'pengaturan', label: 'Keamanan, Database & Audit', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' }
+                    ]
+                });
             }
 
-            navContainer.innerHTML = navs.map(n => `
-                <button onclick="window.switchTab('${n.id}')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition ${appState.activeTab === n.id ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}">
-                    <div class="flex items-center gap-3 overflow-hidden">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${n.icon}"></path></svg>
-                        <span class="truncate">${n.label}</span>
-                    </div>
-                    ${n.badge ? `<span class="px-2 py-0.5 text-[10px] rounded-full font-extrabold ${appState.activeTab === n.id ? 'bg-white text-emerald-700' : 'bg-amber-100 text-amber-800'}">${n.badge}</span>` : ''}
-                </button>
+            navGroups.push({
+                groupTitle: '👤 AKUN PRIBADI',
+                items: [
+                    { id: 'profil-saya', label: 'Profil & Kartu Saya', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
+                ]
+            });
+
+            navContainer.innerHTML = navGroups.map(grp => `
+                <div class="space-y-1 pt-2 first:pt-0">
+                    <div class="px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">${grp.groupTitle}</div>
+                    ${grp.items.map(n => `
+                        <button onclick="window.switchTab('${n.id}')" class="w-full flex items-center justify-between px-3.5 py-2 rounded-xl font-semibold text-xs transition ${appState.activeTab === n.id ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}">
+                            <div class="flex items-center gap-2.5 overflow-hidden">
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${n.icon}"></path></svg>
+                                <span class="truncate">${n.label}</span>
+                            </div>
+                            ${n.badge ? `<span class="px-2 py-0.5 text-[10px] rounded-full font-extrabold ${appState.activeTab === n.id ? 'bg-white text-emerald-700' : 'bg-amber-100 text-amber-800'}">${n.badge}</span>` : ''}
+                        </button>
+                    `).join('')}
+                </div>
             `).join('');
 
             document.getElementById('teksPengumuman').textContent = appState.pengumuman;
@@ -3387,6 +3424,93 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         function renderPersetujuanTab() {
+            const crossBox = document.getElementById('boxAntreanLintasModul');
+            if (crossBox) {
+                const pLoans = (appState.pinjaman || []).filter(p => p.status === 'Menunggu');
+                const pCicilans = [];
+                (appState.pinjaman || []).forEach(p => {
+                    (p.riwayatCicilan || []).forEach(c => {
+                        if (c.status === 'Menunggu') pCicilans.push({ p, c });
+                    });
+                });
+                const pZis = (appState.zis || []).filter(z => z.status === 'Menunggu');
+                const pReg = appState.calonAnggota || [];
+
+                const cards = [];
+                pLoans.forEach(p => {
+                    cards.push(`
+                        <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-300 flex flex-wrap justify-between items-center gap-2 text-xs">
+                            <div>
+                                <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[9px] font-extrabold uppercase">Pengajuan Pinjaman</span>
+                                <div class="font-bold mt-1">${window.escapeHtml(p.nama)} — <span class="text-emerald-600">${window.formatRupiah(p.nominal)}</span> (${p.tenor} Bln)</div>
+                                <div class="text-[10px] text-slate-500">Penjamin: ${window.escapeHtml(p.penjaminNama || '-')} • Keperluan: ${window.escapeHtml(p.keperluan)}</div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="window.updateStatusPinjaman('${p.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
+                                <button onclick="window.updateStatusPinjaman('${p.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                            </div>
+                        </div>
+                    `);
+                });
+                pCicilans.forEach(({ p, c }) => {
+                    cards.push(`
+                        <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-300 flex flex-wrap justify-between items-center gap-2 text-xs">
+                            <div>
+                                <span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 text-[9px] font-extrabold uppercase">Bayar Cicilan Pinjaman</span>
+                                <div class="font-bold mt-1">${window.escapeHtml(p.nama)} — <span class="text-emerald-600">${window.formatRupiah(c.total)}</span> (${c.bulanBayar} Bln)</div>
+                                <div class="text-[10px] text-slate-500">Tanggal: ${window.escapeHtml(c.tanggal)} • ${window.escapeHtml(c.catatan || '-')}</div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                ${c.bukti ? `<button onclick="window.lihatFotoBukti('${c.bukti}')" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg font-bold text-[10px]">🖼️ Bukti</button>` : ''}
+                                <button onclick="window.verifikasiCicilanPinjaman('${p.id}', '${c.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
+                                <button onclick="window.verifikasiCicilanPinjaman('${p.id}', '${c.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                            </div>
+                        </div>
+                    `);
+                });
+                pZis.forEach(z => {
+                    cards.push(`
+                        <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-300 flex flex-wrap justify-between items-center gap-2 text-xs">
+                            <div>
+                                <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[9px] font-extrabold uppercase">Donasi ZIS (${window.escapeHtml(z.jenis)})</span>
+                                <div class="font-bold mt-1">${window.escapeHtml(z.nama)} — <span class="text-emerald-600">${window.formatRupiah(z.nominal)}</span></div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="window.verifikasiZis('${z.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
+                                <button onclick="window.verifikasiZis('${z.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                            </div>
+                        </div>
+                    `);
+                });
+                pReg.forEach(c => {
+                    cards.push(`
+                        <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-300 flex flex-wrap justify-between items-center gap-2 text-xs">
+                            <div>
+                                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[9px] font-extrabold uppercase">Pendaftaran Anggota Baru</span>
+                                <div class="font-bold mt-1">${window.escapeHtml(c.nama)} (${window.escapeHtml(c.namaKeluarga)})</div>
+                                <div class="text-[10px] text-slate-500">WA: ${window.escapeHtml(c.kontak)} • Pengundang: ${window.escapeHtml(c.penjaminNama || '-')}</div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="window.verifikasiCalonAnggota('${c.id}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Terima</button>
+                                <button onclick="window.verifikasiCalonAnggota('${c.id}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                if (cards.length > 0) {
+                    crossBox.classList.remove('hidden');
+                    crossBox.innerHTML = `
+                        <div class="bg-amber-50/80 dark:bg-amber-950/30 p-4 rounded-2xl border border-amber-200 dark:border-amber-800 space-y-2.5">
+                            <h3 class="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">⚡ Antrean Persetujuan Pinjaman, Cicilan, ZIS & Anggota Baru (${cards.length})</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">${cards.join('')}</div>
+                        </div>
+                    `;
+                } else {
+                    crossBox.classList.add('hidden');
+                }
+            }
+
             const selectAllCb = document.getElementById('selectAllCheckbox');
             if (selectAllCb) selectAllCb.checked = false;
             const tbody = document.getElementById('tabelPersetujuanBody');
