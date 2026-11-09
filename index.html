@@ -63,9 +63,14 @@
                 </div>
             </form>
             <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-center space-y-2">
-                <button type="button" onclick="window.bukaModalRegistrasiMandiri()" class="w-full py-2.5 px-4 rounded-xl bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold text-xs transition border border-blue-200 dark:border-slate-700">
-                    📝 Belum punya akun? Daftar Anggota Baru
-                </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button type="button" onclick="window.bukaModalRegistrasiMandiri()" class="w-full py-2 px-3 rounded-xl bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold text-[11px] transition border border-blue-200 dark:border-slate-700">
+                        📝 Belum punya akun? Daftar Anggota Baru
+                    </button>
+                    <button type="button" onclick="window.mintaResetPinViaWa()" class="w-full py-2 px-3 rounded-xl bg-amber-50 dark:bg-slate-800 hover:bg-amber-100 text-amber-800 dark:text-amber-300 font-bold text-[11px] transition border border-amber-200 dark:border-slate-700">
+                        🔑 Lupa PIN? Hubungi Admin
+                    </button>
+                </div>
                 <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium pt-1">&copy; 2026 aufah tech. All rights reserved.</p>
             </div>
         </div>
@@ -107,6 +112,13 @@
                     <p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate" id="headerUserName">Super Admin</p>
                     <p class="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium truncate" id="headerUserRole">Super Admin (082298688189)</p>
                 </div>
+                <div class="hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-50 dark:bg-slate-800 border border-amber-200 dark:border-slate-700 text-[10px] font-bold text-amber-800 dark:text-amber-300" title="Sisa Waktu Sebelum Auto-Logout Otomatis">
+                    <span>⏱️</span>
+                    <span id="lblIdleTimerHeader">05:00</span>
+                </div>
+                <button onclick="window.kunciLayarCepat()" class="p-1.5 sm:p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-800 rounded-xl transition shrink-0 text-xs font-bold" title="Kunci Layar Cepat (Amankan Sesi)">
+                    🔒
+                </button>
                 <button onclick="window.handleLogout()" class="p-1.5 sm:p-2 text-slate-400 hover:text-rose-600 rounded-xl transition shrink-0" title="Keluar">
                     <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 </button>
@@ -134,6 +146,7 @@
             <div class="space-y-4 sm:space-y-5 w-full max-w-7xl mx-auto">
                 
                 <div id="tab-dashboard" class="space-y-4 sm:space-y-5 w-full">
+                    <div id="boxPengingatKewajibanPribadi" class="grid grid-cols-1 md:grid-cols-3 gap-2.5"></div>
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <div>
                             <div class="flex items-center gap-2">
@@ -918,6 +931,55 @@
                             </div>
                         </div>
 
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border space-y-1.5">
+                                <label class="block text-[10px] font-bold uppercase text-slate-500">⏱️ Auto-Logout Saat Tidak Ada Aktivitas (Idle Timeout)</label>
+                                <div class="flex gap-1.5">
+                                    <select id="selectIdleLogoutMinutes" onchange="window.ubahDurasiAutoLogout(this.value)" class="w-full bg-white dark:bg-slate-900 border rounded-lg px-2.5 py-1.5 text-xs font-bold outline-none">
+                                        <option value="3">3 Menit Tanpa Aktivitas</option>
+                                        <option value="5">5 Menit Tanpa Aktivitas (Rekomendasi)</option>
+                                        <option value="10">10 Menit Tanpa Aktivitas</option>
+                                        <option value="15">15 Menit Tanpa Aktivitas</option>
+                                        <option value="30">30 Menit Tanpa Aktivitas</option>
+                                    </select>
+                                    <button type="button" onclick="window.kunciLayarCepat()" class="px-3 py-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-extrabold shrink-0">🔒 Kunci Sekarang</button>
+                                </div>
+                                <p class="text-[10px] text-slate-400">Otomatis keluar dari sesi jika perangkat ditinggal tanpa aktivitas.</p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border space-y-1.5">
+                                <label class="block text-[10px] font-bold uppercase text-slate-500">📅 Kunci Tutup Buku Bulanan (Anti-Backdate)</label>
+                                <div class="flex gap-1.5">
+                                    <input type="month" id="inputPeriodeKunciBuku" class="w-full bg-white dark:bg-slate-900 border rounded-lg px-2.5 py-1.5 text-xs font-bold outline-none">
+                                    <button type="button" onclick="window.toggleKunciPeriodeBulan()" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold shrink-0">🔒 Kunci / Buka Bulan</button>
+                                </div>
+                                <div id="listPeriodeBukuTerkunciBox" class="text-[10px] text-indigo-600 dark:text-indigo-300 font-bold">Belum ada bulan dikunci</div>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-indigo-50/70 dark:bg-slate-800/80 border border-indigo-200 dark:border-slate-700 space-y-2.5">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                <div>
+                                    <h4 class="text-xs font-extrabold text-indigo-900 dark:text-indigo-300">🩺 Pemindai Integritas Akuntansi & Kesehatan Sistem (7-Point Zero-Loophole Audit)</h4>
+                                    <p class="text-[10px] text-slate-500">Memeriksa sinkronisasi saldo anggota, cicilan pinjaman, kas ZIS, duplikat bukti, dan keamanan PIN secara otomatis.</p>
+                                </div>
+                                <button type="button" onclick="window.jalankanAutoHealPembukuan()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] shadow-sm shrink-0">🛠️ Sinkronkan & Perbaiki Pembukuan</button>
+                            </div>
+                            <div id="gridHealthCheckBox" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-[11px]"></div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-teal-50/70 dark:bg-slate-800/80 border border-teal-200 dark:border-slate-700 space-y-2.5">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                                <h4 class="text-xs font-extrabold text-teal-900 dark:text-teal-300">⚖️ Rekonsiliasi & Opname Saldo Riil Rekening Bank vs Kas Sistem</h4>
+                                <span id="badgeStatusOpnameBank" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">Memeriksa...</span>
+                            </div>
+                            <div id="rincianOpnameKasSistemBox" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]"></div>
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
+                                <input type="number" id="inputSaldoRiilBank" placeholder="Masukkan Total Saldo Riil di Mutasi Rekening Bank (Rp)" class="flex-1 bg-white dark:bg-slate-900 border rounded-xl px-3 py-2 text-xs font-bold outline-none">
+                                <button type="button" onclick="window.simpanOpnameSaldoBank()" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shrink-0">💾 Cek & Simpan Opname Bank</button>
+                            </div>
+                        </div>
+
                         <div class="p-3.5 rounded-xl bg-amber-50/70 dark:bg-slate-800/80 border border-amber-200 dark:border-slate-700 space-y-2">
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
                                 <label class="text-[11px] font-extrabold text-amber-900 dark:text-amber-300">🔥 Konfigurasi Firebase Cloud Mandiri (Opsional — Realtime Firestore)</label>
@@ -1029,6 +1091,10 @@
                 <div id="boxSimulasiCicilanModal" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-[11px] flex justify-between items-center">
                     <span class="text-slate-500">Estimasi Angsuran (Pokok + Jasa):</span>
                     <strong id="lblEstimasiCicilanModal" class="text-emerald-600 font-bold">Rp 0 / bln</strong>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">👨‍👩‍👧‍👦 Pilih Penjamin Keluarga (Guarantor Resmi)</label>
+                    <select id="pinjamanPenjaminNama" required class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Keperluan Pinjaman</label>
@@ -1388,6 +1454,10 @@
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Catatan / Pesan Keluarga</label>
                     <input type="text" id="p2pCatatan" placeholder="Contoh: Tambahan tabungan keponakan / hadiah" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none">
                 </div>
+                <div class="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
+                    <label class="block text-[10px] font-extrabold uppercase text-amber-800 dark:text-amber-300 mb-1">🔑 Konfirmasi PIN Keamanan Pengirim (Wajib)</label>
+                    <input type="password" id="p2pPinKonfirmasi" required placeholder="Masukkan PIN Anda untuk otorisasi transfer" class="w-full bg-white dark:bg-slate-900 border border-amber-300 rounded-xl p-2 text-xs font-bold outline-none">
+                </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="document.getElementById('modalTransferP2P').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md">Kirim Saldo Sekarang</button>
@@ -1627,6 +1697,13 @@
                     <select id="setorArisanAnggota" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Metode Pembayaran Iuran</label>
+                    <select id="setorArisanMetode" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs font-bold outline-none">
+                        <option value="Potong Sukarela">⚡ Potong Saldo Simpanan Sukarela (Otomatis)</option>
+                        <option value="Tunai / Transfer Bank">🏦 Setor Tunai / Transfer Bank (Dicatat Bendahara)</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal Setoran (Rp)</label>
                     <input type="number" id="setorArisanNominal" required min="10000" class="w-full bg-slate-50 dark:bg-slate-800 border rounded-xl p-2.5 text-xs font-bold outline-none">
                 </div>
@@ -1695,8 +1772,9 @@
                     </table>
                 </div>
             </div>
-            <div class="flex justify-end gap-2 pt-2 no-print">
+            <div class="flex flex-wrap justify-end gap-2 pt-2 no-print">
                 <button type="button" onclick="document.getElementById('modalBukuAnggota').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border text-xs font-semibold">Tutup</button>
+                <button type="button" onclick="window.print()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm">🖨️ Cetak Buku Tabungan</button>
                 <button type="button" id="btnKirimRekeningKoranWa" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1">📲 Kirim Ringkasan WA</button>
                 <button type="button" onclick="window.print()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1">🖨️ Cetak Buku</button>
             </div>
@@ -1763,6 +1841,9 @@
             bukaPendaftaranMandiri: true,
             apiSecretToken: 'KOP-KELUARGA-2026',
             customFirebaseConfigJson: '',
+            idleLogoutMinutes: 5,
+            saldoRiilBankOpname: 0,
+            periodeBukuTerkunci: [],
             periodeShuTerbagikan: [],
             adArtText: "PASAL 1 — KEANGGOTAAN & SIMPANAN\n1. Setiap anggota keluarga wajib menyetor Simpanan Pokok (sekali saat bergabung) dan Simpanan Wajib secara rutin setiap bulan.\n2. Simpanan Pokok dan Simpanan Wajib tidak dapat ditarik selama masih berstatus anggota aktif.\n3. Simpanan Sukarela dapat disetor dan ditarik kapan saja selama tidak sedang menjadi jaminan pinjaman aktif.\n\nPASAL 2 — ATURAN PINJAMAN & ANGSURAN\n1. Plafon maksimal pinjaman adalah 3x dari total saldo simpanan anggota.\n2. Jasa pinjaman ditetapkan sebesar 1% flat per bulan untuk memperkuat SHU Koperasi.\n3. Selama memiliki sisa hutang aktif, tabungan anggota sebesar sisa pokok hutang dikunci sebagai jaminan.\n\nPASAL 3 — PEMBAGIAN SHU & DANA SOSIAL (ZIS)\n1. SHU Bersih dialokasikan 40% Jasa Modal, 20% Jasa Pinjaman, 25% Cadangan Koperasi, dan 15% Dana Sosial/ZIS.\n2. Seluruh saldo tabungan anggota dilindungi dan tercatat beserta nama Ahli Waris resmi.",
             notulensiRapat: [
@@ -1974,20 +2055,54 @@
         };
 
         // Perhitungan Batas Penarikan & Collateral Lock (Kunci Jaminan Hutang)
-        window.hitungBatasPenarikanAnggota = (anggotaId, kategori = 'Simpanan Sukarela') => {
+        window.hitungBatasPenarikanAnggota = (anggotaId, kategori = 'Simpanan Sukarela', excludeTrxId = null) => {
             const rincian = window.hitungRincianSimpananAnggota(anggotaId);
             const activeLoans = (appState.pinjaman || []).filter(p => p.status === 'Disetujui' && p.anggotaId === anggotaId);
             const sisaHutangAktif = activeLoans.reduce((acc, p) => acc + window.hitungSisaPokokPinjaman(p), 0);
-            const saldoBebasJaminan = Math.max(0, rincian.total - sisaHutangAktif);
+
+            // Hitung nominal penarikan yang masih berstatus Menunggu (Pending Hold) agar tidak bisa Double-Spend
+            const pendingWithdrawals = (appState.transaksi || []).filter(t =>
+                t.anggotaId === anggotaId &&
+                t.tipe === 'Penarikan' &&
+                t.status === 'Menunggu' &&
+                t.id !== excludeTrxId
+            );
+            const penarikanMenungguTotal = pendingWithdrawals.reduce((acc, t) => acc + (Number(t.nominal) || 0), 0);
+            const penarikanMenungguKategori = pendingWithdrawals
+                .filter(t => t.kategori === kategori)
+                .reduce((acc, t) => acc + (Number(t.nominal) || 0), 0);
+
+            // Hitung Tanggungan Jaminan Silang (Guarantor Cross-Collateral Lock) jika anggota ini menjadi Penjamin Akad aktif
+            const memberObj = (appState.anggota || []).find(a => a.id === anggotaId);
+            let tanggunganPenjamin = 0;
+            if (memberObj) {
+                const guaranteedLoans = (appState.pinjaman || []).filter(p =>
+                    p.status === 'Disetujui' &&
+                    p.anggotaId !== anggotaId &&
+                    p.penjaminNama === memberObj.nama
+                );
+                tanggunganPenjamin = guaranteedLoans.reduce((acc, p) => {
+                    const sisaPokokPeminjam = window.hitungSisaPokokPinjaman(p);
+                    const tabunganPeminjam = window.hitungSaldoAnggota(p.anggotaId);
+                    // Eksposur risiko penjamin adalah selisih hutang peminjam yang tidak tertutup tabungan peminjam sendiri
+                    return acc + Math.max(0, sisaPokokPeminjam - tabunganPeminjam);
+                }, 0);
+            }
+
+            const saldoBebasJaminan = Math.max(0, rincian.total - sisaHutangAktif - tanggunganPenjamin - penarikanMenungguTotal);
 
             let saldoKategori = rincian.sukarela;
             if (kategori === 'Simpanan Pokok') saldoKategori = rincian.pokok;
             else if (kategori === 'Simpanan Wajib') saldoKategori = rincian.wajib;
 
-            const maxBisaDitarik = Math.max(0, Math.min(saldoKategori, saldoBebasJaminan));
+            const saldoKategoriEfektif = Math.max(0, saldoKategori - penarikanMenungguKategori);
+            const maxBisaDitarik = Math.max(0, Math.min(saldoKategoriEfektif, saldoBebasJaminan));
             return {
                 rincian,
                 sisaHutangAktif,
+                tanggunganPenjamin,
+                penarikanMenungguTotal,
+                penarikanMenungguKategori,
                 saldoKategori,
                 saldoBebasJaminan,
                 maxBisaDitarik
@@ -2014,8 +2129,7 @@
             const totalBungaPinjaman = (appState.pinjaman || [])
                 .filter(p => p.status === 'Disetujui' || p.status === 'Lunas')
                 .reduce((acc, p) => {
-                    const rate = p.bungaPersen !== undefined ? (Number(p.bungaPersen) / 100) : defaultBunga;
-                    return acc + ((Number(p.nominal) || 0) * rate * (Number(p.tenor) || 1));
+                    return acc + (Number(p.bungaTerbayar) || 0);
                 }, 0);
             const totalPemasukanUsaha = (appState.pemasukanUsaha || []).reduce((acc, p) => acc + (Number(p.nominal) || 0), 0);
             const shuDasar = totalPemasukanUsaha > 0 ? totalPemasukanUsaha : (Number(appState.totalShu) || 0);
@@ -2081,7 +2195,8 @@
                 alokasiShuSosial: shuSummary.nominalSosial,
                 totalMasuk,
                 penyaluran,
-                saldoTersedia
+                saldoTersedia,
+                saldoKasZis: saldoTersedia
             };
         };
 
@@ -2255,6 +2370,20 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
 
         function restoreSavedSessionAndTab() {
             if (appState.currentUserId) {
+                const lastAct = Number(localStorage.getItem('koperasi_last_activity_at') || Date.now());
+                const maxIdleMs = (Number(appState.idleLogoutMinutes) || 5) * 60 * 1000;
+                if (Date.now() - lastAct > maxIdleMs) {
+                    appState.currentUserId = null;
+                    currentUserSession = null;
+                    saveStateToLocalStorage();
+                    const banner = document.getElementById('loginLockoutBanner');
+                    if (banner) {
+                        banner.classList.remove('hidden');
+                        banner.textContent = `⏱️ Sesi sebelumnya otomatis dikeluarkan karena tidak ada aktivitas lebih dari ${appState.idleLogoutMinutes || 5} menit.`;
+                    }
+                    return false;
+                }
+                localStorage.setItem('koperasi_last_activity_at', String(Date.now()));
                 const savedUser = (appState.anggota || []).find(a => a.id === appState.currentUserId);
                 if (savedUser) {
                     currentUserSession = savedUser;
@@ -2409,6 +2538,8 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             if (found) {
                 localStorage.removeItem('koperasi_failed_pin_count');
                 localStorage.removeItem('koperasi_login_lock_until');
+                localStorage.setItem('koperasi_last_activity_at', String(Date.now()));
+                window._lastActivityTime = Date.now();
                 if (banner) banner.classList.add('hidden');
                 currentUserSession = found;
                 appState.currentUserId = found.id;
@@ -2725,6 +2856,7 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             const approvedTrx = appState.transaksi.filter(t => t.status === 'Disetujui');
             window.renderNeracaKoperasi();
             window.renderIuranWajibTracker();
+            window.renderPengingatKewajibanPribadi();
             renderDashboardVoting();
             renderRecentTransactions();
             renderPersetujuanTab();
@@ -2949,12 +3081,13 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                     <div class="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3 relative">
                         ${role === 'admin' ? `
                             <div class="absolute top-3 right-3 flex items-center gap-1">
+                                <button onclick="window.toggleKunciVoting('${v.id}')" class="text-amber-700 hover:text-amber-900 text-[10px] font-bold px-2 py-1 rounded-lg bg-amber-100 dark:bg-amber-950/50" title="Kunci / Buka Hasil Voting">${v.terkunci ? '🔓 Buka' : '🔒 Kunci'}</button>
                                 <button onclick="window.bukaModalEditVoting('${v.id}')" class="text-emerald-600 hover:text-emerald-800 text-[11px] font-bold px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40" title="Edit Topik & Opsi Voting">✏️ Edit</button>
                                 <button onclick="window.hapusVoting('${v.id}')" class="text-rose-500 hover:text-rose-700 text-[11px] font-bold px-2 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40" title="Hapus Voting">🗑️</button>
                             </div>
                         ` : ''}
-                        <div class="pr-16">
-                            <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 rounded-full">Voting Keluarga</span>
+                        <div class="pr-24">
+                            <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 ${v.terkunci ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'} rounded-full">${v.terkunci ? '🔒 Keputusan Terkunci' : '🟢 Voting Aktif'}</span>
                             <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm mt-1 break-words">${window.escapeHtml(v.pertanyaan)}</h4>
                             <p class="text-[10px] text-slate-400 mt-0.5">Oleh: ${window.escapeHtml(v.pembuat || 'Admin')} • Total: ${totalSuara} suara</p>
                         </div>
@@ -2988,6 +3121,10 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         window.pilihOpsiVoting = (votingId, opsiIdx) => {
             const v = appState.votings.find(item => item.id === votingId);
             if (v) {
+                if (v.terkunci) {
+                    window.showToast('🔒 Pemungutan suara untuk topik ini sudah ditutup dan disahkan oleh Pengurus!', 'info');
+                    return;
+                }
                 if (!v.suara) v.suara = {};
                 v.suara[currentUserSession.kontak] = opsiIdx;
                 window.catatLogAudit('VOTING', `Memilih opsi "${v.opsi[opsiIdx]}" pada voting "${v.pertanyaan}"`);
@@ -3147,6 +3284,7 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                     <td class="py-3 px-3 font-extrabold">${window.formatRupiah(t.nominal)}</td>
                     <td class="py-3 px-3">
                         ${t.bukti ? `<button onclick="window.lihatFotoBukti('${t.bukti}')" class="text-blue-600 underline text-[11px] font-bold flex items-center gap-1">🖼️ Lihat Foto</button>` : '<span class="text-slate-400 text-[11px]">Tanpa Foto</span>'}
+                        ${t.duplikatBukti ? `<span class="mt-0.5 inline-block px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-extrabold animate-pulse">⚠️ Bukti Kembar!</span>` : ''}
                     </td>
                     <td class="py-3 px-3 text-slate-500">${window.escapeHtml(t.keterangan || '-')}</td>
                     <td class="py-3 px-3 text-center space-x-1">
@@ -3169,7 +3307,7 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             }
 
             if (statusBaru === 'Disetujui' && t.tipe === 'Penarikan') {
-                const batas = window.hitungBatasPenarikanAnggota(t.anggotaId, t.kategori);
+                const batas = window.hitungBatasPenarikanAnggota(t.anggotaId, t.kategori, t.id);
                 if (Number(t.nominal) > batas.maxBisaDitarik) {
                     window.showToast(`Gagal Setujui: Saldo ${t.kategori} bebas jaminan milik ${t.nama} hanya ${window.formatRupiah(batas.maxBisaDitarik)}!`, 'error');
                     return;
@@ -3195,7 +3333,7 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             appState.transaksi.forEach(t => {
                 if (ids.includes(t.id) && t.status === 'Menunggu') {
                     if (t.tipe === 'Penarikan') {
-                        const batas = window.hitungBatasPenarikanAnggota(t.anggotaId, t.kategori);
+                        const batas = window.hitungBatasPenarikanAnggota(t.anggotaId, t.kategori, t.id);
                         if (Number(t.nominal) > batas.maxBisaDitarik) {
                             skippedCount++;
                             return;
@@ -3341,7 +3479,9 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                 infoBox.innerHTML = `
                     <div class="font-bold">🔒 Proteksi Penarikan & Jaminan Pinjaman:</div>
                     <div>• Saldo ${window.escapeHtml(katSelect.value)}: <strong>${window.formatRupiah(batas.saldoKategori)}</strong></div>
-                    <div>• Sisa Hutang Pinjaman Aktif (Ditahan): <strong class="text-rose-600">${window.formatRupiah(batas.sisaHutangAktif)}</strong></div>
+                    <div>• Penarikan Masih Mengantre (Pending Hold): <strong class="text-amber-600">${window.formatRupiah(batas.penarikanMenungguTotal || 0)}</strong></div>
+                    <div>• Sisa Hutang Pinjaman Sendiri (Ditahan): <strong class="text-rose-600">${window.formatRupiah(batas.sisaHutangAktif)}</strong></div>
+                    ${(batas.tanggunganPenjamin || 0) > 0 ? `<div>• Tanggungan Jaminan Silang (Sebagai Penjamin Akad): <strong class="text-rose-600">${window.formatRupiah(batas.tanggunganPenjamin)}</strong></div>` : ''}
                     <div>• Maksimal Bisa Ditarik Saat Ini: <strong class="text-emerald-700 dark:text-emerald-300 underline">${window.formatRupiah(batas.maxBisaDitarik)}</strong></div>
                 `;
             } else {
@@ -3433,12 +3573,24 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             }
 
             let buktiUrl = '';
+            let buktiHash = '';
+            let isDuplikatBukti = false;
             if (fileInput.files && fileInput.files[0]) {
                 buktiUrl = await window.kompresGambarBukti(fileInput.files[0]);
+                buktiHash = window.hitungHashBuktiFoto(buktiUrl);
+                isDuplikatBukti = window.cekDuplikatBuktiFoto(buktiHash, document.getElementById('editTransaksiId').value);
+                if (isDuplikatBukti) {
+                    window.catatLogAudit('PERINGATAN_BUKTI_KEMBAR', `Deteksi unggahan foto bukti transfer kembar oleh ${anggotaObj ? anggotaObj.nama : 'Anggota'}`);
+                    window.showToast('⚠️ Peringatan: Foto bukti transfer ini terdeteksi identik/kembar dengan transaksi sebelumnya! Sistem menandai transaksi ini untuk pemeriksaan Admin.', 'error');
+                }
             }
 
             const now = new Date();
             const waktuStr = now.toISOString().slice(0, 16).replace('T', ' ');
+            if (window.cekApakahPeriodeTerkunci(waktuStr) && currentUserSession.kontak !== '082298688189') {
+                window.showToast(`Periode buku ${waktuStr.slice(0, 7)} sudah dikunci oleh Pengurus! Tidak dapat menambah/mengubah transaksi pada bulan tersebut.`, 'error');
+                return;
+            }
 
             const editTrxId = document.getElementById('editTransaksiId').value;
             if (editTrxId) {
@@ -3471,6 +3623,8 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                 nominal,
                 status: role === 'admin' ? 'Disetujui' : 'Menunggu',
                 bukti: buktiUrl,
+                buktiHash,
+                duplikatBukti: isDuplikatBukti,
                 bankTujuan: tipe === 'Setoran' ? bankTujuan : '',
                 keterangan
             };
@@ -3549,7 +3703,10 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                             </div>
                         ` : ''}
 
-                        <p class="text-[11px] text-slate-500 italic">Keperluan: ${window.escapeHtml(p.keperluan)}</p>
+                        <div class="flex flex-wrap justify-between items-center gap-1 text-[11px] text-slate-500">
+                            <span class="italic">Keperluan: ${window.escapeHtml(p.keperluan)}</span>
+                            <span class="font-semibold text-emerald-700 dark:text-emerald-400">🛡️ Penjamin: ${window.escapeHtml(p.penjaminNama || '-')}</span>
+                        </div>
 
                         ${(p.riwayatCicilan && p.riwayatCicilan.length > 0) ? `
                             <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
@@ -3601,8 +3758,13 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
 
         // Verifikasi Admin untuk Cicilan yang Diinput Anggota
         window.verifikasiCicilanPinjaman = (pinjamanId, cicilanId, keputusan) => {
+            if (!window.verifyAdminIntegrity()) return;
             const p = (appState.pinjaman || []).find(x => x.id === pinjamanId);
             if (!p || !p.riwayatCicilan) return;
+            if (keputusan === 'Disetujui' && currentUserSession.kontak !== '082298688189' && p.anggotaId === currentUserSession.id) {
+                window.showToast('Proteksi Keamanan (Four-Eyes Principle): Pengurus tidak dapat menyetujui cicilan pinjaman miliknya sendiri. Hubungi Super Admin!', 'error');
+                return;
+            }
             const c = p.riwayatCicilan.find(x => x.id === cicilanId);
             if (!c || c.status !== 'Menunggu') return;
 
@@ -3670,6 +3832,12 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
 
             document.getElementById('lblModalSisaPlafon').textContent = window.formatRupiah(sisaPlafon);
             document.getElementById('lblModalKasTersedia').textContent = window.formatRupiah(kasInfo.kasLikuidTersedia);
+            const selGuarantor = document.getElementById('pinjamanPenjaminNama');
+            if (selGuarantor) {
+                const kandidatPenjamin = (appState.anggota || []).filter(a => a.id !== currentUserSession.id);
+                selGuarantor.innerHTML = `<option value="">-- Pilih Anggota Keluarga Penjamin --</option>` +
+                    kandidatPenjamin.map(a => `<option value="${window.escapeHtml(a.nama)}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
+            }
 
             const selectTenor = document.getElementById('pinjamanTenor');
             const options = [1, 3, 6, 9, 12, 18, 24].filter(m => m <= ps.maxTenor);
@@ -3789,6 +3957,8 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                 tenor,
                 bungaPersen: ps.bungaPersen,
                 keperluan: keperluan || '-',
+                penjaminNama: document.getElementById('pinjamanPenjaminNama')?.value || '-',
+                tanggalPengajuan: new Date().toISOString().slice(0, 10),
                 status: 'Menunggu',
                 tenorTerbayar: 0,
                 pokokTerbayar: 0,
@@ -3825,7 +3995,10 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             const selectBulan = document.getElementById('cicilanJumlahBulan');
             let opts = '';
             for (let i = 1; i <= sisaTenor; i++) {
-                opts += `<option value="${i}">${i} Bulan ${i === sisaTenor ? '(Pelunasan Penuh)' : ''}</option>`;
+                opts += `<option value="${i}">${i} Bulan ${i === sisaTenor ? '(Angsuran Normal Penuh)' : ''}</option>`;
+            }
+            if (sisaTenor > 1) {
+                opts += `<option value="EARLY_PAYOFF">⚡ Pelunasan Pokok Dipercepat (${sisaTenor} Bln — Bebas Jasa Sisa Tenor!)</option>`;
             }
             selectBulan.innerHTML = opts;
             document.getElementById('formBayarCicilan').reset();
@@ -3838,11 +4011,18 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             const id = document.getElementById('cicilanPinjamanId').value;
             const p = appState.pinjaman.find(x => x.id === id);
             if (!p) return;
-            const jmlBulan = parseInt(document.getElementById('cicilanJumlahBulan').value) || 1;
+            const rawVal = document.getElementById('cicilanJumlahBulan').value;
             const ratePersen = p.bungaPersen !== undefined ? Number(p.bungaPersen) : Number(appState.pinjamanSetting?.bungaPersen ?? 1);
             const pokokPerBulan = p.nominal / p.tenor;
             const bungaPerBulan = p.nominal * (ratePersen / 100);
-            const totalBayar = Math.round((pokokPerBulan + bungaPerBulan) * jmlBulan);
+            let totalBayar = 0;
+            if (rawVal === 'EARLY_PAYOFF') {
+                const sisaPokok = window.hitungSisaPokokPinjaman(p);
+                totalBayar = Math.round(sisaPokok + bungaPerBulan);
+            } else {
+                const jmlBulan = parseInt(rawVal) || 1;
+                totalBayar = Math.round((pokokPerBulan + bungaPerBulan) * jmlBulan);
+            }
             document.getElementById('cicilanNominalBayar').value = totalBayar;
 
             const metode = document.getElementById('cicilanMetodeBayar')?.value || 'Transfer Bank';
@@ -3867,23 +4047,36 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
 
-            const jmlBulan = parseInt(document.getElementById('cicilanJumlahBulan').value) || 1;
+            const rawBulanVal = document.getElementById('cicilanJumlahBulan').value;
+            const isEarlyPayoff = (rawBulanVal === 'EARLY_PAYOFF');
+            const sisaTenorSaatIni = Math.max(1, p.tenor - (Number(p.tenorTerbayar) || 0));
+            const jmlBulan = isEarlyPayoff ? sisaTenorSaatIni : (parseInt(rawBulanVal) || 1);
             const ratePersen = p.bungaPersen !== undefined ? Number(p.bungaPersen) : Number(appState.pinjamanSetting?.bungaPersen ?? 1);
-            const pokokBayar = (p.nominal / p.tenor) * jmlBulan;
-            const bungaBayar = (p.nominal * (ratePersen / 100)) * jmlBulan;
+            const pokokBayar = isEarlyPayoff ? window.hitungSisaPokokPinjaman(p) : ((p.nominal / p.tenor) * jmlBulan);
+            const bungaBayar = isEarlyPayoff ? (p.nominal * (ratePersen / 100)) : ((p.nominal * (ratePersen / 100)) * jmlBulan);
             const totalBayar = Math.round(pokokBayar + bungaBayar);
             const catatan = document.getElementById('cicilanCatatan').value.trim();
             const fileInput = document.getElementById('cicilanBuktiFoto');
 
             let buktiUrl = '';
+            let buktiHash = '';
+            let isDuplikatBukti = false;
             if (fileInput.files && fileInput.files[0]) {
                 buktiUrl = await window.kompresGambarBukti(fileInput.files[0]);
+                buktiHash = window.hitungHashBuktiFoto(buktiUrl);
+                isDuplikatBukti = window.cekDuplikatBuktiFoto(buktiHash);
+                if (isDuplikatBukti) {
+                    window.catatLogAudit('PERINGATAN_BUKTI_KEMBAR', `Deteksi foto bukti cicilan kembar pada pinjaman ${p.nama}`);
+                    window.showToast('⚠️ Peringatan: Foto bukti transfer cicilan ini terdeteksi kembar dengan transaksi sebelumnya!', 'error');
+                }
             }
 
             const metodeBayar = document.getElementById('cicilanMetodeBayar')?.value || 'Transfer Bank';
             if (metodeBayar === 'Potong Sukarela') {
-                const r = window.hitungRincianSimpananAnggota(p.anggotaId);
-                if (totalBayar > r.sukarela) {
+                const batasSukarela = window.hitungBatasPenarikanAnggota(p.anggotaId, 'Simpanan Sukarela');
+                const r = batasSukarela.rincian;
+                const sukarelaTersedia = Math.max(0, r.sukarela - (batasSukarela.penarikanMenungguKategori || 0));
+                if (totalBayar > sukarelaTersedia) {
                     window.showToast(`Saldo Simpanan Sukarela ${p.nama} (${window.formatRupiah(r.sukarela)}) tidak mencukupi untuk potong otomatis sebesar ${window.formatRupiah(totalBayar)}!`, 'error');
                     return;
                 }
@@ -4532,6 +4725,10 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                     ? 'w-full py-2 px-3 rounded-lg font-extrabold text-xs bg-emerald-600 text-white shadow-sm transition'
                     : 'w-full py-2 px-3 rounded-lg font-extrabold text-xs bg-rose-600 text-white shadow-sm transition';
             }
+            const selIdle = document.getElementById('selectIdleLogoutMinutes');
+            if (selIdle) selIdle.value = String(appState.idleLogoutMinutes || 5);
+            window.renderRekonsiliasiDanKunciBuku();
+            window.renderSystemHealthScanner();
             const thumb = document.getElementById('qrisPreviewThumb');
             const ph = document.getElementById('qrisPlaceholderText');
             if (thumb && ph) {
@@ -4752,6 +4949,9 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                             ${isArisan && role === 'admin' ? `
                                 <button onclick="window.kocokUndianArisan('${ar.id}')" class="flex-1 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl font-extrabold text-xs shadow-sm">🎲 Kocok Undian</button>
                             ` : ''}
+                            ${!isArisan && role === 'admin' && (Number(ar.terkumpul) || 0) > 0 ? `
+                                <button onclick="window.cairkanProgramTabungan('${ar.id}')" class="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-extrabold text-xs shadow-sm">💸 Cairkan Program</button>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -4832,22 +5032,62 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         window.bukaModalSetorArisan = (arisanId) => {
             const ar = (appState.arisanPrograms || []).find(x => x.id === arisanId);
             if (!ar) return;
+            const isSuperAdmin = currentUserSession.kontak === '082298688189';
+            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
             document.getElementById('setorArisanId').value = ar.id;
             document.getElementById('modalSetorArisanTitle').textContent = `Setor Iuran: ${ar.nama}`;
             const sel = document.getElementById('setorArisanAnggota');
             sel.innerHTML = appState.anggota.map(a => `<option value="${window.escapeHtml(a.nama)}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
             sel.value = currentUserSession.nama;
+            sel.disabled = (role !== 'admin');
+            const selMetode = document.getElementById('setorArisanMetode');
+            if (selMetode) {
+                selMetode.value = 'Potong Sukarela';
+            }
             document.getElementById('setorArisanNominal').value = ar.iuran || 100000;
             document.getElementById('modalSetorArisan').classList.remove('hidden');
         };
 
         window.simpanSetoranArisan = (e) => {
             e.preventDefault();
+            const isSuperAdmin = currentUserSession.kontak === '082298688189';
+            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
             const id = document.getElementById('setorArisanId').value;
             const ar = (appState.arisanPrograms || []).find(x => x.id === id);
             if (!ar) return;
-            const nama = document.getElementById('setorArisanAnggota').value;
+            const nama = role === 'admin' ? document.getElementById('setorArisanAnggota').value : currentUserSession.nama;
+            const anggotaObj = (appState.anggota || []).find(a => a.nama === nama) || currentUserSession;
+            const metode = document.getElementById('setorArisanMetode')?.value || 'Potong Sukarela';
             const nominal = parseFloat(document.getElementById('setorArisanNominal').value) || 0;
+            if (nominal <= 0) return;
+
+            if (metode === 'Tunai / Transfer Bank' && role !== 'admin') {
+                window.showToast('Pencatatan setoran Tunai/Bank langsung hanya dapat dilakukan oleh Bendahara/Admin, atau gunakan metode Potong Saldo Sukarela!', 'error');
+                return;
+            }
+
+            if (metode === 'Potong Sukarela') {
+                const batas = window.hitungBatasPenarikanAnggota(anggotaObj.id, 'Simpanan Sukarela');
+                if (nominal > batas.maxBisaDitarik) {
+                    window.showToast(`Saldo Simpanan Sukarela bebas jaminan milik ${nama} (${window.formatRupiah(batas.maxBisaDitarik)}) tidak mencukupi untuk potong iuran ${window.formatRupiah(nominal)}!`, 'error');
+                    return;
+                }
+                const waktuStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+                appState.transaksi.push({
+                    id: 't_arisan_cut_' + Date.now(),
+                    waktu: waktuStr,
+                    anggotaId: anggotaObj.id,
+                    nama: anggotaObj.nama,
+                    tipe: 'Penarikan',
+                    kategori: 'Simpanan Sukarela',
+                    nominal,
+                    status: 'Disetujui',
+                    bukti: '',
+                    bankTujuan: 'Potong Saldo Iuran Program',
+                    keterangan: `Potong Saldo Sukarela untuk iuran ${ar.nama}`
+                });
+            }
+
             if (!ar.pesertaSetor) ar.pesertaSetor = [];
             ar.pesertaSetor.push({
                 id: 'as_' + Date.now(),
@@ -4856,11 +5096,32 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                 nominal
             });
             ar.terkumpul = (Number(ar.terkumpul) || 0) + nominal;
-            window.catatLogAudit('SETOR_ARISAN', `${nama} menyetor ${window.formatRupiah(nominal)} ke ${ar.nama}`);
+            window.catatLogAudit('SETOR_ARISAN', `${nama} menyetor ${window.formatRupiah(nominal)} ke ${ar.nama} (${metode})`);
             saveStateToCloud();
             document.getElementById('modalSetorArisan').classList.add('hidden');
             renderApp();
-            window.showToast(`Setoran ${nama} berhasil dicatat ke ${ar.nama}!`);
+            window.showToast(`Setoran ${nama} (${metode}) berhasil dicatat ke ${ar.nama}!`);
+        };
+
+        window.cairkanProgramTabungan = (arisanId) => {
+            if (!window.verifyAdminIntegrity()) return;
+            const ar = (appState.arisanPrograms || []).find(x => x.id === arisanId);
+            if (!ar || (Number(ar.terkumpul) || 0) <= 0) return;
+            const totalDana = Number(ar.terkumpul) || 0;
+            window.showConfirmModal(
+                `Cairkan Dana Program: ${ar.nama}`,
+                `Total dana terkumpul pada program "${ar.nama}" sebesar ${window.formatRupiah(totalDana)} akan dicairkan untuk pelaksanaan program keluarga dan saldo program di-reset ke Rp 0. Lanjutkan?`,
+                () => {
+                    const tgl = new Date().toISOString().slice(0, 10);
+                    ar.pemenangTerakhir = `Dicairkan Rp ${totalDana.toLocaleString('id-ID')} (${tgl})`;
+                    ar.terkumpul = 0;
+                    ar.pesertaSetor = [];
+                    window.catatLogAudit('CAIRKAN_PROGRAM', `Mencairkan dana program ${ar.nama} sebesar ${window.formatRupiah(totalDana)}`);
+                    saveStateToCloud();
+                    renderApp();
+                    window.showToast(`Dana program ${ar.nama} sebesar ${window.formatRupiah(totalDana)} berhasil dicairkan!`);
+                }
+            );
         };
 
         window.kocokUndianArisan = (arisanId) => {
@@ -5238,8 +5499,14 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         window.simpanBebanOperasional = (e) => {
             e.preventDefault();
             const editId = document.getElementById('editBebanId').value;
+            if (!window.verifyAdminIntegrity()) return;
             const keterangan = document.getElementById('bebanKeterangan').value.trim();
             const nominal = parseFloat(document.getElementById('bebanNominal').value) || 0;
+            const kasInfo = window.hitungKasLikuidKoperasi();
+            if (nominal <= 0 || nominal > kasInfo.kasLikuidTersedia) {
+                window.showToast(`Nominal beban operasional tidak boleh melebihi Kas Likuid Koperasi yang tersedia (${window.formatRupiah(kasInfo.kasLikuidTersedia)})!`, 'error');
+                return;
+            }
 
             if (editId) {
                 const existing = (appState.bebanOperasional || []).find(b => b.id === editId);
@@ -5322,13 +5589,33 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         window.simpanProfilMandiri = (e) => {
             e.preventDefault();
             const newKontak = document.getElementById('mandiriKontak').value.trim();
+            const newPin = document.getElementById('mandiriPin').value.trim();
+            if (newPin.length < 4) {
+                window.showToast('PIN Keamanan minimal harus terdiri dari 4 karakter/angka!', 'error');
+                return;
+            }
+            if (currentUserSession.kontak === '082298688189' && newKontak !== '082298688189') {
+                window.showToast('Nomor utama Super Admin (082298688189) dikunci sebagai identitas otorisasi utama sistem!', 'error');
+                document.getElementById('mandiriKontak').value = '082298688189';
+                return;
+            }
             if (appState.anggota.some(a => a.id !== currentUserSession.id && a.kontak === newKontak)) {
                 window.showToast('Nomor WhatsApp tersebut sudah digunakan anggota lain!', 'error');
                 return;
             }
+            const oldKontak = currentUserSession.kontak;
             currentUserSession.kontak = newKontak;
             currentUserSession.email = document.getElementById('mandiriEmail').value.trim();
-            currentUserSession.pin = document.getElementById('mandiriPin').value.trim();
+            currentUserSession.pin = newPin;
+            // Pertahankan hak suara voting saat anggota mengganti nomor WA agar tidak bisa voting ganda
+            if (oldKontak && oldKontak !== newKontak) {
+                (appState.votings || []).forEach(v => {
+                    if (v.suara && v.suara[oldKontak] !== undefined) {
+                        v.suara[newKontak] = v.suara[oldKontak];
+                        delete v.suara[oldKontak];
+                    }
+                });
+            }
             currentUserSession.ahliWaris = document.getElementById('mandiriAhliWaris').value.trim();
             currentUserSession.hubunganWaris = document.getElementById('mandiriHubunganWaris').value.trim();
 
@@ -5554,6 +5841,13 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
 
         window.simpanTransferP2P = (e) => {
             e.preventDefault();
+            const pinKonfirmasi = (document.getElementById('p2pPinKonfirmasi')?.value || '').trim();
+            if (pinKonfirmasi !== String(currentUserSession.pin)) {
+                window.catatLogAudit('GAGAL_PIN_P2P', `Konfirmasi PIN salah saat mencoba transfer P2P oleh ${currentUserSession.nama}`);
+                saveStateToCloud();
+                window.showToast('PIN Keamanan salah! Transfer P2P dibatalkan demi keamanan saldo Anda.', 'error');
+                return;
+            }
             const tujuanId = document.getElementById('p2pAnggotaTujuan').value;
             const nominal = parseFloat(document.getElementById('p2pNominal').value) || 0;
             const catatan = document.getElementById('p2pCatatan').value.trim();
@@ -5764,7 +6058,8 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                 <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border space-y-1.5">
                     <div class="flex justify-between"><span>Nama Peminjam (Pihak Kedua):</span><strong>${window.escapeHtml(p.nama)} (${window.escapeHtml(a.namaKeluarga || '-')})</strong></div>
                     <div class="flex justify-between"><span>Nomor WhatsApp / Kontak:</span><strong>${window.escapeHtml(a.kontak || '-')}</strong></div>
-                    <div class="flex justify-between"><span>Ahli Waris / Penjamin Keluarga:</span><strong>${window.escapeHtml(a.ahliWaris || '-')} (${window.escapeHtml(a.hubunganWaris || '-')})</strong></div>
+                    <div class="flex justify-between"><span>Penjamin Keluarga (Guarantor Akad):</span><strong class="text-emerald-700">${window.escapeHtml(p.penjaminNama || a.ahliWaris || '-')}</strong></div>
+                    <div class="flex justify-between"><span>Ahli Waris Tercatat:</span><strong>${window.escapeHtml(a.ahliWaris || '-')} (${window.escapeHtml(a.hubunganWaris || '-')})</strong></div>
                     <div class="flex justify-between"><span>Saldo Simpanan Terkunci (Jaminan):</span><strong class="text-blue-600">${window.formatRupiah(r.total)}</strong></div>
                     <div class="flex justify-between pt-1 border-t"><span>Pokok Pinjaman Dicairkan:</span><strong class="text-emerald-600 font-black">${window.formatRupiah(p.nominal)}</strong></div>
                     <div class="flex justify-between"><span>Tenor & Jasa Bulanan:</span><strong>${p.tenor} Bulan (Jasa ${ratePersen}% Flat / Bulan)</strong></div>
@@ -6184,6 +6479,371 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             document.getElementById('modalKartuAnggota').classList.remove('hidden');
         };
 
+
+        // Mesin Auto-Logout Saat Tidak Ada Aktivitas (Idle Session Watchdog)
+        window._lastActivityTime = Number(localStorage.getItem('koperasi_last_activity_at') || Date.now());
+        window._idleThrottleTime = 0;
+
+        window.resetIdleTimer = () => {
+            const now = Date.now();
+            window._lastActivityTime = now;
+            if (now - window._idleThrottleTime > 2000) {
+                window._idleThrottleTime = now;
+                localStorage.setItem('koperasi_last_activity_at', String(now));
+            }
+        };
+
+        ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+            window.addEventListener(evt, window.resetIdleTimer, { passive: true });
+        });
+
+        window.ubahDurasiAutoLogout = (menit) => {
+            if (!window.verifyAdminIntegrity()) return;
+            const m = Math.max(1, parseInt(menit) || 5);
+            appState.idleLogoutMinutes = m;
+            window.resetIdleTimer();
+            window.catatLogAudit('SET_AUTO_LOGOUT', `Mengubah durasi Auto-Logout otomatis menjadi ${m} menit`);
+            saveStateToCloud();
+            renderApp();
+            window.showToast(`Durasi Auto-Logout diatur ke ${m} menit tanpa aktivitas!`);
+        };
+
+        window.kunciLayarCepat = () => {
+            if (!currentUserSession) return;
+            window.catatLogAudit('KUNCI_LAYAR_CEPAT', `${currentUserSession.nama} mengunci layar sesi secara manual`);
+            currentUserSession = null;
+            appState.currentUserId = null;
+            saveStateToLocalStorage();
+            document.getElementById('loginScreen').classList.remove('hidden');
+            const banner = document.getElementById('loginLockoutBanner');
+            if (banner) {
+                banner.classList.remove('hidden');
+                banner.textContent = '🔒 Layar telah dikunci. Masukkan kembali Nomor WA & PIN Anda untuk melanjutkan.';
+            }
+            window.showToast('🔒 Sesi berhasil dikunci! Masukkan PIN untuk masuk kembali.', 'info');
+        };
+
+        window.handleAutoLogoutIdle = () => {
+            if (!currentUserSession) return;
+            const menit = Number(appState.idleLogoutMinutes) || 5;
+            const namaUser = currentUserSession.nama;
+            window.catatLogAudit('AUTO_LOGOUT_IDLE', `Sesi ${namaUser} otomatis keluar karena tanpa aktivitas selama ${menit} menit`);
+            currentUserSession = null;
+            appState.currentUserId = null;
+            saveStateToLocalStorage();
+            document.querySelectorAll('[id^="modal"]').forEach(m => m.classList.add('hidden'));
+            document.getElementById('loginScreen').classList.remove('hidden');
+            const banner = document.getElementById('loginLockoutBanner');
+            if (banner) {
+                banner.classList.remove('hidden');
+                banner.textContent = `⏱️ Sesi ${namaUser} otomatis dikeluarkan (Auto-Logout) karena tidak ada aktivitas selama ${menit} menit demi keamanan akun.`;
+            }
+            window.showToast(`⏱️ Auto-Logout: Sesi ditutup karena tidak ada aktivitas selama ${menit} menit.`, 'info');
+        };
+
+        setInterval(() => {
+            if (!currentUserSession) return;
+            const maxIdleMs = (Number(appState.idleLogoutMinutes) || 5) * 60 * 1000;
+            const elapsed = Date.now() - (window._lastActivityTime || Date.now());
+            const remainMs = Math.max(0, maxIdleMs - elapsed);
+            const totalSec = Math.ceil(remainMs / 1000);
+            const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
+            const ss = String(totalSec % 60).padStart(2, '0');
+            const lbl = document.getElementById('lblIdleTimerHeader');
+            if (lbl) lbl.textContent = `${mm}:${ss}`;
+            if (remainMs <= 0) {
+                window.handleAutoLogoutIdle();
+            }
+        }, 1000);
+
+        // Deteksi Sidik Jari Bukti Foto Kembar (Duplicate Receipt Fingerprint)
+        window.hitungHashBuktiFoto = (dataUrl) => {
+            if (!dataUrl || typeof dataUrl !== 'string') return '';
+            let hash = 5381;
+            const len = dataUrl.length;
+            const step = Math.max(1, Math.floor(len / 500));
+            for (let i = 0; i < len; i += step) {
+                hash = ((hash << 5) + hash) + dataUrl.charCodeAt(i);
+                hash = hash & hash;
+            }
+            return 'FP_' + len + '_' + Math.abs(hash).toString(16);
+        };
+
+        window.cekDuplikatBuktiFoto = (hash, excludeId = null) => {
+            if (!hash) return false;
+            const inTrx = (appState.transaksi || []).some(t => t.id !== excludeId && t.status !== 'Ditolak' && (t.buktiHash === hash || (t.bukti && window.hitungHashBuktiFoto(t.bukti) === hash)));
+            if (inTrx) return true;
+            const inCicilan = (appState.pinjaman || []).some(p => (p.riwayatCicilan || []).some(c => c.id !== excludeId && c.status !== 'Ditolak' && (c.buktiHash === hash || (c.bukti && window.hitungHashBuktiFoto(c.bukti) === hash))));
+            return inCicilan;
+        };
+
+        // Penguncian Periode Tutup Buku Bulanan (Monthly Period Freeze)
+        window.cekApakahPeriodeTerkunci = (waktuAtauTanggal) => {
+            if (!waktuAtauTanggal) return false;
+            const ym = String(waktuAtauTanggal).slice(0, 7);
+            return (appState.periodeBukuTerkunci || []).includes(ym);
+        };
+
+        window.toggleKunciPeriodeBulan = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            const ym = document.getElementById('inputPeriodeKunciBuku')?.value;
+            if (!ym) {
+                window.showToast('Pilih bulan & tahun (YYYY-MM) yang ingin dikunci atau dibuka!', 'error');
+                return;
+            }
+            if (!appState.periodeBukuTerkunci) appState.periodeBukuTerkunci = [];
+            if (appState.periodeBukuTerkunci.includes(ym)) {
+                appState.periodeBukuTerkunci = appState.periodeBukuTerkunci.filter(x => x !== ym);
+                window.catatLogAudit('BUKA_KUNCI_PERIODE', `Membuka kunci tutup buku periode ${ym}`);
+                window.showToast(`Kunci periode buku ${ym} berhasil dibuka.`, 'info');
+            } else {
+                appState.periodeBukuTerkunci.push(ym);
+                appState.periodeBukuTerkunci.sort();
+                window.catatLogAudit('KUNCI_PERIODE_BUKU', `Mengunci tutup buku bulanan periode ${ym}`);
+                window.showToast(`Periode buku ${ym} berhasil dikunci dari perubahan!`);
+            }
+            saveStateToCloud();
+            renderApp();
+        };
+
+        // Rekonsiliasi & Opname Saldo Riil Bank vs Kas Sistem
+        window.renderRekonsiliasiDanKunciBuku = () => {
+            const boxPeriode = document.getElementById('listPeriodeBukuTerkunciBox');
+            if (boxPeriode) {
+                const listP = appState.periodeBukuTerkunci || [];
+                boxPeriode.textContent = listP.length > 0 ? `Bulan Terkunci: ${listP.join(', ')}` : 'Belum ada bulan dikunci';
+            }
+
+            const boxRincian = document.getElementById('rincianOpnameKasSistemBox');
+            const badgeOpname = document.getElementById('badgeStatusOpnameBank');
+            const inpSaldoBank = document.getElementById('inputSaldoRiilBank');
+            if (!boxRincian || !badgeOpname) return;
+
+            const kasInfo = window.hitungKasLikuidKoperasi();
+            const zisInfo = window.hitungRingkasanZis();
+            const danaArisan = (appState.arisanPrograms || []).reduce((acc, ar) => acc + (Number(ar.terkumpul) || 0), 0);
+            const totalKasSistem = kasInfo.kasLikuidTersedia + zisInfo.saldoKasZis + danaArisan;
+            const saldoBank = Number(appState.saldoRiilBankOpname) || 0;
+            const selisih = saldoBank - totalKasSistem;
+
+            if (inpSaldoBank && document.activeElement !== inpSaldoBank) {
+                inpSaldoBank.value = saldoBank > 0 ? saldoBank : totalKasSistem;
+            }
+
+            boxRincian.innerHTML = `
+                <div class="p-2 bg-white dark:bg-slate-900 rounded-lg border">
+                    <span class="text-[9px] text-slate-400 uppercase block">Kas Simpan Pinjam</span>
+                    <strong class="font-bold text-slate-800 dark:text-white">${window.formatRupiah(kasInfo.kasLikuidTersedia)}</strong>
+                </div>
+                <div class="p-2 bg-white dark:bg-slate-900 rounded-lg border">
+                    <span class="text-[9px] text-slate-400 uppercase block">Saldo Kas ZIS</span>
+                    <strong class="font-bold text-emerald-600">${window.formatRupiah(zisInfo.saldoKasZis)}</strong>
+                </div>
+                <div class="p-2 bg-white dark:bg-slate-900 rounded-lg border">
+                    <span class="text-[9px] text-slate-400 uppercase block">Dana Arisan Mengendap</span>
+                    <strong class="font-bold text-blue-600">${window.formatRupiah(danaArisan)}</strong>
+                </div>
+                <div class="p-2 bg-teal-100/60 dark:bg-teal-950/60 rounded-lg border border-teal-300">
+                    <span class="text-[9px] text-teal-800 dark:text-teal-300 font-bold uppercase block">Total Kas Sistem</span>
+                    <strong class="font-black text-teal-900 dark:text-teal-200">${window.formatRupiah(totalKasSistem)}</strong>
+                </div>
+            `;
+
+            if (saldoBank === 0 || selisih === 0) {
+                badgeOpname.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800';
+                badgeOpname.textContent = '✅ SEIMBANG (COCOK 100%)';
+            } else {
+                badgeOpname.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-800 animate-pulse';
+                badgeOpname.textContent = `⚠️ SELISIH BANK: ${selisih > 0 ? '+' : ''}${window.formatRupiah(selisih)}`;
+            }
+        };
+
+        window.simpanOpnameSaldoBank = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            const val = parseFloat(document.getElementById('inputSaldoRiilBank')?.value) || 0;
+            appState.saldoRiilBankOpname = val;
+            window.catatLogAudit('OPNAME_KAS_BANK', `Mencatat rekonsiliasi saldo riil rekening bank sebesar ${window.formatRupiah(val)}`);
+            saveStateToCloud();
+            renderApp();
+            window.showToast('Hasil Opname & Rekonsiliasi Saldo Bank berhasil disimpan!');
+        };
+
+
+        // Pemindai Integritas Akuntansi & Kesehatan Sistem (7-Point Zero-Loophole Scanner)
+        window.renderSystemHealthScanner = () => {
+            const box = document.getElementById('gridHealthCheckBox');
+            if (!box) return;
+
+            // 1. Cek Keseimbangan Kas Likuid
+            const kasInfo = window.hitungKasLikuidKoperasi();
+            const kasSehat = kasInfo.kasLikuidTersedia >= 0;
+
+            // 2. Cek Sinkronisasi Progres Pinjaman
+            const pinjValid = (appState.pinjaman || []).every(p => {
+                if (p.status !== 'Disetujui' && p.status !== 'Lunas') return true;
+                const sisa = window.hitungSisaPokokPinjaman(p);
+                return sisa >= 0 && sisa <= p.nominal;
+            });
+
+            // 3. Cek Saldo Kas ZIS
+            const zisInfo = window.hitungRingkasanZis();
+            const zisSehat = zisInfo.saldoKasZis >= 0;
+
+            // 4. Cek Duplikat Bukti Foto
+            const jmlDuplikat = (appState.transaksi || []).filter(t => t.duplikatBukti && t.status === 'Menunggu').length;
+
+            // 5. Cek Anggota dengan PIN Standar Lemah (1234 / 0000)
+            const jmlPinLemah = (appState.anggota || []).filter(a => a.pin === '1234' || a.pin === '0000' || String(a.pin).length < 4).length;
+
+            // 6. Cek Antrean Menunggu Verifikasi
+            const jmlPending = (appState.transaksi || []).filter(t => t.status === 'Menunggu').length +
+                               (appState.pinjaman || []).filter(p => p.status === 'Menunggu').length +
+                               (appState.calonAnggota || []).length;
+
+            const items = [
+                {
+                    label: '1. Keseimbangan Kas Likuid',
+                    ok: kasSehat,
+                    status: kasSehat ? `✅ Sehat (${window.formatRupiah(kasInfo.kasLikuidTersedia)})` : '⚠️ Defisit Kas!'
+                },
+                {
+                    label: '2. Integritas Buku Pinjaman',
+                    ok: pinjValid,
+                    status: pinjValid ? '✅ 100% Sinkron & Valid' : '⚠️ Perlu Rekalkulasi'
+                },
+                {
+                    label: '3. Keseimbangan Kas ZIS Sosial',
+                    ok: zisSehat,
+                    status: zisSehat ? `✅ Aman (${window.formatRupiah(zisInfo.saldoKasZis)})` : '⚠️ Melebihi Saldo'
+                },
+                {
+                    label: '4. Audit Bukti Transfer Kembar',
+                    ok: jmlDuplikat === 0,
+                    status: jmlDuplikat === 0 ? '✅ Bebas Duplikat Aktif' : `⚠️ ${jmlDuplikat} Bukti Kembar!`
+                },
+                {
+                    label: '5. Audit Keamanan PIN Anggota',
+                    ok: jmlPinLemah === 0,
+                    status: jmlPinLemah === 0 ? '✅ Semua PIN Kuat' : `ℹ️ ${jmlPinLemah} Akun Masih PIN '1234'`
+                },
+                {
+                    label: '6. Status Antrean & Auto-Logout',
+                    ok: true,
+                    status: `🛡️ Idle ${appState.idleLogoutMinutes || 5}m • ${jmlPending} Antrean`
+                }
+            ];
+
+            box.innerHTML = items.map(it => `
+                <div class="p-2.5 bg-white dark:bg-slate-900 rounded-xl border ${it.ok ? 'border-emerald-200 dark:border-slate-700' : 'border-amber-300 dark:border-amber-700'} flex flex-col justify-between gap-1">
+                    <span class="text-[10px] text-slate-400 font-bold">${it.label}</span>
+                    <strong class="text-[11px] ${it.ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}">${it.status}</strong>
+                </div>
+            `).join('');
+        };
+
+        window.jalankanAutoHealPembukuan = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            // 1. Sinkronkan ulang properti saldo pada setiap objek anggota dari transaksi Disetujui
+            (appState.anggota || []).forEach(a => {
+                const r = window.hitungRincianSimpananAnggota(a.id);
+                a.simpananPokok = r.pokok;
+                a.simpananWajib = r.wajib;
+                a.simpananSukarela = r.sukarela;
+                a.saldo = r.total;
+            });
+            // 2. Rekalkulasi seluruh induk pinjaman dari riwayatCicilan Disetujui
+            (appState.pinjaman || []).forEach(p => {
+                if (p.riwayatCicilan && p.riwayatCicilan.length > 0) {
+                    window.rekalkulasiIndukPinjaman(p);
+                }
+            });
+            // 3. Rekalkulasi dana terkumpul program arisan dari pesertaSetor
+            (appState.arisanPrograms || []).forEach(ar => {
+                if (ar.pesertaSetor) {
+                    ar.terkumpul = ar.pesertaSetor.reduce((acc, ps) => acc + (Number(ps.nominal) || 0), 0);
+                }
+            });
+            window.catatLogAudit('AUTO_HEAL_PEMBUKUAN', 'Menjalankan sinkronisasi & rekalkulasi penuh seluruh buku besar, pinjaman, dan arisan');
+            saveStateToCloud();
+            renderApp();
+            window.showToast('✅ Seluruh buku besar simpanan, pinjaman, dan arisan berhasil disinkronkan 100%!');
+        };
+
+
+        // Pusat Pengingat Kewajiban & Keamanan Pribadi Anggota di Dashboard
+        window.renderPengingatKewajibanPribadi = () => {
+            const box = document.getElementById('boxPengingatKewajibanPribadi');
+            if (!box || !currentUserSession) return;
+
+            const ymNow = new Date().toISOString().slice(0, 7);
+            const sudahWajibBulanIni = (appState.transaksi || []).some(t =>
+                t.anggotaId === currentUserSession.id &&
+                t.kategori === 'Simpanan Wajib' &&
+                t.tipe === 'Setoran' &&
+                t.status !== 'Ditolak' &&
+                (t.waktu || '').startsWith(ymNow)
+            );
+
+            const pinjamanAktifSaya = (appState.pinjaman || []).find(p => p.status === 'Disetujui' && p.anggotaId === currentUserSession.id);
+            const isPinStandar = (String(currentUserSession.pin) === '1234' || String(currentUserSession.pin) === '0000');
+
+            box.innerHTML = `
+                <div class="p-3 rounded-2xl border flex items-center justify-between gap-2 ${sudahWajibBulanIni ? 'bg-emerald-50/70 dark:bg-slate-900 border-emerald-200 dark:border-slate-800' : 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800'}">
+                    <div>
+                        <span class="text-[9px] font-extrabold uppercase tracking-wider ${sudahWajibBulanIni ? 'text-emerald-700' : 'text-amber-800'} block">Iuran Wajib (${ymNow})</span>
+                        <strong class="text-xs text-slate-800 dark:text-white">${sudahWajibBulanIni ? '✅ Sudah Tercatat Bulan Ini' : '⏳ Belum Setor Bulan Ini'}</strong>
+                    </div>
+                    ${!sudahWajibBulanIni ? `<button onclick="window.setorCepatWajibPribadi()" class="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-[10px] shrink-0">⚡ Setor Wajib</button>` : ''}
+                </div>
+
+                <div class="p-3 rounded-2xl border flex items-center justify-between gap-2 ${!pinjamanAktifSaya ? 'bg-blue-50/70 dark:bg-slate-900 border-blue-200 dark:border-slate-800' : 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-300 dark:border-indigo-800'}">
+                    <div>
+                        <span class="text-[9px] font-extrabold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 block">Status Pinjaman Saya</span>
+                        <strong class="text-xs text-slate-800 dark:text-white">${pinjamanAktifSaya ? `Sisa Pokok: ${window.formatRupiah(window.hitungSisaPokokPinjaman(pinjamanAktifSaya))}` : '✅ Bebas Tanggunan Pinjaman'}</strong>
+                    </div>
+                    ${pinjamanAktifSaya ? `<button onclick="window.bukaModalBayarCicilan('${pinjamanAktifSaya.id}')" class="px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] shrink-0">💳 Bayar Cicilan</button>` : ''}
+                </div>
+
+                <div class="p-3 rounded-2xl border flex items-center justify-between gap-2 ${!isPinStandar ? 'bg-emerald-50/70 dark:bg-slate-900 border-emerald-200 dark:border-slate-800' : 'bg-rose-50 dark:bg-rose-950/30 border-rose-300 dark:border-rose-800'}">
+                    <div>
+                        <span class="text-[9px] font-extrabold uppercase tracking-wider ${!isPinStandar ? 'text-emerald-700' : 'text-rose-700'} block">Keamanan PIN & Sesi</span>
+                        <strong class="text-xs text-slate-800 dark:text-white">${!isPinStandar ? '🛡️ PIN Pribadi Kuat & Aman' : '⚠️ Masih PIN Bawaan (1234)'}</strong>
+                    </div>
+                    ${isPinStandar ? `<button onclick="window.switchTab('profil-saya')" class="px-2.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] shrink-0">🔑 Ganti PIN</button>` : ''}
+                </div>
+            `;
+        };
+
+        window.setorCepatWajibPribadi = () => {
+            window.bukaModalTransaksi();
+            const selTipe = document.getElementById('transaksiTipe');
+            const selKat = document.getElementById('transaksiKategori');
+            const inpNom = document.getElementById('transaksiNominal');
+            const inpKet = document.getElementById('transaksiKeterangan');
+            if (selTipe) selTipe.value = 'Setoran';
+            if (selKat) selKat.value = 'Simpanan Wajib';
+            if (inpNom) inpNom.value = 100000;
+            if (inpKet) inpKet.value = `Setoran Simpanan Wajib Periode ${new Date().toISOString().slice(0, 7)}`;
+            window.updateInfoPenarikanModal();
+        };
+
+        window.toggleKunciVoting = (votingId) => {
+            if (!window.verifyAdminIntegrity()) return;
+            const v = (appState.votings || []).find(x => x.id === votingId);
+            if (!v) return;
+            v.terkunci = !v.terkunci;
+            window.catatLogAudit('KUNCI_VOTING', `${v.terkunci ? 'Mengunci' : 'Membuka kembali'} hasil voting musyawarah: "${v.pertanyaan}"`);
+            saveStateToCloud();
+            renderApp();
+            window.showToast(v.terkunci ? '🔒 Hasil voting musyawarah berhasil dikunci & disahkan!' : '🔓 Voting kembali dibuka untuk anggota.');
+        };
+
+        window.mintaResetPinViaWa = () => {
+            const kontakInput = (document.getElementById('loginKontak')?.value || '').trim();
+            const pesan = `Assalamu'alaikum Pengurus / Super Admin Koperasi Keluarga, saya anggota dengan nomor WA *${kontakInput || '(Nomor WA Saya)'}* mohon bantuan untuk *Reset PIN Keamanan* akun Koperasi Keluarga saya. Terima kasih.`;
+            window.kirimPesanWa('082298688189', pesan);
+        };
+
         let cashflowChartInstance = null;
         let kkChartInstance = null;
 
@@ -6243,4 +6903,4 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
     </script>
 </body>
-</html>l
+</html>
