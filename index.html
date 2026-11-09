@@ -276,7 +276,7 @@
                                     <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">📅 Status Iuran Wajib Bulanan</h3>
                                     <p class="text-[11px] text-slate-500">Pantau kepatuhan setoran Simpanan Wajib anggota per bulan.</p>
                                 </div>
-                                <input type="month" id="filterBulanIuranWajib" onchange="window.renderIuranWajibTracker()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold outline-none">
+                                <input type="month" id="filterBulanIuranWajib" onchange="window.renderIuranWajibTracker()" class="w-full sm:w-auto min-w-[155px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold outline-none">
                             </div>
                             <div id="listIuranWajibTracker" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                         </div>
@@ -895,6 +895,16 @@
                             </label>
                             <button type="button" onclick="window.resetDatabaseDefault()" class="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 font-bold text-xs flex items-center justify-center gap-2 hover:bg-rose-100 transition">
                                 <span>🗑️</span> Reset Data Awal
+                            </button>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div>
+                                <h4 class="text-xs font-extrabold text-emerald-900 dark:text-emerald-300">🚀 Siapkan Mode Rilis Produksi (Bersihkan Data Uji Coba)</h4>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400">Hapus seluruh transaksi, pinjaman, arisan, dan voting uji coba menjadi <strong>Rp 0</strong> di Browser & Cloud Firestore, namun <strong>tetap mempertahankan Daftar Anggota & Rekening Bank</strong> yang sudah Anda daftarkan.</p>
+                            </div>
+                            <button type="button" onclick="window.bersihkanTransaksiUjiCoba()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shrink-0 cursor-pointer">
+                                🧹 Nolkan Transaksi Uji Coba (Siap Rilis)
                             </button>
                         </div>
 
@@ -1927,7 +1937,7 @@
             currentUserId: null,
             currentRole: 'member',
             activeTab: 'dashboard',
-            totalShu: 2500000,
+            totalShu: 0,
             gasWebhookUrl: '',
             qrisImage: '',
             kodeUndanganKeluarga: 'KELUARGA2026',
@@ -1940,99 +1950,22 @@
             periodeBukuTerkunci: [],
             periodeShuTerbagikan: [],
             adArtText: "PASAL 1 — KEANGGOTAAN & SIMPANAN\n1. Setiap anggota keluarga wajib menyetor Simpanan Pokok (sekali saat bergabung) dan Simpanan Wajib secara rutin setiap bulan.\n2. Simpanan Pokok dan Simpanan Wajib tidak dapat ditarik selama masih berstatus anggota aktif.\n3. Simpanan Sukarela dapat disetor dan ditarik kapan saja selama tidak sedang menjadi jaminan pinjaman aktif.\n\nPASAL 2 — ATURAN PINJAMAN & ANGSURAN\n1. Plafon maksimal pinjaman adalah 3x dari total saldo simpanan anggota.\n2. Jasa pinjaman ditetapkan sebesar 1% flat per bulan untuk memperkuat SHU Koperasi.\n3. Selama memiliki sisa hutang aktif, tabungan anggota sebesar sisa pokok hutang dikunci sebagai jaminan.\n\nPASAL 3 — PEMBAGIAN SHU & DANA SOSIAL (ZIS)\n1. SHU Bersih dialokasikan 40% Jasa Modal, 20% Jasa Pinjaman, 25% Cadangan Koperasi, dan 15% Dana Sosial/ZIS.\n2. Seluruh saldo tabungan anggota dilindungi dan tercatat beserta nama Ahli Waris resmi.",
-            notulensiRapat: [
-                {
-                    id: 'not1',
-                    tanggal: '2026-01-05',
-                    judul: 'Musyawarah Pembentukan & Penetapan Aturan Koperasi Keluarga',
-                    isi: 'Disepakati iuran Simpanan Pokok Rp250.000 - Rp500.000, Simpanan Wajib bulanan, plafon pinjaman darurat maksimal 3x tabungan dengan jasa 1%/bulan, serta pembentukan Kotak Amal ZIS Keluarga.',
-                    penulis: 'Super Admin'
-                }
-            ],
+            notulensiRapat: [],
             calonAnggota: [],
-            pengumuman: "Selamat datang di Koperasi Keluarga v25.0 Pro! Sistem telah dilengkapi proteksi Zero-Loophole & Audit Trail.",
-            rekeningBank: [
-                { id: 'b1', nama: 'BCA', nomor: '1234567890', pemilik: 'Koperasi Keluarga aufah' },
-                { id: 'b2', nama: 'Mandiri', nomor: '0987654321', pemilik: 'Koperasi Keluarga aufah' }
-            ],
-            pemasukanUsaha: [
-                { id: 'pu1', tanggal: '2026-02-15', keterangan: 'Bagi Hasil Pengadaan Sembako Keluarga', nominal: 1500000 },
-                { id: 'pu2', tanggal: '2026-03-10', keterangan: 'Pendapatan Jasa & Bunga Bank Koperasi', nominal: 1000000 }
-            ],
-            arisanPrograms: [
-                {
-                    id: 'ar1',
-                    nama: 'Arisan Silaturahmi Bulanan Keluarga',
-                    kategori: 'Arisan Keluarga',
-                    iuran: 100000,
-                    target: 2400000,
-                    terkumpul: 400000,
-                    pemenangTerakhir: 'Super Admin (Putaran #1)',
-                    pesertaSetor: [
-                        { id: 'as1', tanggal: '2026-03-05', nama: 'Super Admin', nominal: 200000 },
-                        { id: 'as2', tanggal: '2026-03-06', nama: 'Budi Santoso', nominal: 200000 }
-                    ]
-                },
-                {
-                    id: 'ar2',
-                    nama: 'Tabungan Qurban Keluarga Besar 2027',
-                    kategori: 'Tabungan Qurban',
-                    iuran: 250000,
-                    target: 3500000,
-                    terkumpul: 750000,
-                    pemenangTerakhir: '-',
-                    pesertaSetor: [
-                        { id: 'as3', tanggal: '2026-03-08', nama: 'Super Admin', nominal: 500000 },
-                        { id: 'as4', tanggal: '2026-03-09', nama: 'Budi Santoso', nominal: 250000 }
-                    ]
-                }
-            ],
-            bebanOperasional: [
-                { id: 'beb1', tanggal: '2026-01-10', keterangan: 'Biaya Administrasi Bank', nominal: 50000 }
-            ],
-            votings: [
-                {
-                    id: 'v1',
-                    pertanyaan: 'Mau adakan acara silaturahmi keluarga di mana tahun ini?',
-                    opsi: ['Puncak Bogor', 'Pantai Anyer', 'Villa Lembang Bandung'],
-                    suara: { '082298688189': 0 },
-                    pembuat: 'Super Admin (082298688189)'
-                }
-            ],
+            pengumuman: "Selamat datang di Koperasi Keluarga v25.0 Pro (Versi Rilis Resmi). Silakan lakukan setoran simpanan atau transaksi melalui menu yang tersedia.",
+            rekeningBank: [],
+            pemasukanUsaha: [],
+            arisanPrograms: [],
+            bebanOperasional: [],
+            votings: [],
             anggota: [
-                { id: 'a1', namaKeluarga: 'Keluarga Besar Aufah', nama: 'Super Admin', kontak: '082298688189', email: 'admin@aufah.tech', pin: '1234', role: 'admin', ahliWaris: 'Keluarga Aufah', hubunganWaris: 'Istri / Anak', saldo: 0, simpananPokok: 500000, simpananWajib: 1000000, simpananSukarela: 0 },
-                { id: 'a2', namaKeluarga: 'Keluarga Budi Santoso', nama: 'Budi Santoso', kontak: '081234567890', email: 'budi@gmail.com', pin: '5678', role: 'member', ahliWaris: 'Siti Rahmawati', hubunganWaris: 'Istri', saldo: 0, simpananPokok: 250000, simpananWajib: 500000, simpananSukarela: 0 }
+                { id: 'a1', namaKeluarga: 'Aufah Hidayat Tullah', nama: 'Aufah Hidayat Tullah', kontak: '082298688189', email: 'admin@aufah.tech', pin: '1234', role: 'admin', ahliWaris: 'Keluarga Inti', hubunganWaris: 'Istri / Anak', saldo: 0, simpananPokok: 0, simpananWajib: 0, simpananSukarela: 0 }
             ],
-            transaksi: [
-                { id: 't1', waktu: '2026-03-01 10:00', anggotaId: 'a1', nama: 'Super Admin', tipe: 'Setoran', kategori: 'Simpanan Pokok', nominal: 500000, status: 'Disetujui', bukti: '', bankTujuan: 'BCA', keterangan: 'Setoran awal pokok' },
-                { id: 't1b', waktu: '2026-03-01 10:05', anggotaId: 'a1', nama: 'Super Admin', tipe: 'Setoran', kategori: 'Simpanan Wajib', nominal: 1000000, status: 'Disetujui', bukti: '', bankTujuan: 'BCA', keterangan: 'Setoran wajib tahunan' },
-                { id: 't2', waktu: '2026-03-02 11:30', anggotaId: 'a2', nama: 'Budi Santoso', tipe: 'Setoran', kategori: 'Simpanan Wajib', nominal: 750000, status: 'Disetujui', bukti: '', bankTujuan: 'Mandiri', keterangan: 'Iuran wajib keluarga' },
-                { id: 't2b', waktu: '2026-03-05 09:15', anggotaId: 'a2', nama: 'Budi Santoso', tipe: 'Setoran', kategori: 'Simpanan Sukarela', nominal: 500000, status: 'Disetujui', bukti: '', bankTujuan: 'Mandiri', keterangan: 'Tabungan sukarela keluarga' }
-            ],
-            pinjaman: [
-                {
-                    id: 'p1',
-                    anggotaId: 'a2',
-                    nama: 'Budi Santoso',
-                    nominal: 600000,
-                    tenor: 6,
-                    bungaPersen: 1,
-                    keperluan: 'Tambahan biaya sekolah anak',
-                    status: 'Disetujui',
-                    tenorTerbayar: 2,
-                    pokokTerbayar: 200000,
-                    bungaTerbayar: 12000,
-                    riwayatCicilan: [
-                        { id: 'c1', tanggal: '2026-03-15', bulanBayar: 2, pokok: 200000, bunga: 12000, total: 212000, status: 'Disetujui', bukti: '', catatan: 'Cicilan bulan ke-1 & 2' }
-                    ]
-                }
-            ],
-            zis: [
-                { id: 'z1', tanggal: '2026-03-03', nama: 'Super Admin', tipeArus: 'Pemasukan', jenis: 'Infaq', nominal: 250000, keterangan: 'Infaq awal pembukaan koperasi keluarga' },
-                { id: 'z2', tanggal: '2026-03-10', nama: 'Santunan Pendidikan Keponakan', tipeArus: 'Penyaluran', jenis: 'Santunan Keluarga', nominal: 100000, keterangan: 'Bantuan buku sekolah semester genap' }
-            ],
+            transaksi: [],
+            pinjaman: [],
+            zis: [],
             auditLogs: [
-                { id: 'log_init', waktu: '2026-03-01 10:00', pelaku: 'Sistem Koperasi', aksi: 'INISIALISASI', rincian: 'Sistem Koperasi Keluarga v25.0 Pro Zero-Loophole diaktifkan' }
+                { id: 'log_release', waktu: new Date().toISOString().slice(0, 16).replace('T', ' '), pelaku: 'Sistem Koperasi', aksi: 'RILIS_RESMI', rincian: 'Versi Rilis Produksi Koperasi Keluarga v25.0 Pro diaktifkan (Siap Data Riil Rp 0)' }
             ],
             pinjamanSetting: { maxPlafonMultiplier: 3, bungaPersen: 1, maxTenor: 12 },
             shuSetting: { alokasiModal: 40, alokasiUsaha: 20, alokasiCadangan: 25, alokasiSosial: 15 }
@@ -2332,17 +2265,29 @@
         window.formatNomorWa = (kontak) => {
             let num = String(kontak || '').replace(/[^0-9]/g, '');
             if (num.startsWith('0')) num = '62' + num.slice(1);
+            else if (num.startsWith('8')) num = '62' + num;
             return num;
         };
 
         window.kirimPesanWa = (kontak, pesan) => {
             const phone = window.formatNomorWa(kontak);
-            if (!phone) {
-                window.showToast('Nomor WhatsApp anggota tidak valid!', 'error');
+            if (!phone || phone.length < 9) {
+                window.showToast('Nomor WhatsApp tujuan belum diisi atau tidak valid!', 'error');
                 return;
             }
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent(pesan)}`;
-            window.open(url, '_blank', 'noopener,noreferrer');
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(pesan)}`;
+            window.showToast(`📲 Membuka WhatsApp (+${phone})...`, 'info');
+            try {
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (e) {
+                window.location.href = url;
+            }
         };
 
         window.bukaKwitansiTransaksi = (trxId) => {
@@ -3073,12 +3018,30 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             `;
         };
 
+        window.ingatkanIuranWajibWa = (anggotaId) => {
+            const a = (appState.anggota || []).find(x => x.id === anggotaId);
+            if (!a) {
+                window.showToast('Data anggota tidak ditemukan!', 'error');
+                return;
+            }
+            const bulan = document.getElementById('filterBulanIuranWajib')?.value || new Date().toISOString().slice(0, 7);
+            const pesan = `Assalamu'alaikum / Halo *${a.nama}*,\n\nPengingat ramah dari Pengurus *Koperasi Keluarga* untuk setoran *Simpanan Wajib* periode bulan *${bulan}*.\n\nSilakan melakukan setoran dan mengunggah bukti transfer melalui aplikasi Koperasi Keluarga. Terima kasih banyak atas kebersamaannya! 🙏`;
+            window.kirimPesanWa(a.kontak, pesan);
+        };
+
+        window.sapaAnggotaWa = (anggotaId) => {
+            const a = (appState.anggota || []).find(x => x.id === anggotaId);
+            if (!a) return;
+            const pesan = `Assalamu'alaikum / Halo *${a.nama}*, salam silaturahmi dari Pengurus *Koperasi Keluarga*. Semoga sehat dan lancar selalu! 🙏`;
+            window.kirimPesanWa(a.kontak, pesan);
+        };
+
         window.renderIuranWajibTracker = () => {
             const container = document.getElementById('listIuranWajibTracker');
             const monthInput = document.getElementById('filterBulanIuranWajib');
             if (!container || !monthInput) return;
             if (!monthInput.value) {
-                monthInput.value = '2026-03';
+                monthInput.value = new Date().toISOString().slice(0, 7);
             }
             const bulan = monthInput.value;
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
@@ -3101,7 +3064,7 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
                                 <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">✓ Lunas (${window.formatRupiah(setoranBulanIni)})</span>
                             ` : `
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Belum Setor</span>
-                                ${role === 'admin' ? `<button onclick="window.kirimPesanWa('${a.kontak}', 'Assalamu\'alaikum / Halo *${a.nama}*, pengingat ramah untuk setoran *Simpanan Wajib* periode bulan *${bulan}* di Koperasi Keluarga. Terima kasih! 🙏')" class="px-2 py-1 rounded-lg bg-emerald-600 text-white text-[10px] font-bold">📲 Ingatkan WA</button>` : ''}
+                                ${role === 'admin' ? `<button type="button" onclick="window.ingatkanIuranWajibWa('${a.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition text-white text-[10px] font-bold shadow-sm cursor-pointer">📲 Ingatkan WA</button>` : ''}
                             `}
                         </div>
                     </div>
@@ -4725,7 +4688,7 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
                             <button onclick="window.bukaBukuAnggota('${a.id}')" class="text-indigo-600 font-bold hover:underline">📖 Buku</button>
                             <button onclick="window.bukaModalEditAnggota('${a.id}')" class="text-emerald-600 font-bold hover:underline">✏️ Edit</button>
                             <button onclick="window.bukaModalResetPin('${a.id}')" class="text-blue-600 font-bold hover:underline">Reset PIN</button>
-                            <button onclick="window.kirimPesanWa('${a.kontak}', 'Halo ${a.nama}, salam silaturahmi dari Pengurus Koperasi Keluarga.')" class="text-teal-600 font-bold hover:underline">📲 WA</button>
+                            <button type="button" onclick="window.sapaAnggotaWa('${a.id}')" class="text-teal-600 font-bold hover:underline">📲 WA</button>
                         </div>
                         ${a.kontak !== '082298688189' ? `
                             <div class="flex items-center gap-2">
@@ -6000,19 +5963,57 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             reader.readAsText(file);
         };
 
+        window.bersihkanTransaksiUjiCoba = () => {
+            if (!window.verifySuperAdminOnly()) return;
+            window.showConfirmModal(
+                'Siapkan Rilis Produksi (Nolkan Transaksi Uji Coba)',
+                'Seluruh transaksi simpanan, pinjaman, ZIS, arisan, beban, dan voting uji coba akan dikosongkan ke Rp 0 (di Lokal & Cloud Firestore), tetapi Daftar Anggota dan Rekening Bank Anda TETAP DIPERTAHANKAN. Lanjutkan?',
+                () => {
+                    appState.transaksi = [];
+                    appState.pinjaman = [];
+                    appState.zis = [];
+                    appState.pemasukanUsaha = [];
+                    appState.bebanOperasional = [];
+                    appState.arisanPrograms = [];
+                    appState.votings = [];
+                    appState.totalShu = 0;
+                    appState.saldoRiilBankOpname = 0;
+                    appState.periodeBukuTerkunci = [];
+                    appState.periodeShuTerbagikan = [];
+                    (appState.anggota || []).forEach(a => {
+                        a.saldo = 0;
+                        a.simpananPokok = 0;
+                        a.simpananWajib = 0;
+                        a.simpananSukarela = 0;
+                    });
+                    appState.auditLogs = [{
+                        id: 'log_clean_' + Date.now(),
+                        waktu: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                        pelaku: currentUserSession.nama,
+                        aksi: 'SIAP_RILIS_PRODUKSI',
+                        rincian: 'Membersihkan seluruh transaksi & voting uji coba ke Rp 0 untuk mulai data riil produksi'
+                    }];
+                    saveStateToCloud();
+                    renderApp();
+                    window.showToast('🚀 Sistem berhasil dibersihkan ke Rp 0 dan siap digunakan untuk Data Riil!');
+                }
+            );
+        };
+
         window.resetDatabaseDefault = () => {
             if (!window.verifySuperAdminOnly()) return;
             window.showConfirmModal(
-                'Reset ke Data Awal',
-                'Seluruh perubahan di penyimpanan lokal akan dikembalikan ke data awal Koperasi Keluarga. Lanjutkan?',
+                'Reset Total ke Versi Rilis Awal (Rp 0)',
+                'Seluruh data di Browser & Cloud Firestore akan di-reset bersih ke kondisi awal rilis (Rp 0, hanya menyisakan akun utama Super Admin). Lanjutkan?',
                 () => {
+                    const keepUserId = 'a1';
                     appState = structuredClone(defaultInitialState);
-                    if (currentUserSession) {
-                        currentUserSession = appState.anggota.find(a => a.kontak === currentUserSession.kontak) || appState.anggota[0];
-                    }
+                    appState.currentUserId = keepUserId;
+                    appState.currentRole = 'admin';
+                    currentUserSession = appState.anggota[0];
                     saveStateToCloud();
                     renderApp();
-                    window.showToast('Data berhasil dikembalikan ke pengaturan awal.', 'info');
+                    window.showToast('Database berhasil di-reset bersih ke Versi Rilis Produksi (Rp 0)!', 'info');
                 }
             );
         };
