@@ -865,10 +865,17 @@
                         </form>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4">
-                        <div>
-                            <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">Cadangan Database & Integrasi Google Sheets</h3>
-                            <p class="text-[11px] text-slate-500">Seluruh data otomatis tersimpan di penyimpanan lokal browser (LocalStorage). Anda juga dapat mengunduh cadangan JSON atau menyinkronkan ke Google Sheets (Apps Script).</p>
+                    <!-- Pembatasan Role: Seluruh Pengaturan Website, Database, Keamanan & Audit Trail Hanya Tampil untuk Admin / Super Admin -->
+                    <div id="adminSystemSettingsWrapper" class="space-y-4 hidden">
+                    <div id="superAdminDatabaseCard" class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4">
+                        <div class="flex flex-wrap justify-between items-center gap-2">
+                            <div>
+                                <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">⚙️ Pengaturan Website, Cadangan Database & Integrasi Google Sheets</h3>
+                                <p class="text-[11px] text-slate-500">Khusus Super Admin: Cadangkan/pulihkan database JSON, atur privasi role anggota, atau sinkronkan ke Google Sheets.</p>
+                            </div>
+                            <button type="button" id="btnToggleModePrivasi" onclick="window.toggleModePrivasiAnggota()" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-extrabold text-[11px] shadow-sm transition">
+                                🔒 Privasi Anggota: KETAT (Data Pribadi)
+                            </button>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -1014,6 +1021,7 @@
                                 <tbody id="tabelAuditTrailBody" class="divide-y text-[11px]"></tbody>
                             </table>
                         </div>
+                    </div>
                     </div>
                 </div>
 
@@ -1917,6 +1925,7 @@
             qrisImage: '',
             kodeUndanganKeluarga: 'KELUARGA2026',
             bukaPendaftaranMandiri: true,
+            modePrivasiKetat: true,
             apiSecretToken: 'KOP-KELUARGA-2026',
             customFirebaseConfigJson: '',
             idleLogoutMinutes: 5,
@@ -2704,7 +2713,7 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
 
         window.switchTab = (tabId) => {
             const tabs = ['dashboard', 'persetujuan', 'simpanan', 'pinjaman', 'zis', 'arisan', 'gamifikasi', 'anggota', 'bank', 'shu', 'ad-art', 'profil-saya'];
-            const adminOnlyTabs = ['persetujuan', 'anggota', 'bank', 'shu'];
+            const adminOnlyTabs = ['persetujuan', 'anggota', 'bank'];
             if (appState.currentRole !== 'admin' && adminOnlyTabs.includes(tabId)) {
                 tabId = 'dashboard';
             }
@@ -2887,7 +2896,7 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
                 { id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' },
                 { id: 'shu', label: 'Sisa Hasil Usaha (SHU)', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
                 { id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-                { id: 'profil-saya', label: 'Profil, Backup & Audit', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
+                { id: 'profil-saya', label: role === 'admin' ? 'Profil, Pengaturan & Audit' : 'Profil & Kartu Saya', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
             ];
 
             if (role === 'admin') {
@@ -2912,7 +2921,7 @@ Silakan melakukan pembayaran angsuran dan mengunggah bukti transfer melalui apli
             if (currentUserSession && currentUserSession.kontak !== '082298688189' && currentUserSession.role !== 'admin' && appState.currentRole === 'admin') {
                 appState.currentRole = 'member';
             }
-            const adminToggleIds = ['btnEditPengumuman', 'btnBukaModalVoting', 'btnSettingPinjam', 'btnSettingShu', 'btnDistribusiShu', 'btnResetKunciShu', 'btnTambahPemasukanUsaha', 'thAksiPemasukanUsaha', 'btnTambahArisan', 'btnEditAdArt', 'btnTambahNotulensi', 'btnTambahBeban', 'thAksiBeban', 'adminShuControl', 'btnTambahAnggota', 'btnTagihanWajibKolektif', 'btnSalurkanZis'];
+            const adminToggleIds = ['btnEditPengumuman', 'btnBukaModalVoting', 'btnSettingPinjam', 'btnSettingShu', 'btnDistribusiShu', 'btnResetKunciShu', 'btnTambahPemasukanUsaha', 'thAksiPemasukanUsaha', 'btnTambahArisan', 'btnEditAdArt', 'btnTambahNotulensi', 'btnTambahBeban', 'thAksiBeban', 'adminShuControl', 'btnTambahAnggota', 'btnTagihanWajibKolektif', 'btnSalurkanZis', 'adminSystemSettingsWrapper'];
             adminToggleIds.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -3486,7 +3495,13 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             const statusFilter = document.getElementById('filterSimpananStatus')?.value || 'ALL';
             const bulanFilter = document.getElementById('filterSimpananBulan')?.value || '';
 
+            const isSuperAdmin = currentUserSession?.kontak === '082298688189';
+            const role = isSuperAdmin ? appState.currentRole : (currentUserSession?.role || 'member');
+            const isStrictPrivacy = (appState.modePrivasiKetat !== false) && (role !== 'admin');
+
             const filtered = (appState.transaksi || []).filter(t => {
+                // Proteksi Privasi Role Anggota: Anggota biasa hanya dapat melihat riwayat transaksinya sendiri
+                if (isStrictPrivacy && t.anggotaId !== currentUserSession?.id) return false;
                 if (tipeFilter !== 'ALL' && t.tipe !== tipeFilter) return false;
                 if (katFilter !== 'ALL' && t.kategori !== katFilter) return false;
                 if (statusFilter !== 'ALL' && t.status !== statusFilter) return false;
@@ -3541,8 +3556,14 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         window.exportToExcel = () => {
+            const isSuperAdmin = currentUserSession?.kontak === '082298688189';
+            const role = isSuperAdmin ? appState.currentRole : (currentUserSession?.role || 'member');
+            const isStrictPrivacy = (appState.modePrivasiKetat !== false) && (role !== 'admin');
+            const sourceTrx = isStrictPrivacy
+                ? (appState.transaksi || []).filter(t => t.anggotaId === currentUserSession?.id)
+                : (appState.transaksi || []);
             const headers = ['Waktu', 'Nama Anggota', 'Tipe', 'Kategori', 'Bank Tujuan', 'Nominal', 'Status', 'Keterangan'];
-            const rows = appState.transaksi.map(t => [
+            const rows = sourceTrx.map(t => [
                 t.waktu, `"${t.nama}"`, t.tipe, t.kategori, t.bankTujuan || '-', t.nominal, t.status, `"${t.keterangan || ''}"`
             ]);
             const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
@@ -3760,9 +3781,19 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             }
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isStrictPrivacy = (appState.modePrivasiKetat !== false) && (role !== 'admin');
             const defaultBungaPersen = Number(appState.pinjamanSetting?.bungaPersen ?? 1);
 
-            container.innerHTML = appState.pinjaman.map(p => {
+            const visibleLoans = isStrictPrivacy
+                ? (appState.pinjaman || []).filter(p => p.anggotaId === currentUserSession.id || p.penjaminNama === currentUserSession.nama)
+                : (appState.pinjaman || []);
+
+            if (visibleLoans.length === 0) {
+                container.innerHTML = `<div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border text-center col-span-2 text-slate-400 italic">🔒 Anda belum memiliki riwayat pinjaman aktif atau tanggungan penjamin keluarga.</div>`;
+                return;
+            }
+
+            container.innerHTML = visibleLoans.map(p => {
                 const ratePersen = p.bungaPersen !== undefined ? Number(p.bungaPersen) : defaultBungaPersen;
                 const pokokPerBulan = p.nominal / p.tenor;
                 const bungaPerBulan = p.nominal * (ratePersen / 100);
@@ -4832,6 +4863,14 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             if (inpToken) inpToken.value = appState.apiSecretToken || 'KOP-KELUARGA-2026';
             const inpFb = document.getElementById('inputCustomFirebaseConfig');
             if (inpFb && !inpFb.value) inpFb.value = localStorage.getItem('koperasi_custom_firebase_config') || appState.customFirebaseConfigJson || '';
+            const btnPriv = document.getElementById('btnToggleModePrivasi');
+            if (btnPriv) {
+                const isKetat = appState.modePrivasiKetat !== false;
+                btnPriv.textContent = isKetat ? '🔒 Privasi Anggota: KETAT (Hanya Lihat Data Sendiri)' : '👁️ Privasi Anggota: TRANSPARAN KELUARGA';
+                btnPriv.className = isKetat
+                    ? 'px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-extrabold text-[11px] shadow-sm transition'
+                    : 'px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-[11px] shadow-sm transition';
+            }
             const btnToggleReg = document.getElementById('btnTogglePendaftaranMandiri');
             if (btnToggleReg) {
                 const isOpen = appState.bukaPendaftaranMandiri !== false;
@@ -5460,7 +5499,12 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             const shuBody = document.getElementById('tabelShuBody');
             let sumSimpanan = 0, sumJasaModal = 0, sumJasaUsaha = 0, sumTotalTerima = 0;
 
-            const memberRows = appState.anggota.map(a => {
+            const isStrictPrivacy = (appState.modePrivasiKetat !== false) && (role !== 'admin');
+            const listAnggotaShu = isStrictPrivacy
+                ? appState.anggota.filter(a => a.id === currentUserSession.id)
+                : appState.anggota;
+
+            const memberRows = listAnggotaShu.map(a => {
                 const rincian = window.hitungRincianSimpananAnggota(a.id);
                 const ind = window.hitungShuIndividu(a.id, s);
                 const persenModal = (ind.porsiModal * 100).toFixed(1);
@@ -5766,7 +5810,26 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
             }
         };
 
+        window.verifySuperAdminOnly = () => {
+            if (!currentUserSession || currentUserSession.kontak !== '082298688189') {
+                window.showToast('🔒 Akses Ditolak! Pengaturan sistem tingkat tinggi ini khusus untuk Super Admin utama.', 'error');
+                return false;
+            }
+            return true;
+        };
+
+        window.toggleModePrivasiAnggota = () => {
+            if (!window.verifyAdminIntegrity()) return;
+            appState.modePrivasiKetat = appState.modePrivasiKetat === false ? true : false;
+            const statusStr = appState.modePrivasiKetat ? 'KETAT (Anggota Hanya Lihat Data Pribadi)' : 'TRANSPARAN KELUARGA';
+            window.catatLogAudit('UBAH_MODE_PRIVASI', `Mengubah kebijakan privasi data anggota menjadi: ${statusStr}`);
+            saveStateToCloud();
+            renderApp();
+            window.showToast(`🔒 Mode Privasi diatur ke: ${statusStr}`);
+        };
+
         window.exportDatabaseJson = () => {
+            if (!window.verifyAdminIntegrity()) return;
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const link = document.createElement('a');
             link.setAttribute('href', dataStr);
@@ -5778,6 +5841,7 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         window.importDatabaseJson = (e) => {
+            if (!window.verifySuperAdminOnly()) return;
             const file = e.target.files && e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -5813,6 +5877,7 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         window.resetDatabaseDefault = () => {
+            if (!window.verifySuperAdminOnly()) return;
             window.showConfirmModal(
                 'Reset ke Data Awal',
                 'Seluruh perubahan di penyimpanan lokal akan dikembalikan ke data awal Koperasi Keluarga. Lanjutkan?',
@@ -6159,6 +6224,12 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         window.bukaModalAkadPinjaman = (pinjamanId) => {
             const p = (appState.pinjaman || []).find(x => x.id === pinjamanId);
             if (!p) return;
+            const isSuperAdmin = currentUserSession?.kontak === '082298688189';
+            const role = isSuperAdmin ? appState.currentRole : (currentUserSession?.role || 'member');
+            if (role !== 'admin' && p.anggotaId !== currentUserSession?.id && p.penjaminNama !== currentUserSession?.nama) {
+                window.showToast('🔒 Privasi Dilindungi: Surat Akad Pinjaman hanya dapat dilihat oleh Peminjam, Penjamin, dan Pengurus!', 'error');
+                return;
+            }
             const a = appState.anggota.find(x => x.id === p.anggotaId) || {};
             const r = window.hitungRincianSimpananAnggota(p.anggotaId);
             const ratePersen = p.bungaPersen !== undefined ? Number(p.bungaPersen) : Number(appState.pinjamanSetting?.bungaPersen ?? 1);
@@ -6531,6 +6602,12 @@ Total Simpanan: ${window.formatRupiah(r.total)} (${(ind.porsiModal * 100).toFixe
         };
 
         window.bukaModalKoneksiFirebase = () => {
+            const isSuperAdmin = currentUserSession?.kontak === '082298688189';
+            const role = isSuperAdmin ? appState.currentRole : (currentUserSession?.role || 'member');
+            if (role !== 'admin') {
+                window.showToast('🔒 Koneksi Cloud Firestore Aktif & Terlindungi. Pengaturan server hanya dapat diakses oleh Pengurus/Admin.', 'info');
+                return;
+            }
             const saved = localStorage.getItem('koperasi_custom_firebase_config') || appState.customFirebaseConfigJson || '';
             const inp = document.getElementById('inputModalFirebaseConfig');
             if (inp) inp.value = saved;
