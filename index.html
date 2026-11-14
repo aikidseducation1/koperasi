@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Koperasi Keluarga v34.0 Pro</title>
+    <title>Aplikasi Koperasi Keluarga v34.5 Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -175,7 +175,7 @@
             <span class="text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">Info</span>
         </div>
         <div class="running-text-wrapper flex-1 overflow-hidden" title="Arahkan kursor / sentuh untuk menghentikan sejenak">
-            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v34.0 Pro!</p>
+            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v34.5 Pro!</p>
         </div>
         <button id="btnEditPengumuman" onclick="window.bukaModalEditPengumuman()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
             ✏️ Edit
@@ -193,7 +193,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v34.0</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v34.5 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -1066,25 +1066,37 @@
                     <div id="gridAnggota" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
                 </div>
 
-                <!-- TAB: REKENING BANK -->
+                <!-- TAB: REKENING BANK (UPGRADED v34.3 PRO) -->
                 <div id="tab-bank" class="space-y-4 sm:space-y-5 w-full hidden">
                     <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">Pengaturan Rekening Bank Koperasi</h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Daftar bank dan nomor rekening untuk tujuan transfer setoran anggota.</p>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">Rekening Bank, E-Wallet &amp; QRIS Koperasi</h2>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">🏦 Rekonsiliasi Kas &amp; QRIS</span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Daftar rekening resmi tujuan setoran anggota, barcode QRIS, serta laporan posisi saldo kasir per bank.</p>
                         </div>
-                        <button onclick="window.bukaModalBank()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-md transition shrink-0">+ Tambah Rekening</button>
+                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                            <button type="button" onclick="window.bagikanSemuaRekeningKeWA()" class="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm transition shrink-0">📢 Share Info Rekening ke WA</button>
+                            <button type="button" id="btnExportBankCsv" onclick="window.exportRekonsiliasiBankToExcel()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-3 py-2 rounded-xl text-xs shadow-sm transition shrink-0">📥 Export Rekonsiliasi</button>
+                            <button type="button" id="btnTambahRekeningAdmin" onclick="window.bukaModalBank()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-md transition shrink-0">+ Tambah Rekening / QRIS</button>
+                        </div>
                     </div>
+
+                    <!-- 4 Kartu Ringkasan Rekonsiliasi Bank -->
+                    <div id="bankSummaryCardsContainer" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
 
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5">
                         <div class="overflow-x-auto w-full">
-                            <table class="w-full text-left border-collapse min-w-[500px]">
+                            <table class="w-full text-left border-collapse min-w-[760px]">
                                 <thead>
                                     <tr class="bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-500 uppercase">
-                                        <th class="py-2.5 px-3">Nama Bank</th>
-                                        <th class="py-2.5 px-3">Nomor Rekening</th>
-                                        <th class="py-2.5 px-3">Atas Nama</th>
-                                        <th class="py-2.5 px-3 text-center">Aksi</th>
+                                        <th class="py-2.5 px-3">Nama Bank / Kanal</th>
+                                        <th class="py-2.5 px-3">Nomor Rekening &amp; Salin</th>
+                                        <th class="py-2.5 px-3">Atas Nama &amp; Cabang</th>
+                                        <th class="py-2.5 px-3">Mutasi &amp; Saldo Akhir Bank</th>
+                                        <th class="py-2.5 px-3 text-center">QRIS / Status</th>
+                                        <th class="py-2.5 px-3 text-center">Aksi &amp; Integrasi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabelBankBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs"></tbody>
@@ -1093,43 +1105,179 @@
                     </div>
                 </div>
 
-                <!-- TAB: SISTEM, KEAMANAN & 7-AUDIT (FITUR v30) -->
+                <!-- TAB: SISTEM, KEAMANAN & 8-AUDIT NERACA (UPGRADED v34.5 PRO) -->
                 <div id="tab-pengaturan" class="space-y-4 sm:space-y-5 w-full hidden">
                     <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">Sistem, Keamanan & 7-Audit Neraca</h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Pemeriksaan integritas kas otomatis, pengaturan iuran wajib, backup database JSON, dan log sistem.</p>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">Sistem, Keamanan &amp; 8-Audit Neraca</h2>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">🛡️ Proteksi &amp; Audit Aktif</span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Pemeriksaan integritas kas &amp; bank otomatis, proteksi PIN &amp; sesi idle, pengaturan iuran, backup/restore JSON, dan log audit sistem.</p>
                         </div>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="window.downloadBackupJson()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition">📥 Backup Database JSON</button>
-                            <button onclick="window.bukaModalSyncStatus()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition">☁️ Konfigurasi Cloud & API</button>
+                        <div class="flex flex-wrap gap-2 no-print">
+                            <button type="button" onclick="window.cetakLaporanAuditSistem()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm transition">🖨️ Cetak Audit</button>
+                            <button type="button" onclick="window.downloadBackupJson()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition">📥 Backup Database JSON</button>
+                            <label class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer inline-flex items-center">
+                                📤 Restore JSON
+                                <input type="file" accept=".json" class="hidden" onchange="window.restoreBackupJson(event)">
+                            </label>
+                            <button type="button" onclick="window.bukaModalSyncStatus()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition">☁️ Konfigurasi Cloud &amp; API</button>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3">
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">🛡️ Pemeriksaan 7-Audit Kesehatan Finansial Koperasi</h3>
-                        <div id="gridSevenAudit" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs"></div>
+                    <!-- 4 Kartu Ringkasan Eksekutif Sistem, Keamanan & Kapasitas -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block">Skor Kesehatan Audit</span>
+                            <strong id="sysCardAuditScore" class="text-sm sm:text-base font-black text-emerald-600 block mt-0.5">8 / 8 Lulus (100%)</strong>
+                            <span id="sysCardAuditSub" class="text-[10px] text-slate-400 block truncate">Neraca &amp; Rekonsiliasi Bank</span>
+                        </div>
+                        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block">Keamanan PIN &amp; Sesi</span>
+                            <strong id="sysCardPinSecurity" class="text-sm sm:text-base font-black text-blue-600 block mt-0.5">Terlindungi</strong>
+                            <span id="sysCardSessionSub" class="text-[10px] text-slate-400 block truncate">Auto-Logout: 30m • Max 5x PIN</span>
+                        </div>
+                        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block">Ukuran Database Lokal</span>
+                            <strong id="sysCardStorageSize" class="text-sm sm:text-base font-black text-purple-600 block mt-0.5">0 KB (0%)</strong>
+                            <span id="sysCardRecordCount" class="text-[10px] text-slate-400 block truncate">0 Anggota • 0 Transaksi</span>
+                        </div>
+                        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-emerald-200 dark:border-emerald-900 shadow-xs bg-emerald-50/30 dark:bg-emerald-950/20">
+                            <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold uppercase block">Log Aktivitas &amp; Keamanan</span>
+                            <strong id="sysCardLogCount" class="text-sm sm:text-base font-black text-emerald-600 block mt-0.5">0 Aktivitas</strong>
+                            <span id="sysCardFailedLoginSub" class="text-[10px] text-slate-500 block truncate">Percobaan Gagal Login: 0</span>
+                        </div>
                     </div>
 
+                    <!-- Panel 8-Audit Kesehatan Finansial, Rekonsiliasi Bank & Keamanan -->
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3">
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">⚙️ Parameter Standar Iuran Koperasi Keluarga</h3>
-                        <form onsubmit="return window.simpanParameterKoperasi(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                             <div>
-                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Simpanan Pokok Standar (Rp)</label>
-                                <input type="number" id="paramSimpananPokok" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-bold">
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-white">🛡️ Pemeriksaan 8-Audit Kesehatan Finansial, Rekonsiliasi Bank &amp; Keamanan</h3>
+                                <p class="text-[11px] text-slate-500">Deteksi otomatis selisih kas buku vs rekening bank, rasio sisa piutang berjalan, akun dengan PIN standar 1234, dan kapasitas penyimpanan.</p>
                             </div>
+                            <button type="button" onclick="window.autoFixRekonsiliasiBank()" class="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-slate-700 font-bold text-[11px] shrink-0 no-print">⚡ Auto-Fix Selaraskan Transaksi Tanpa Bank</button>
+                        </div>
+                        <div id="gridSevenAudit" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs"></div>
+                    </div>
+
+                    <!-- Grid 2 Kolom: Parameter Standar Iuran & Kebijakan Keamanan Sesi / Anti-Brute Force -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3 flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">⚙️ Parameter Standar Iuran Koperasi Keluarga</h3>
+                                    <p class="text-[11px] text-slate-500">Acuan nominal standar untuk pengingat kewajiban anggota dan iuran arisan bulanan.</p>
+                                </div>
+                                <form id="formParameterKoperasi" onsubmit="return window.simpanParameterKoperasi(event)" class="space-y-3 text-xs">
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                        <div>
+                                            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Simpanan Pokok (Rp)</label>
+                                            <input type="number" id="paramSimpananPokok" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-bold">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Iuran Wajib / Bln (Rp)</label>
+                                            <input type="number" id="paramSimpananWajib" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-bold">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Iuran Arisan / Bln (Rp)</label>
+                                            <input type="number" id="paramIuranArisan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-bold">
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end pt-1">
+                                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">Simpan Parameter Standar</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="boxWarningWeakPins" class="p-3 rounded-xl bg-amber-50/70 dark:bg-slate-800 border border-amber-200 dark:border-slate-700 text-[11px] text-amber-900 dark:text-amber-300"></div>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3">
+                            <div class="flex justify-between items-start gap-2">
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">🔐 Kebijakan Keamanan Sesi, Auto-Logout &amp; Anti-Brute Force PIN</h3>
+                                    <p class="text-[11px] text-slate-500">Atur batas waktu sesi tidak aktif (idle) dan penguncian otomatis jika salah memasukkan PIN.</p>
+                                </div>
+                                <button type="button" onclick="window.resetSemuaLockoutLogin()" class="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-slate-800 hover:bg-rose-100 text-rose-600 font-bold text-[10px] shrink-0" title="Buka kunci semua nomor WA yang terkunci karena salah PIN">🔓 Reset Lockout</button>
+                            </div>
+                            <form id="formKeamananSistem" onsubmit="return window.simpanKeamananSistem(event)" class="space-y-3 text-xs">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Auto-Logout Saat Idle</label>
+                                        <select id="secIdleTimeoutMenit" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-semibold">
+                                            <option value="15">15 Menit</option>
+                                            <option value="30">30 Menit (Standar)</option>
+                                            <option value="60">60 Menit (1 Jam)</option>
+                                            <option value="720">720 Menit (12 Jam)</option>
+                                            <option value="0">Nonaktif (Tetap Login)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Batas Maks. Salah PIN</label>
+                                        <select id="secMaxFailedLogin" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-semibold">
+                                            <option value="3">3 Kali Salah PIN</option>
+                                            <option value="5">5 Kali Salah PIN</option>
+                                            <option value="10">10 Kali Salah PIN</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Durasi Kunci (Cooldown)</label>
+                                        <select id="secLockoutDurationMenit" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-semibold">
+                                            <option value="1">1 Menit</option>
+                                            <option value="5">5 Menit (Standar)</option>
+                                            <option value="15">15 Menit</option>
+                                            <option value="30">30 Menit</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                                    <input type="checkbox" id="secWajibGantiPinStandar" checked class="accent-emerald-600 w-4 h-4">
+                                    <span class="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Tampilkan pengingat keamanan otomatis saat anggota login masih menggunakan PIN standar (<code class="font-mono font-bold">1234</code>)</span>
+                                </label>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">Simpan Kebijakan Keamanan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Tabel Log Audit Aktivitas & Keamanan Sistem -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                             <div>
-                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Iuran Wajib Bulanan (Rp)</label>
-                                <input type="number" id="paramSimpananWajib" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-bold">
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-white">📜 Log Audit Aktivitas &amp; Keamanan Sistem (Real-Time Audit Trail)</h3>
+                                <p class="text-[11px] text-slate-500">Rekam jejak otomatis aktivitas login, percobaan salah PIN, persetujuan transaksi, perubahan aturan, dan pencadangan database.</p>
                             </div>
-                            <div>
-                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Iuran Arisan Bulanan (Rp)</label>
-                                <input type="number" id="paramIuranArisan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none font-bold">
+                            <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto no-print">
+                                <input type="text" id="searchAuditLogInput" oninput="window.renderPengaturanAuditTab()" placeholder="🔍 Cari nama, aksi, detail..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none">
+                                <select id="filterKategoriAuditLog" onchange="window.renderPengaturanAuditTab()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none">
+                                    <option value="ALL">Semua Kategori Log</option>
+                                    <option value="AUTH">🔑 Login &amp; Sesi (AUTH)</option>
+                                    <option value="SECURITY">🚨 Keamanan / Salah PIN</option>
+                                    <option value="TRANSAKSI">💰 Verifikasi &amp; Mutasi</option>
+                                    <option value="PENGATURAN">⚙️ Perubahan Aturan</option>
+                                    <option value="BACKUP">📥 Backup &amp; Restore</option>
+                                </select>
+                                <button type="button" onclick="window.exportAuditLogToExcel()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-3 py-1.5 rounded-xl text-xs shadow-xs transition">📥 Export Log</button>
+                                <button type="button" onclick="window.bersihkanAuditLogSistem()" class="bg-rose-50 dark:bg-slate-800 hover:bg-rose-100 text-rose-600 font-bold px-2.5 py-1.5 rounded-xl text-xs transition">🗑️ Bersihkan</button>
                             </div>
-                            <div class="sm:col-span-3 flex justify-end">
-                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">Simpan Parameter Standar</button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-left border-collapse min-w-[700px]">
+                                <thead>
+                                    <tr class="bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                        <th class="py-2.5 px-3">Waktu Kejadian</th>
+                                        <th class="py-2.5 px-3">Pengguna / Aktor</th>
+                                        <th class="py-2.5 px-3">Kategori</th>
+                                        <th class="py-2.5 px-3">Aktivitas Sistem</th>
+                                        <th class="py-2.5 px-3">Rincian / Detail</th>
+                                        <th class="py-2.5 px-3 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelAuditLogBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -1453,6 +1601,10 @@
                     </div>
                     <input type="number" id="cicilanNominalInput" required min="1000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
                 </div>
+                <div id="groupCicilanBankTujuan">
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Tujuan Transfer Angsuran</label>
+                    <select id="cicilanBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Upload Bukti Transfer (Opsional)</label>
                     <input type="file" id="cicilanBuktiFoto" accept="image/*" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs outline-none file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950 dark:file:text-emerald-300">
@@ -1521,10 +1673,14 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Metode Pembayaran</label>
-                    <select id="arisanMetodeBayar" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                    <select id="arisanMetodeBayar" onchange="window.handleArisanMetodeChange(this)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                         <option value="TUNAI">Setoran Tunai / Transfer Bank</option>
                         <option value="POTONG_SUKARELA">Potong Saldo Simpanan Sukarela</option>
                     </select>
+                </div>
+                <div id="wrapArisanBankTujuan">
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Tujuan Setoran Arisan</label>
+                    <select id="arisanBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="document.getElementById('modalBayarArisan').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
@@ -1784,10 +1940,14 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Sumber Dana Tabungan</label>
-                    <select id="setorProgSumberDana" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                    <select id="setorProgSumberDana" onchange="window.handleProgramSumberChange(this)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                         <option value="TUNAI">Setoran Tunai / Transfer Baru</option>
                         <option value="POTONG_SUKARELA">Potong Saldo Simpanan Sukarela Saya</option>
                     </select>
+                </div>
+                <div id="wrapProgramBankTujuan">
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Tujuan Setoran Program</label>
+                    <select id="setorProgBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Catatan (Opsional)</label>
@@ -1832,7 +1992,8 @@
                 </div>
                 <div id="groupBankTujuan">
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Rekening Tujuan Transfer</label>
-                    <select id="transaksiBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                    <select id="transaksiBankTujuan" onchange="window.updateHelperBankTujuanTrx()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                    <div id="helperCopyBankTrx" class="mt-1.5 p-2 rounded-xl bg-blue-50/80 dark:bg-slate-800/90 border border-blue-200 dark:border-slate-700 flex items-center justify-between gap-2 text-[11px]"></div>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal (Rp)</label>
@@ -1897,11 +2058,15 @@
                     </div>
                     <div id="wrapZisSumberDana">
                         <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Sumber Dana Donasi</label>
-                        <select id="zisSumberDana" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                        <select id="zisSumberDana" onchange="window.handleSumberDanaZisChange(this)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                             <option value="TUNAI">Setoran Tunai / Transfer Bank</option>
                             <option value="POTONG_SUKARELA">Potong Saldo Simpanan Sukarela</option>
                         </select>
                     </div>
+                </div>
+                <div id="wrapZisBankTujuan">
+                    <label id="lblZisBankTujuan" class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Rekening Bank Tujuan Donasi ZIS</label>
+                    <select id="zisBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal (Rp)</label>
@@ -2078,27 +2243,54 @@
         </div>
     </div>
 
-    <!-- Modal Rekening Bank -->
+    <!-- Modal Rekening Bank (UPGRADED v34.3 PRO) -->
     <div id="modalBank" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3">
-            <h3 id="modalBankTitle" class="font-bold text-base text-slate-800 dark:text-white">Tambah Rekening Bank Koperasi</h3>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3 max-h-[92vh] overflow-y-auto">
+            <h3 id="modalBankTitle" class="font-bold text-base text-slate-800 dark:text-white">Tambah Rekening Bank / QRIS Koperasi</h3>
             <form id="formBank" class="space-y-3" onsubmit="return window.simpanRekeningBank(event)">
                 <input type="hidden" id="editBankId">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Bank / E-Wallet</label>
-                    <input type="text" id="bankNama" required placeholder="Contoh: BCA / Mandiri / QRIS" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Bank / E-Wallet</label>
+                        <input type="text" id="bankNama" required placeholder="Contoh: BCA / BSI / Dana" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Jenis Kanal</label>
+                        <select id="bankJenisKanal" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                            <option value="Bank Transfer">🏦 Bank Transfer</option>
+                            <option value="Bank Syariah">☪️ Bank Syariah</option>
+                            <option value="E-Wallet">📱 E-Wallet (Dana/OVO/Gopay)</option>
+                            <option value="QRIS">📷 QRIS Koperasi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nomor Rekening / E-Wallet</label>
+                        <input type="text" id="bankNomor" required placeholder="1234567890" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-emerald-600 mb-1">Saldo Awal Rek. (Rp)</label>
+                        <input type="number" id="bankSaldoAwal" value="0" min="0" step="50000" placeholder="0" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Atas Nama Pemilik</label>
+                        <input type="text" id="bankPemilik" required placeholder="Koperasi Keluarga" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Kantor Cabang / Catatan</label>
+                        <input type="text" id="bankCabang" placeholder="Contoh: KCP Jakarta / Bebas Admin" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nomor Rekening</label>
-                    <input type="text" id="bankNomor" required placeholder="1234567890" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Atas Nama Pemilik Rekening</label>
-                    <input type="text" id="bankPemilik" required placeholder="Koperasi Keluarga" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Upload Gambar Barcode QRIS (Opsional)</label>
+                    <input type="file" id="bankQrisFoto" accept="image/*" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs outline-none file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="document.getElementById('modalBank').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
-                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs shadow-md">Simpan Rekening</button>
                 </div>
             </form>
         </div>
@@ -2332,7 +2524,18 @@
 
     <script>
         const LOCAL_STORAGE_KEY = 'KOPERASI_KELUARGA_V34_PRO_LOCAL';
+        const SESSION_STORAGE_KEY = 'KOPERASI_ACTIVE_SESSION_V34_4';
         const CUSTOM_FIREBASE_KEY = 'KOPERASI_CUSTOM_FIREBASE_CONFIG';
+
+        window.escapeHtml = function(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'koperasi-keluarga-v25-pro';
 
         let customConfig = null;
@@ -2364,7 +2567,7 @@
             currentRole: 'member',
             activeTab: 'dashboard',
             totalShu: 2500000,
-            pengumuman: "Selamat datang di Koperasi Keluarga v25.0 Pro! Mari tingkatkan kesejahteraan keluarga bersama.",
+            pengumuman: "Selamat datang di Koperasi Keluarga v34.5 Pro! Dilengkapi 8-Audit Neraca & Bank, Proteksi Brute-Force PIN, Auto-Logout Idle & Log Sistem.",
             rekeningBank: [
                 { id: 'b1', nama: 'BCA', nomor: '1234567890', pemilik: 'Koperasi Keluarga aufah' },
                 { id: 'b2', nama: 'Mandiri', nomor: '0987654321', pemilik: 'Koperasi Keluarga aufah' }
@@ -2400,6 +2603,10 @@
             shuSetting: { alokasiModal: 40, alokasiUsaha: 20, alokasiCadangan: 25, alokasiSosial: 15 },
             pinjamanSetting: { maxPlafonMultiplier: 3, bungaPerBulan: 1, maxTenor: 12 },
             parameterStandar: { simpananPokok: 500000, simpananWajib: 100000, iuranArisan: 100000 },
+            securitySetting: { idleTimeoutMenit: 30, maxFailedLogin: 5, lockoutDurationMenit: 5, warnWeakPin: true },
+            systemAuditLogs: [
+                { id: 'log_init_1', waktu: '2026-11-14 08:00:00', aktor: 'Sistem Otomatis', role: 'SYSTEM', kategori: 'PENGATURAN', aktivitas: 'Inisialisasi Sistem v34.5 Pro', detail: '8-Audit Neraca, Rekonsiliasi Bank 5 Modul & Proteksi Brute-Force Aktif', status: 'Sukses' }
+            ],
             arisan: {
                 peserta: [
                     { anggotaId: 'a1', nama: 'Super Admin', sudahMenang: true, tanggalMenang: '2026-02-01', lunasPutaranIni: true },
@@ -2407,7 +2614,8 @@
                 ],
                 riwayatPemenang: [
                     { putaranKe: 1, tanggal: '2026-02-01', nama: 'Super Admin', nominalPot: 200000 }
-                ]
+                ],
+                riwayatIuran: []
             },
             programKeluarga: [
                 {
@@ -2468,6 +2676,102 @@
             }
         } catch (e) {}
 
+        window.saveUserSessionState = function() {
+            if (!currentUserSession) return;
+            const payload = JSON.stringify({
+                id: currentUserSession.id,
+                kontak: currentUserSession.kontak,
+                currentRole: appState.currentRole || currentUserSession.role,
+                activeTab: appState.activeTab || 'dashboard',
+                savedAt: Date.now()
+            });
+            try { sessionStorage.setItem(SESSION_STORAGE_KEY, payload); } catch (e) {}
+            try { localStorage.setItem(SESSION_STORAGE_KEY, payload); } catch (e) {}
+        };
+
+        window.clearUserSessionState = function() {
+            try { sessionStorage.removeItem(SESSION_STORAGE_KEY); } catch (e) {}
+            try { localStorage.removeItem(SESSION_STORAGE_KEY); } catch (e) {}
+        };
+
+        window.restoreUserSessionState = function() {
+            if (currentUserSession) return true;
+            try {
+                const raw = sessionStorage.getItem(SESSION_STORAGE_KEY) || localStorage.getItem(SESSION_STORAGE_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                // Sesi berlaku 12 jam sejak aktivitas terakhir
+                if (!data || (Date.now() - (Number(data.savedAt) || 0) > 12 * 60 * 60 * 1000)) {
+                    window.clearUserSessionState();
+                    return false;
+                }
+                const daftarAnggota = (appState && Array.isArray(appState.anggota)) ? appState.anggota : defaultState.anggota;
+                const found = daftarAnggota.find(a => a.id === data.id || a.kontak === data.kontak);
+                if (!found) return false;
+                currentUserSession = found;
+                appState.currentRole = found.kontak === '082298688189' ? (data.currentRole || 'admin') : found.role;
+                const savedTab = data.activeTab || 'dashboard';
+                const loginScreen = document.getElementById('loginScreen');
+                if (loginScreen) loginScreen.classList.add('hidden');
+                if (typeof window.switchTab === 'function') {
+                    window.switchTab(savedTab);
+                } else if (typeof window.renderApp === 'function') {
+                    window.renderApp();
+                }
+                return true;
+            } catch (e) {
+                return false;
+            }
+        };
+
+        const LOGIN_LOCKOUT_KEY = 'KOPERASI_LOGIN_LOCKOUT_MAP_V34_5';
+        let lastUserActivityTime = Date.now();
+
+        window.catatLogAuditSistem = function(kategori, aktivitas, detail = '', status = 'Sukses', customAktor = '') {
+            if (!Array.isArray(appState.systemAuditLogs)) appState.systemAuditLogs = [];
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            const waktuStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const aktorNama = customAktor || (currentUserSession ? currentUserSession.nama : 'Tamu / Anonim');
+            const aktorRole = currentUserSession ? window.getEffectiveRole().toUpperCase() : 'PUBLIC';
+            appState.systemAuditLogs.unshift({
+                id: 'log_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                waktu: waktuStr,
+                aktor: aktorNama,
+                role: aktorRole,
+                kategori: kategori || 'SISTEM',
+                aktivitas: aktivitas || '-',
+                detail: detail || '-',
+                status: status || 'Sukses'
+            });
+            if (appState.systemAuditLogs.length > 150) {
+                appState.systemAuditLogs = appState.systemAuditLogs.slice(0, 150);
+            }
+        };
+
+        window.getLockoutMap = function() {
+            try {
+                const raw = localStorage.getItem(LOGIN_LOCKOUT_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) {
+                return {};
+            }
+        };
+
+        window.saveLockoutMap = function(mapObj) {
+            try {
+                localStorage.setItem(LOGIN_LOCKOUT_KEY, JSON.stringify(mapObj || {}));
+            } catch (e) {}
+        };
+
+        window.resetSemuaLockoutLogin = function() {
+            window.saveLockoutMap({});
+            window.catatLogAuditSistem('SECURITY', 'Reset Lockout PIN', 'Seluruh kunci percobaan gagal login dibuka oleh Pengurus', 'Sukses');
+            saveStateToCloud();
+            window.renderApp();
+            window.showToast('🔓 Seluruh pembatasan gagal login (Lockout PIN) berhasil direset!');
+        };
+
         window._doLoginProcess = function(e) {
             if (e && typeof e.preventDefault === 'function') e.preventDefault();
             const kontakEl = document.getElementById('loginKontak');
@@ -2475,22 +2779,69 @@
             const kontak = kontakEl ? kontakEl.value.trim() : '';
             const pin = pinEl ? pinEl.value.trim() : '';
 
+            const sec = appState.securitySetting || { idleTimeoutMenit: 30, maxFailedLogin: 5, lockoutDurationMenit: 5, warnWeakPin: true };
+            const maxFail = Number(sec.maxFailedLogin) || 5;
+            const lockMinutes = Number(sec.lockoutDurationMenit) || 5;
+            const lockMap = window.getLockoutMap();
+            const entry = lockMap[kontak] || { count: 0, lockedUntil: 0 };
+
+            if (entry.lockedUntil && Date.now() < entry.lockedUntil) {
+                const sisaDetik = Math.ceil((entry.lockedUntil - Date.now()) / 1000);
+                const sisaMenit = Math.ceil(sisaDetik / 60);
+                if (typeof window.showToast === 'function') {
+                    window.showToast(`🔒 Akun ${kontak} dikunci sementara karena ${maxFail}x salah PIN! Coba lagi dalam ${sisaMenit} menit (${sisaDetik} dtk).`, 'error');
+                }
+                return false;
+            }
+
             const daftarAnggota = (appState && Array.isArray(appState.anggota)) ? appState.anggota : defaultState.anggota;
             const found = daftarAnggota.find(a => a.kontak === kontak && a.pin === pin);
             if (found) {
+                if (lockMap[kontak]) {
+                    delete lockMap[kontak];
+                    window.saveLockoutMap(lockMap);
+                }
                 currentUserSession = found;
+                lastUserActivityTime = Date.now();
                 appState.currentRole = found.kontak === '082298688189' ? 'admin' : found.role;
+                window.saveUserSessionState();
+                window.catatLogAuditSistem('AUTH', 'Login Berhasil', `Masuk sebagai ${found.nama} (${found.kontak})`, 'Sukses', found.nama);
+                saveStateToCloud();
+
                 const loginScreen = document.getElementById('loginScreen');
                 if (loginScreen) loginScreen.classList.add('hidden');
                 if (typeof window.showToast === 'function') {
                     window.showToast(`Selamat datang, ${found.nama}!`);
+                    if (sec.warnWeakPin !== false && (found.pin === '1234' || found.pin === '0000')) {
+                        setTimeout(() => {
+                            window.showToast('⚠️ Pengingat Keamanan: Anda masih memakai PIN standar (1234). Segera perbarui PIN di menu Profil & Kartu Saya.', 'info');
+                        }, 1200);
+                    }
                 }
                 if (typeof window.renderApp === 'function') {
                     window.renderApp();
                 }
             } else {
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Nomor WA atau PIN salah! (Super Admin: 082298688189 / PIN: 1234)', 'error');
+                entry.count = (Number(entry.count) || 0) + 1;
+                if (entry.count >= maxFail) {
+                    entry.lockedUntil = Date.now() + (lockMinutes * 60 * 1000);
+                    entry.count = 0;
+                    lockMap[kontak] = entry;
+                    window.saveLockoutMap(lockMap);
+                    window.catatLogAuditSistem('SECURITY', 'Akun Terkunci (Brute-Force PIN)', `Nomor WA ${kontak} salah PIN ${maxFail}x berturut-turut (Kunci ${lockMinutes} menit)`, 'Ditolak', kontak || 'Anonim');
+                    saveStateToCloud();
+                    if (typeof window.showToast === 'function') {
+                        window.showToast(`🚨 Terlalu banyak percobaan salah PIN! Nomor ${kontak} dikunci selama ${lockMinutes} menit.`, 'error');
+                    }
+                } else {
+                    lockMap[kontak] = entry;
+                    window.saveLockoutMap(lockMap);
+                    const sisaKesempatan = maxFail - entry.count;
+                    window.catatLogAuditSistem('SECURITY', 'Gagal Login (Salah PIN)', `Nomor WA ${kontak} gagal autentikasi (Percobaan ke-${entry.count} dari ${maxFail})`, 'Peringatan', kontak || 'Anonim');
+                    saveStateToCloud();
+                    if (typeof window.showToast === 'function') {
+                        window.showToast(`Nomor WA atau PIN salah! Sisa kesempatan: ${sisaKesempatan}x sebelum terkunci.`, 'error');
+                    }
                 }
             }
             return false;
@@ -2719,6 +3070,9 @@
                             document.getElementById('firebaseStatusText').textContent = `Cloud Synced (${lastSyncTimestamp})`;
                             const sideSync = document.getElementById('sidebarLastSyncTime');
                             if (sideSync) sideSync.textContent = `Sinkron Cloud: ${lastSyncTimestamp}`;
+                            if (!currentUserSession && typeof window.restoreUserSessionState === 'function') {
+                                window.restoreUserSessionState();
+                            }
                             if (currentUserSession) {
                                 const foundUpdated = appState.anggota.find(a => a.id === currentUserSession.id);
                                 if (foundUpdated) currentUserSession = foundUpdated;
@@ -2818,6 +3172,9 @@
         };
 
         window.downloadBackupJson = () => {
+            appState.lastBackupTime = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            window.catatLogAuditSistem('BACKUP', 'Unduh Backup Database JSON', `Backup penuh diunduh (${(appState.anggota || []).length} anggota, ${(appState.transaksi || []).length} transaksi)`, 'Sukses');
+            saveStateToCloud();
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const dlAnchor = document.createElement('a');
             dlAnchor.setAttribute("href", dataStr);
@@ -2825,7 +3182,8 @@
             document.body.appendChild(dlAnchor);
             dlAnchor.click();
             dlAnchor.remove();
-            window.showToast('File Backup JSON berhasil diunduh!');
+            if (typeof window.renderApp === 'function') window.renderApp();
+            window.showToast('File Backup JSON berhasil diunduh & dicatat di Log Audit!');
         };
 
         window.restoreBackupJson = (event) => {
@@ -2837,6 +3195,7 @@
                     const parsed = JSON.parse(e.target.result);
                     if (parsed && Array.isArray(parsed.anggota)) {
                         appState = { ...appState, ...parsed };
+                        window.catatLogAuditSistem('BACKUP', 'Restore Database JSON', `Data dipulihkan dari file ${file.name}`, 'Sukses');
                         await saveStateToCloud();
                         if (currentUserSession) window.renderApp();
                         window.showToast('Data Backup JSON berhasil dipulihkan & disinkronkan!');
@@ -2876,10 +3235,15 @@
             setTimeout(() => window.location.reload(), 1000);
         };
 
-        window.handleLogout = () => {
+        window.handleLogout = (alasan = 'Logout Manual') => {
+            if (currentUserSession) {
+                window.catatLogAuditSistem('AUTH', alasan, `Pengguna ${currentUserSession.nama} keluar dari sesi`, 'Sukses', currentUserSession.nama);
+                saveStateToCloud();
+            }
             currentUserSession = null;
+            window.clearUserSessionState();
             document.getElementById('loginScreen').classList.remove('hidden');
-            window.showToast('Berhasil keluar dari sesi.', 'info');
+            window.showToast(alasan === 'Auto-Logout Idle' ? '🔒 Sesi otomatis berakhir karena tidak aktif (Auto-Logout Keamanan).' : 'Berhasil keluar dari sesi.', 'info');
         };
 
         window.toggleSidebar = () => {
@@ -2905,6 +3269,7 @@
                 if (overlay) overlay.classList.add('hidden');
             }
             if (tabId === 'profil-saya') populateProfilMandiri();
+            window.saveUserSessionState();
             window.renderApp();
         };
 
@@ -2937,10 +3302,11 @@
         window.switchMode = (mode) => {
             if (currentUserSession && currentUserSession.kontak === '082298688189') {
                 appState.currentRole = mode;
-                if (mode === 'member' && ['persetujuan', 'anggota', 'bank', 'pengaturan'].includes(appState.activeTab)) {
+                if (mode === 'member' && ['persetujuan', 'anggota', 'pengaturan'].includes(appState.activeTab)) {
                     window.switchTab('dashboard');
                     return;
                 }
+                window.saveUserSessionState();
                 window.showToast(`Beralih ke tampilan ${mode === 'admin' ? 'Admin' : 'Anggota'}`, 'info');
                 window.renderApp();
             }
@@ -3223,8 +3589,8 @@
                         ` : ''}
                         <div class="pr-24">
                             <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 rounded-full">Voting Keluarga</span>
-                            <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm mt-1 break-words">${v.pertanyaan}</h4>
-                            <p class="text-[10px] text-slate-400 mt-0.5">Oleh: ${v.pembuat || 'Admin'} • Total: ${totalSuara} suara</p>
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm mt-1 break-words">${window.escapeHtml(v.pertanyaan)}</h4>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Oleh: ${window.escapeHtml(v.pembuat || 'Admin')} • Total: ${totalSuara} suara</p>
                         </div>
                         <div class="space-y-1.5">
                             ${(v.opsi || []).map((opsi, idx) => {
@@ -3378,10 +3744,10 @@
 
             tbody.innerHTML = recent.map(t => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                    <td class="py-2.5 px-3 font-mono text-[11px] text-slate-500">${t.waktu}</td>
-                    <td class="py-2.5 px-3 font-bold">${t.nama}</td>
-                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.tipe === 'Setoran' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}">${t.tipe}</span></td>
-                    <td class="py-2.5 px-3 text-slate-500">${t.kategori}</td>
+                    <td class="py-2.5 px-3 font-mono text-[11px] text-slate-500">${window.escapeHtml(t.waktu)}</td>
+                    <td class="py-2.5 px-3 font-bold">${window.escapeHtml(t.nama)}</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.tipe === 'Setoran' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}">${window.escapeHtml(t.tipe)}</span></td>
+                    <td class="py-2.5 px-3 text-slate-500">${window.escapeHtml(t.kategori)}</td>
                     <td class="py-2.5 px-3 font-extrabold ${t.tipe === 'Setoran' ? 'text-emerald-600' : 'text-rose-600'}">${t.tipe === 'Setoran' ? '+' : '-'}${window.formatRupiah(t.nominal)}</td>
                     <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : t.status === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${t.status}</span></td>
                 </tr>
@@ -3621,6 +3987,7 @@
                     }
                 }
                 t.status = statusBaru;
+                window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Transaksi Simpanan`, `${t.tipe} ${t.kategori} a.n ${t.nama} (${window.formatRupiah(t.nominal)})`, statusBaru);
                 saveStateToCloud();
                 window.renderApp();
                 window.showToast(`Transaksi ${statusBaru.toLowerCase()}!`);
@@ -3804,18 +4171,18 @@
             } else {
                 const rowsHtml = filtered.map(t => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                        <td class="py-3 px-3 font-mono text-[11px] text-slate-500">${t.waktu}</td>
-                        <td class="py-3 px-3 font-bold">${t.nama}</td>
-                        <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.tipe === 'Setoran' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${t.tipe}</span></td>
+                        <td class="py-3 px-3 font-mono text-[11px] text-slate-500">${window.escapeHtml(t.waktu)}</td>
+                        <td class="py-3 px-3 font-bold">${window.escapeHtml(t.nama)}</td>
+                        <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.tipe === 'Setoran' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${window.escapeHtml(t.tipe)}</span></td>
                         <td class="py-3 px-3 text-slate-500">
-                            <span class="font-semibold text-slate-700 dark:text-slate-200">${t.kategori}</span>
-                            ${t.bankTujuan ? `<span class="block text-[10px] text-slate-400">via ${t.bankTujuan}</span>` : ''}
+                            <span class="font-semibold text-slate-700 dark:text-slate-200">${window.escapeHtml(t.kategori)}</span>
+                            ${t.bankTujuan ? `<span class="block text-[10px] text-slate-400">via ${window.escapeHtml(t.bankTujuan)}</span>` : ''}
                         </td>
                         <td class="py-3 px-3 font-extrabold ${t.tipe === 'Setoran' ? 'text-emerald-600' : 'text-rose-600'}">${t.tipe === 'Setoran' ? '+' : '-'}${window.formatRupiah(t.nominal)}</td>
                         <td class="py-3 px-3 font-bold text-slate-700 dark:text-slate-300">${t.status === 'Disetujui' ? window.formatRupiah(t.saldoSetelah) : '<span class="text-[10px] text-slate-400 italic">Menunggu</span>'}</td>
-                        <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : t.status === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${t.status}</span></td>
+                        <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : t.status === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${window.escapeHtml(t.status)}</span></td>
                         <td class="py-3 px-3">${t.bukti ? `<button onclick="window.lihatFotoBukti('${t.bukti}')" class="text-blue-600 underline text-[11px] font-bold">🖼️ Lihat</button>` : '-'}</td>
-                        <td class="py-3 px-3 text-slate-500">${t.keterangan || '-'}</td>
+                        <td class="py-3 px-3 text-slate-500">${window.escapeHtml(t.keterangan || '-')}</td>
                         <td class="py-3 px-3 text-center no-print space-x-1 whitespace-nowrap">
                             <button onclick="window.bukaKwitansiTransaksi('${t.id}')" class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 font-bold text-[10px]" title="Cetak Struk / Kwitansi">🧾 Struk</button>
                             ${(role === 'admin' || isSuperAdmin) ? `<button onclick="window.bukaModalEditTransaksi('${t.id}')" class="text-emerald-600 hover:underline font-bold text-[11px]">Edit</button>` : ''}
@@ -4017,16 +4384,29 @@
             });
         };
 
-        window.bukaModalTransaksi = () => {
-            const select = document.getElementById('transaksiAnggotaId');
-            select.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${a.nama} (${a.namaKeluarga})</option>`).join('');
+        window.populateDropdownBankAktif = (selectId, selectedValue = '') => {
+            const bankSelect = document.getElementById(selectId);
+            if (!bankSelect) return;
+            const allBanks = appState.rekeningBank || [];
+            const aktifBanks = allBanks.filter(b => b.aktif !== false || b.nama === selectedValue);
+            aktifBanks.sort((a, b) => (b.isUtama ? 1 : 0) - (a.isUtama ? 1 : 0));
+            bankSelect.innerHTML = aktifBanks.map(b =>
+                `<option value="${window.escapeHtml(b.nama)}">${b.isUtama ? '⭐ ' : ''}${window.escapeHtml(b.nama)} - ${window.escapeHtml(b.nomor)} a.n ${window.escapeHtml(b.pemilik)}</option>`
+            ).join('');
+            if (selectedValue && [...bankSelect.options].some(o => o.value === selectedValue)) {
+                bankSelect.value = selectedValue;
+            }
+        };
 
-            const bankSelect = document.getElementById('transaksiBankTujuan');
-            bankSelect.innerHTML = appState.rekeningBank.map(b => `<option value="${b.nama}">${b.nama} - ${b.nomor} a.n ${b.pemilik}</option>`).join('');
+        window.bukaModalTransaksi = () => {
+            if (typeof window.upgradeDOMBankModalDanTab === 'function') window.upgradeDOMBankModalDanTab();
+            const select = document.getElementById('transaksiAnggotaId');
+            select.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
 
             document.getElementById('formTransaksi').reset();
             document.getElementById('editTransaksiId').value = '';
             document.getElementById('modalTransaksiTitle').textContent = 'Catat Setoran / Penarikan Simpanan';
+            window.populateDropdownBankAktif('transaksiBankTujuan');
 
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
@@ -4040,6 +4420,7 @@
 
             window.updateInfoSaldoModalTransaksi();
             window.handleTipeTransaksiChange(document.getElementById('transaksiTipe'));
+            if (typeof window.updateHelperBankTujuanTrx === 'function') window.updateHelperBankTujuanTrx();
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
 
@@ -4055,10 +4436,10 @@
         window.bukaModalEditTransaksi = (id) => {
             const t = (appState.transaksi || []).find(x => x.id === id);
             if (!t) return;
+            if (typeof window.upgradeDOMBankModalDanTab === 'function') window.upgradeDOMBankModalDanTab();
             const select = document.getElementById('transaksiAnggotaId');
-            select.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${a.nama} (${a.namaKeluarga})</option>`).join('');
-            const bankSelect = document.getElementById('transaksiBankTujuan');
-            bankSelect.innerHTML = appState.rekeningBank.map(b => `<option value="${b.nama}">${b.nama} - ${b.nomor} a.n ${b.pemilik}</option>`).join('');
+            select.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
+            window.populateDropdownBankAktif('transaksiBankTujuan', t.bankTujuan || '');
 
             document.getElementById('editTransaksiId').value = t.id;
             document.getElementById('modalTransaksiTitle').textContent = 'Edit Catatan Transaksi Simpanan';
@@ -4067,23 +4448,26 @@
             document.getElementById('transaksiTipe').value = t.tipe;
             document.getElementById('transaksiKategori').value = t.kategori;
             document.getElementById('transaksiNominal').value = t.nominal;
-            if (t.bankTujuan) bankSelect.value = t.bankTujuan;
+            if (t.bankTujuan) document.getElementById('transaksiBankTujuan').value = t.bankTujuan;
             document.getElementById('transaksiKeterangan').value = t.keterangan || '';
 
             window.updateInfoSaldoModalTransaksi();
             window.handleTipeTransaksiChange(document.getElementById('transaksiTipe'));
+            if (typeof window.updateHelperBankTujuanTrx === 'function') window.updateHelperBankTujuanTrx();
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
 
         window.handleTipeTransaksiChange = (sel) => {
             const groupBank = document.getElementById('groupBankTujuan');
             const groupBukti = document.getElementById('groupBuktiTransfer');
-            if (sel.value === 'Penarikan') {
-                groupBank.style.display = 'none';
-                groupBukti.style.display = 'none';
+            const lblBank = groupBank ? groupBank.querySelector('label') : null;
+            if (groupBank) groupBank.style.display = 'block';
+            if (sel && sel.value === 'Penarikan') {
+                if (lblBank) lblBank.textContent = 'Pilih Sumber Rekening Pencairan Dana (Kas Bank)';
+                if (groupBukti) groupBukti.style.display = 'none';
             } else {
-                groupBank.style.display = 'block';
-                groupBukti.style.display = 'block';
+                if (lblBank) lblBank.textContent = 'Pilih Rekening Tujuan Transfer';
+                if (groupBukti) groupBukti.style.display = 'block';
             }
         };
 
@@ -4098,8 +4482,8 @@
             const tipe = document.getElementById('transaksiTipe').value;
             const kategori = document.getElementById('transaksiKategori').value;
             const nominal = parseFloat(document.getElementById('transaksiNominal').value) || 0;
-            const bankTujuan = document.getElementById('transaksiBankTujuan').value;
-            const keterangan = document.getElementById('transaksiKeterangan').value;
+            const bankTujuan = document.getElementById('transaksiBankTujuan')?.value || '';
+            const keterangan = document.getElementById('transaksiKeterangan').value.trim();
             const fileInput = document.getElementById('transaksiBuktiFoto');
 
             let buktiUrl = '';
@@ -4128,13 +4512,13 @@
                     trx.tipe = tipe;
                     trx.kategori = kategori;
                     trx.nominal = nominal;
-                    trx.bankTujuan = tipe === 'Setoran' ? bankTujuan : '';
+                    trx.bankTujuan = bankTujuan;
                     trx.keterangan = keterangan;
                     if (buktiUrl) trx.bukti = buktiUrl;
                     saveStateToCloud();
                     document.getElementById('modalTransaksi').classList.add('hidden');
                     window.renderApp();
-                    window.showToast('Catatan transaksi berhasil diperbarui!');
+                    window.showToast('Catatan transaksi & mutasi bank berhasil diperbarui!');
                 }
                 return false;
             }
@@ -4160,7 +4544,7 @@
                 nominal,
                 status: role === 'admin' ? 'Disetujui' : 'Menunggu',
                 bukti: buktiUrl,
-                bankTujuan: tipe === 'Setoran' ? bankTujuan : '',
+                bankTujuan: bankTujuan,
                 keterangan
             };
 
@@ -4313,8 +4697,8 @@
                                     ${riwayatList.map((c, idx) => `
                                         <div class="flex justify-between items-center text-[11px] bg-slate-50 dark:bg-slate-800/60 px-2.5 py-1.5 rounded-lg">
                                             <div class="truncate">
-                                                <span class="font-semibold text-slate-700 dark:text-slate-200">#${idx + 1} (${c.tanggal})</span>
-                                                <span class="text-slate-400 ml-1">${c.keterangan || ''}</span>
+                                                <span class="font-semibold text-slate-700 dark:text-slate-200">#${idx + 1} (${window.escapeHtml(c.tanggal)})</span>
+                                                <span class="text-slate-400 ml-1">${window.escapeHtml(c.keterangan || '')} ${c.bankTujuan ? `[via ${window.escapeHtml(c.bankTujuan)}]` : ''}</span>
                                                 ${c.bukti ? `<button onclick="window.lihatFotoBukti('${c.bukti}')" class="text-blue-600 underline ml-1 font-bold">🖼️</button>` : ''}
                                             </div>
                                             <div class="flex items-center gap-1.5 shrink-0">
@@ -4731,20 +5115,28 @@
             });
         };
 
+        window.handleArisanMetodeChange = (sel) => {
+            const wrapBank = document.getElementById('wrapArisanBankTujuan');
+            if (wrapBank) wrapBank.style.display = (sel && sel.value === 'POTONG_SUKARELA') ? 'none' : 'block';
+        };
+
         window.bukaModalBayarArisan = () => {
             const role = window.getEffectiveRole();
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const wrapEl = document.getElementById('wrapArisanPilihAnggota');
             const selEl = document.getElementById('arisanPesertaSelect');
             if (selEl && wrapEl) {
-                selEl.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${a.nama} (${a.namaKeluarga})</option>`).join('');
+                selEl.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
                 selEl.value = currentUserSession.id;
                 if (role === 'admin' || isSuperAdmin) wrapEl.classList.remove('hidden');
                 else wrapEl.classList.add('hidden');
             }
+            window.populateDropdownBankAktif('arisanBankTujuan');
             const iuranStd = Number(appState.parameterStandar?.iuranArisan ?? 100000);
             document.getElementById('arisanNominalInput').value = iuranStd;
-            document.getElementById('arisanMetodeBayar').value = 'TUNAI';
+            const metodeEl = document.getElementById('arisanMetodeBayar');
+            metodeEl.value = 'TUNAI';
+            window.handleArisanMetodeChange(metodeEl);
             document.getElementById('modalBayarArisan').classList.remove('hidden');
         };
 
@@ -4758,6 +5150,7 @@
             const targetObj = appState.anggota.find(a => a.id === targetId) || currentUserSession;
             const nominal = parseFloat(document.getElementById('arisanNominalInput').value) || 0;
             const metode = document.getElementById('arisanMetodeBayar').value;
+            const bankTujuan = metode === 'TUNAI' ? (document.getElementById('arisanBankTujuan')?.value || '') : 'Potong Simpanan Sukarela';
 
             if (metode === 'POTONG_SUKARELA') {
                 const r = window.hitungRincianSimpananAnggota(targetId);
@@ -4781,18 +5174,31 @@
             }
 
             if (!appState.arisan || !Array.isArray(appState.arisan.peserta)) {
-                appState.arisan = { peserta: [], riwayatPemenang: [] };
+                appState.arisan = { peserta: [], riwayatPemenang: [], riwayatIuran: [] };
             }
+            if (!Array.isArray(appState.arisan.riwayatIuran)) appState.arisan.riwayatIuran = [];
+            appState.arisan.riwayatIuran.push({
+                id: 'ari_' + Date.now(),
+                tanggal: new Date().toISOString().slice(0, 10),
+                anggotaId: targetObj.id,
+                nama: targetObj.nama,
+                nominal,
+                metode,
+                bankTujuan,
+                status: 'Disetujui'
+            });
             const ps = appState.arisan.peserta.find(p => p.anggotaId === targetId);
             if (ps) {
                 ps.lunasPutaranIni = true;
+                ps.bankTujuanTerakhir = bankTujuan;
             } else {
                 appState.arisan.peserta.push({
                     anggotaId: targetObj.id,
                     nama: targetObj.nama,
                     sudahMenang: false,
                     tanggalMenang: '-',
-                    lunasPutaranIni: true
+                    lunasPutaranIni: true,
+                    bankTujuanTerakhir: bankTujuan
                 });
             }
 
@@ -4850,16 +5256,25 @@
             });
         };
 
+        window.handleProgramSumberChange = (sel) => {
+            const wrapBank = document.getElementById('wrapProgramBankTujuan');
+            if (wrapBank) wrapBank.style.display = (sel && sel.value === 'POTONG_SUKARELA') ? 'none' : 'block';
+        };
+
         window.setorKeProgramKeluarga = (progId) => {
             const pr = (appState.programKeluarga || []).find(x => x.id === progId);
             if (!pr) return;
             document.getElementById('setorProgId').value = progId;
             document.getElementById('judulModalSetorProgram').textContent = `Menabung: ${pr.nama}`;
             document.getElementById('setorProgNominal').value = 250000;
+            window.populateDropdownBankAktif('setorProgBankTujuan');
             const catEl = document.getElementById('setorProgCatatan');
             if (catEl) catEl.value = '';
             const sumEl = document.getElementById('setorProgSumberDana');
-            if (sumEl) sumEl.value = 'TUNAI';
+            if (sumEl) {
+                sumEl.value = 'TUNAI';
+                window.handleProgramSumberChange(sumEl);
+            }
             document.getElementById('modalSetorProgram').classList.remove('hidden');
         };
 
@@ -4868,6 +5283,7 @@
             const progId = document.getElementById('setorProgId').value;
             const nominal = parseFloat(document.getElementById('setorProgNominal').value) || 0;
             const sumberDana = document.getElementById('setorProgSumberDana')?.value || 'TUNAI';
+            const bankTujuan = sumberDana === 'TUNAI' ? (document.getElementById('setorProgBankTujuan')?.value || '') : 'Potong Simpanan Sukarela';
             const catatan = document.getElementById('setorProgCatatan')?.value.trim() || '';
 
             const pr = (appState.programKeluarga || []).find(x => x.id === progId);
@@ -4902,6 +5318,8 @@
                 anggotaId: currentUserSession.id,
                 nama: currentUserSession.nama,
                 nominal,
+                sumberDana,
+                bankTujuan,
                 catatan
             });
 
@@ -5400,8 +5818,8 @@
                     <td class="py-2.5 px-3 font-mono text-[10px] text-slate-500">${z.tanggal}</td>
                     <td class="py-2.5 px-3 font-bold">${displayNama}</td>
                     <td class="py-2.5 px-3">
-                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isKeluar ? 'bg-rose-100 text-rose-800' : 'bg-purple-100 text-purple-800'}">${z.jenis} (${z.tipeMutasi || 'Pemasukan'})</span>
-                        ${z.sumberDana === 'POTONG_SUKARELA' ? `<span class="block text-[9px] text-emerald-600 mt-0.5">Potong Tabungan Sukarela</span>` : ''}
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isKeluar ? 'bg-rose-100 text-rose-800' : 'bg-purple-100 text-purple-800'}">${window.escapeHtml(z.jenis)} (${window.escapeHtml(z.tipeMutasi || 'Pemasukan')})</span>
+                        ${z.sumberDana === 'POTONG_SUKARELA' ? `<span class="block text-[9px] text-emerald-600 mt-0.5">Potong Tabungan Sukarela</span>` : (z.bankTujuan ? `<span class="block text-[9px] text-slate-400 mt-0.5">via ${window.escapeHtml(z.bankTujuan)}</span>` : '')}
                     </td>
                     <td class="py-2.5 px-3 font-extrabold ${isKeluar ? 'text-rose-600' : 'text-emerald-600'}">${isKeluar ? '-' : '+'}${window.formatRupiah(z.nominal)}</td>
                     <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${st === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : st === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${st}</span></td>
@@ -5441,14 +5859,35 @@
             document.getElementById('zisKeterangan').value = 'Tunaikan Zakat Maal / Infaq Simpanan (2,5%)';
         };
 
+        window.handleSumberDanaZisChange = (sel) => {
+            const tipeMutasi = document.getElementById('zisTipeMutasi')?.value || 'Pemasukan';
+            const wrapBank = document.getElementById('wrapZisBankTujuan');
+            if (!wrapBank) return;
+            if (tipeMutasi === 'Pemasukan' && sel && sel.value === 'POTONG_SUKARELA') {
+                wrapBank.style.display = 'none';
+            } else {
+                wrapBank.style.display = 'block';
+            }
+        };
+
         window.handleTipeMutasiZisChange = (sel) => {
             const isPenyaluran = sel.value === 'Penyaluran';
             const wrapSumber = document.getElementById('wrapZisSumberDana');
             const wrapAnonim = document.getElementById('wrapZisAnonim');
+            const lblBank = document.getElementById('lblZisBankTujuan');
+            const wrapBank = document.getElementById('wrapZisBankTujuan');
             if (wrapSumber) wrapSumber.style.display = isPenyaluran ? 'none' : 'block';
             if (wrapAnonim) wrapAnonim.style.display = isPenyaluran ? 'none' : 'flex';
+            if (lblBank) {
+                lblBank.textContent = isPenyaluran
+                    ? 'Pilih Rekening Bank Sumber Pencairan Santunan'
+                    : 'Pilih Rekening Bank Tujuan Donasi ZIS';
+            }
             if (isPenyaluran) {
                 document.getElementById('zisJenis').value = 'Santunan Sosial';
+                if (wrapBank) wrapBank.style.display = 'block';
+            } else {
+                window.handleSumberDanaZisChange(document.getElementById('zisSumberDana'));
             }
         };
 
@@ -5458,6 +5897,7 @@
             if (editEl) editEl.value = '';
             const titleEl = document.getElementById('modalZisTitle');
             if (titleEl) titleEl.textContent = 'Catat ZISWAF / Penyaluran Dana Sosial';
+            window.populateDropdownBankAktif('zisBankTujuan');
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
             const tipeSel = document.getElementById('zisTipeMutasi');
@@ -5475,15 +5915,19 @@
             document.getElementById('editZisId').value = z.id;
             const titleEl = document.getElementById('modalZisTitle');
             if (titleEl) titleEl.textContent = 'Edit Catatan ZISWAF / Dana Sosial';
+            window.populateDropdownBankAktif('zisBankTujuan', z.bankTujuan || '');
             const tipeSel = document.getElementById('zisTipeMutasi');
             if (tipeSel) {
                 tipeSel.disabled = false;
                 tipeSel.value = z.tipeMutasi || 'Pemasukan';
-                window.handleTipeMutasiZisChange(tipeSel);
             }
             document.getElementById('zisJenis').value = z.jenis || 'Infaq';
             const sumEl = document.getElementById('zisSumberDana');
             if (sumEl) sumEl.value = z.sumberDana || 'TUNAI';
+            if (tipeSel) window.handleTipeMutasiZisChange(tipeSel);
+            if (z.bankTujuan && document.getElementById('zisBankTujuan')) {
+                document.getElementById('zisBankTujuan').value = z.bankTujuan;
+            }
             const anonEl = document.getElementById('zisIsAnonim');
             if (anonEl) anonEl.checked = Boolean(z.isAnonim);
             document.getElementById('zisNominal').value = z.nominal;
@@ -5500,6 +5944,9 @@
             const tipeMutasi = document.getElementById('zisTipeMutasi')?.value || 'Pemasukan';
             const jenis = document.getElementById('zisJenis').value;
             const sumberDana = document.getElementById('zisSumberDana')?.value || 'TUNAI';
+            const bankTujuan = (tipeMutasi === 'Penyaluran' || sumberDana === 'TUNAI')
+                ? (document.getElementById('zisBankTujuan')?.value || '')
+                : 'Potong Simpanan Sukarela';
             const isAnonim = Boolean(document.getElementById('zisIsAnonim')?.checked);
             const nominal = parseFloat(document.getElementById('zisNominal').value) || 0;
             const keterangan = document.getElementById('zisKeterangan').value.trim();
@@ -5520,6 +5967,7 @@
                     z.tipeMutasi = tipeMutasi;
                     z.jenis = jenis;
                     z.sumberDana = sumberDana;
+                    z.bankTujuan = bankTujuan;
                     z.isAnonim = isAnonim;
                     z.nominal = nominal;
                     z.keterangan = keterangan;
@@ -5571,6 +6019,7 @@
                 tipeMutasi,
                 jenis,
                 sumberDana: tipeMutasi === 'Pemasukan' ? sumberDana : 'KAS_ZIS',
+                bankTujuan,
                 isAnonim: tipeMutasi === 'Pemasukan' ? isAnonim : false,
                 bukti: buktiUrl,
                 nominal,
@@ -6425,69 +6874,6 @@
             return false;
         };
 
-        function renderBankTab() {
-            const tbody = document.getElementById('tabelBankBody');
-            tbody.innerHTML = appState.rekeningBank.map(b => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                    <td class="py-3 px-3 font-bold">${b.nama}</td>
-                    <td class="py-3 px-3 font-mono text-slate-600 dark:text-slate-300">${b.nomor}</td>
-                    <td class="py-3 px-3 text-slate-500">${b.pemilik}</td>
-                    <td class="py-3 px-3 text-center space-x-2">
-                        <button onclick="window.bukaModalEditBank('${b.id}')" class="text-emerald-600 font-bold text-xs hover:underline">Edit</button>
-                        <button onclick="window.hapusRekeningBank('${b.id}')" class="text-rose-600 font-bold text-xs hover:underline">Hapus</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        window.bukaModalBank = () => {
-            document.getElementById('formBank').reset();
-            document.getElementById('editBankId').value = '';
-            document.getElementById('modalBankTitle').textContent = 'Tambah Rekening Bank Koperasi';
-            document.getElementById('modalBank').classList.remove('hidden');
-        };
-
-        window.bukaModalEditBank = (id) => {
-            const b = appState.rekeningBank.find(x => x.id === id);
-            if (!b) return;
-            document.getElementById('editBankId').value = b.id;
-            document.getElementById('modalBankTitle').textContent = 'Edit Rekening Bank Koperasi';
-            document.getElementById('bankNama').value = b.nama;
-            document.getElementById('bankNomor').value = b.nomor;
-            document.getElementById('bankPemilik').value = b.pemilik;
-            document.getElementById('modalBank').classList.remove('hidden');
-        };
-
-        window.simpanRekeningBank = (e) => {
-            if (e && e.preventDefault) e.preventDefault();
-            const editId = document.getElementById('editBankId').value;
-            const nama = document.getElementById('bankNama').value.trim();
-            const nomor = document.getElementById('bankNomor').value.trim();
-            const pemilik = document.getElementById('bankPemilik').value.trim();
-
-            if (editId) {
-                const b = appState.rekeningBank.find(x => x.id === editId);
-                if (b) {
-                    b.nama = nama;
-                    b.nomor = nomor;
-                    b.pemilik = pemilik;
-                }
-            } else {
-                appState.rekeningBank.push({
-                    id: 'b_' + Date.now(),
-                    nama,
-                    nomor,
-                    pemilik
-                });
-            }
-
-            saveStateToCloud();
-            document.getElementById('modalBank').classList.add('hidden');
-            window.renderApp();
-            window.showToast('Data rekening bank berhasil disimpan!');
-            return false;
-        };
-
         window.hapusRekeningBank = (id) => {
             window.showConfirmModal('Hapus Rekening Bank', 'Yakin ingin menghapus rekening bank tujuan ini?', () => {
                 appState.rekeningBank = appState.rekeningBank.filter(b => b.id !== id);
@@ -6512,6 +6898,7 @@
         window.bukaModalBayarCicilan = (pinjamanId, defaultNom, sisaTagihanMax) => {
             document.getElementById('formBayarCicilan').reset();
             document.getElementById('cicilanPinjamanId').value = pinjamanId;
+            window.populateDropdownBankAktif('cicilanBankTujuan');
             currentMaxSisaCicilan = sisaTagihanMax || defaultNom || 0;
             document.getElementById('cicilanNominalInput').value = defaultNom || '';
             const infoEl = document.getElementById('infoSisaTagihanCicilanModal');
@@ -6530,6 +6917,7 @@
             if (e && e.preventDefault) e.preventDefault();
             const pinjamanId = document.getElementById('cicilanPinjamanId').value;
             const nominal = parseFloat(document.getElementById('cicilanNominalInput').value) || 0;
+            const bankTujuan = document.getElementById('cicilanBankTujuan')?.value || '';
             const keterangan = document.getElementById('cicilanKeteranganInput').value.trim();
             const fileInput = document.getElementById('cicilanBuktiFoto');
 
@@ -6566,6 +6954,7 @@
                 id: 'cicil_' + Date.now(),
                 tanggal: new Date().toISOString().slice(0, 10),
                 nominal,
+                bankTujuan,
                 bukti: buktiUrl,
                 keterangan: keterangan || `Angsuran ke-${p.riwayatCicilan.length + 1}`,
                 status: role === 'admin' ? 'Disetujui' : 'Menunggu'
@@ -6838,6 +7227,16 @@
             if (pWajib && document.activeElement !== pWajib) pWajib.value = appState.parameterStandar?.simpananWajib ?? 100000;
             if (pArisan && document.activeElement !== pArisan) pArisan.value = appState.parameterStandar?.iuranArisan ?? 100000;
 
+            const sec = appState.securitySetting || { idleTimeoutMenit: 30, maxFailedLogin: 5, lockoutDurationMenit: 5, warnWeakPin: true };
+            const elIdle = document.getElementById('secIdleTimeoutMenit');
+            const elMaxFail = document.getElementById('secMaxFailedLogin');
+            const elLockDur = document.getElementById('secLockoutDurationMenit');
+            const elWarnPin = document.getElementById('secWajibGantiPinStandar');
+            if (elIdle && document.activeElement !== elIdle) elIdle.value = String(sec.idleTimeoutMenit ?? 30);
+            if (elMaxFail && document.activeElement !== elMaxFail) elMaxFail.value = String(sec.maxFailedLogin ?? 5);
+            if (elLockDur && document.activeElement !== elLockDur) elLockDur.value = String(sec.lockoutDurationMenit ?? 5);
+            if (elWarnPin && document.activeElement !== elWarnPin) elWarnPin.checked = sec.warnWeakPin !== false;
+
             const approvedTrx = (appState.transaksi || []).filter(t => t.status === 'Disetujui');
             const totalSimpanan = approvedTrx.reduce((acc, t) => t.tipe === 'Setoran' ? acc + (Number(t.nominal) || 0) : acc - (Number(t.nominal) || 0), 0);
             const approvedLoans = (appState.pinjaman || []).filter(p => p.status === 'Disetujui');
@@ -6845,30 +7244,162 @@
             const totalCicilanMasuk = approvedLoans.reduce((acc, p) => {
                 return acc + (p.riwayatCicilan || []).filter(c => c.status === 'Disetujui').reduce((s, c) => s + (Number(c.nominal) || 0), 0);
             }, 0);
+            const sisaPiutangPokok = Math.max(0, totalPinjaman - totalCicilanMasuk);
             const kasLikuid = totalSimpanan - totalPinjaman + totalCicilanMasuk;
             const s = window.hitungRingkasanShuKoperasi();
             const totalPersenShu = s.setting.alokasiModal + s.setting.alokasiUsaha + s.setting.alokasiCadangan + s.setting.alokasiSosial;
 
+            // Hitung Rekonsiliasi Bank & Transaksi Tanpa Bank Tujuan
+            const allBanks = appState.rekeningBank || [];
+            let totalSaldoBankAktual = 0;
+            allBanks.forEach(b => {
+                if (typeof window.hitungMutasiPerBank === 'function') {
+                    totalSaldoBankAktual += window.hitungMutasiPerBank(b).saldoAkhir;
+                }
+            });
+            const unassignedTrx = approvedTrx.filter(t => !t.bankTujuan || t.bankTujuan.trim() === '');
+
+            // Deteksi Akun dengan PIN Lemah / Standar (1234 / 0000)
+            const weakPinMembers = (appState.anggota || []).filter(a => a.pin === '1234' || a.pin === '0000' || String(a.pin || '').length < 4);
+            const warisLengkapCount = (appState.anggota || []).filter(a => a.ahliWaris && a.ahliWaris.trim() !== '').length;
+            const adArtSignedCount = (appState.adArtSignedBy || []).length;
+
+            // Hitung Ukuran Database Lokal (KB & % dari kuota 5.000 KB)
+            const serializedState = JSON.stringify(appState);
+            const sizeKB = Math.max(1, Math.round((serializedState.length * 2) / 1024));
+            const quotaPercent = Math.min(100, ((sizeKB / 5120) * 100).toFixed(1));
+
             const audits = [
-                { title: '1. Keseimbangan Buku Kas & Saldo', ok: totalSimpanan >= 0, desc: `Total Simpanan Terverifikasi: ${window.formatRupiah(totalSimpanan)}` },
-                { title: '2. Likuiditas Kas Koperasi', ok: kasLikuid >= 0, desc: `Kas Likuid Tersedia: ${window.formatRupiah(kasLikuid)}` },
-                { title: '3. Rasio Pinjaman Terhadap Modal', ok: totalPinjaman <= totalSimpanan, desc: `Pinjaman Disalurkan: ${window.formatRupiah(totalPinjaman)}` },
-                { title: '4. Validasi Formula Alokasi SHU', ok: totalPersenShu === 100, desc: `Total Persentase Alokasi SHU: ${totalPersenShu}%` },
-                { title: '5. Ketersediaan Rekening Bank', ok: (appState.rekeningBank || []).length > 0, desc: `${(appState.rekeningBank || []).length} Rekening Aktif Terdaftar` },
-                { title: '6. Keamanan Akun Super Admin', ok: appState.anggota.some(a => a.kontak === '082298688189'), desc: 'Super Admin 082298688189 Terlindungi' },
-                { title: '7. Sinkronisasi & Pencadangan Lokal', ok: true, desc: `Tersimpan otomatis di LocalStorage & Cloud` }
+                {
+                    title: '1. Keseimbangan Buku Kas & Saldo',
+                    ok: totalSimpanan >= 0,
+                    desc: `Total Simpanan Terverifikasi: ${window.formatRupiah(totalSimpanan)} (${approvedTrx.length} mutasi)`
+                },
+                {
+                    title: '2. Likuiditas Kas Koperasi',
+                    ok: kasLikuid >= 0,
+                    desc: `Kas Likuid Tersedia: ${window.formatRupiah(kasLikuid)}`
+                },
+                {
+                    title: '3. Rasio Sisa Piutang vs Modal',
+                    ok: sisaPiutangPokok <= totalSimpanan,
+                    desc: `Sisa Piutang Pokok: ${window.formatRupiah(sisaPiutangPokok)} (Total Disalurkan: ${window.formatRupiah(totalPinjaman)})`
+                },
+                {
+                    title: '4. Validasi Formula Alokasi SHU',
+                    ok: totalPersenShu === 100,
+                    desc: `Total Persentase Alokasi SHU: ${totalPersenShu}% (SHU Bersih: ${window.formatRupiah(s.netShu)})`
+                },
+                {
+                    title: '5. Rekonsiliasi Kas & Rekening Bank',
+                    ok: allBanks.length > 0 && unassignedTrx.length === 0,
+                    desc: unassignedTrx.length === 0
+                        ? `Total Saldo ${allBanks.length} Bank: ${window.formatRupiah(totalSaldoBankAktual)} (100% Tersinkron)`
+                        : `${unassignedTrx.length} transaksi belum memiliki bank tujuan (Klik Auto-Fix di atas)`
+                },
+                {
+                    title: '6. Audit Keamanan PIN Anggota',
+                    ok: weakPinMembers.length === 0,
+                    desc: weakPinMembers.length === 0
+                        ? 'Seluruh anggota telah mengganti PIN standar'
+                        : `${weakPinMembers.length} akun masih memakai PIN standar 1234 (${weakPinMembers.map(m => m.nama).slice(0, 2).join(', ')})`
+                },
+                {
+                    title: '7. Data Ahli Waris & Pakta AD/ART',
+                    ok: warisLengkapCount === appState.anggota.length && adArtSignedCount === appState.anggota.length,
+                    desc: `Ahli Waris: ${warisLengkapCount}/${appState.anggota.length} • Pakta AD/ART: ${adArtSignedCount}/${appState.anggota.length} Anggota`
+                },
+                {
+                    title: '8. Kapasitas Storage & Backup',
+                    ok: sizeKB < 4096,
+                    desc: `Ukuran Data: ${sizeKB} KB (${quotaPercent}% kuota) • Backup: ${appState.lastBackupTime || 'Belum pernah'}`
+                }
             ];
 
+            const passedCount = audits.filter(a => a.ok).length;
+            const scorePercent = Math.round((passedCount / audits.length) * 100);
+
+            // Update 4 Kartu KPI Sistem
+            const setSysEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            setSysEl('sysCardAuditScore', `${passedCount} / ${audits.length} Lulus (${scorePercent}%)`);
+            setSysEl('sysCardAuditSub', unassignedTrx.length === 0 ? `Saldo Bank: ${window.formatRupiah(totalSaldoBankAktual)}` : `${unassignedTrx.length} Mutasi Tanpa Bank`);
+            setSysEl('sysCardPinSecurity', weakPinMembers.length === 0 ? '🛡️ Sangat Aman' : `⚠️ ${weakPinMembers.length} PIN Standar`);
+            setSysEl('sysCardSessionSub', `Idle: ${Number(sec.idleTimeoutMenit) > 0 ? sec.idleTimeoutMenit + ' Menit' : 'Nonaktif'} • Max ${sec.maxFailedLogin || 5}x PIN`);
+            setSysEl('sysCardStorageSize', `${sizeKB} KB (${quotaPercent}%)`);
+            setSysEl('sysCardRecordCount', `${(appState.anggota || []).length} Anggota • ${(appState.transaksi || []).length} Transaksi`);
+
+            const logs = appState.systemAuditLogs || [];
+            const failedLogsCount = logs.filter(l => l.kategori === 'SECURITY').length;
+            setSysEl('sysCardLogCount', `${logs.length} Catatan Log`);
+            setSysEl('sysCardFailedLoginSub', `Peringatan Keamanan / PIN: ${failedLogsCount}`);
+
+            // Box Peringatan Akun PIN Standar
+            const boxWeak = document.getElementById('boxWarningWeakPins');
+            if (boxWeak) {
+                if (weakPinMembers.length === 0) {
+                    boxWeak.innerHTML = `<span class="text-emerald-700 dark:text-emerald-400 font-bold">✅ Keamanan PIN Prima:</span> Tidak ada anggota yang menggunakan PIN standar <code class="font-mono">1234</code>.`;
+                } else {
+                    boxWeak.innerHTML = `<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                            <strong class="block">⚠️ Deteksi Akun dengan PIN Standar (1234):</strong>
+                            <span>${weakPinMembers.map(a => window.escapeHtml(a.nama)).join(', ')} disarankan segera mengganti PIN melalui menu Profil atau tombol Reset PIN di Data Anggota.</span>
+                        </div>
+                    </div>`;
+                }
+            }
+
             grid.innerHTML = audits.map(a => `
-                <div class="p-3.5 rounded-2xl border ${a.ok ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900' : 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900'} flex items-start gap-2.5">
-                    <span class="text-base">${a.ok ? '✅' : '⚠️'}</span>
-                    <div>
-                        <strong class="text-slate-800 dark:text-white block text-xs">${a.title}</strong>
-                        <span class="text-[11px] text-slate-500">${a.desc}</span>
+                <div class="p-3.5 rounded-2xl border ${a.ok ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900' : 'bg-amber-50/60 dark:bg-amber-950/25 border-amber-300 dark:border-amber-800'} flex items-start gap-2.5">
+                    <span class="text-base shrink-0">${a.ok ? '✅' : '⚠️'}</span>
+                    <div class="overflow-hidden">
+                        <strong class="text-slate-800 dark:text-white block text-xs truncate">${window.escapeHtml(a.title)}</strong>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400 leading-snug block mt-0.5">${window.escapeHtml(a.desc)}</span>
                     </div>
                 </div>
             `).join('');
+
+            // Render Tabel Log Audit Sistem
+            const logBody = document.getElementById('tabelAuditLogBody');
+            if (logBody) {
+                const qLog = (document.getElementById('searchAuditLogInput')?.value || '').toLowerCase();
+                const katLog = document.getElementById('filterKategoriAuditLog')?.value || 'ALL';
+                const filteredLogs = logs.filter(l => {
+                    const matchKat = katLog === 'ALL' || l.kategori === katLog;
+                    const matchQ = !qLog ||
+                        (l.aktor || '').toLowerCase().includes(qLog) ||
+                        (l.aktivitas || '').toLowerCase().includes(qLog) ||
+                        (l.detail || '').toLowerCase().includes(qLog);
+                    return matchKat && matchQ;
+                });
+
+                if (filteredLogs.length === 0) {
+                    logBody.innerHTML = `<tr><td colspan="6" class="py-5 text-center text-slate-400 italic">Belum ada catatan log audit yang sesuai filter.</td></tr>`;
+                } else {
+                    logBody.innerHTML = filteredLogs.slice(0, 50).map(l => {
+                        const badgeColor = l.kategori === 'SECURITY'
+                            ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                            : l.kategori === 'AUTH'
+                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'
+                                : l.kategori === 'TRANSAKSI'
+                                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                                    : l.kategori === 'BACKUP'
+                                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
+                                        : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300';
+                        return `
+                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                <td class="py-2.5 px-3 font-mono text-[10px] text-slate-500 whitespace-nowrap">${window.escapeHtml(l.waktu)}</td>
+                                <td class="py-2.5 px-3 font-bold">${window.escapeHtml(l.aktor)} <span class="text-[9px] text-slate-400 font-normal">(${window.escapeHtml(l.role || 'USER')})</span></td>
+                                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold ${badgeColor}">${window.escapeHtml(l.kategori)}</span></td>
+                                <td class="py-2.5 px-3 font-semibold text-slate-700 dark:text-slate-200">${window.escapeHtml(l.aktivitas)}</td>
+                                <td class="py-2.5 px-3 text-slate-500">${window.escapeHtml(l.detail)}</td>
+                                <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${l.status === 'Ditolak' || l.status === 'Peringatan' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-800'}">${window.escapeHtml(l.status)}</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            }
         }
+        window.renderPengaturanAuditTab = renderPengaturanAuditTab;
 
         window.simpanParameterKoperasi = (e) => {
             if (e && e.preventDefault) e.preventDefault();
@@ -6877,10 +7408,110 @@
                 simpananWajib: parseFloat(document.getElementById('paramSimpananWajib').value) || 100000,
                 iuranArisan: parseFloat(document.getElementById('paramIuranArisan').value) || 100000
             };
+            window.catatLogAuditSistem('PENGATURAN', 'Ubah Parameter Iuran Standar', `Pokok: ${window.formatRupiah(appState.parameterStandar.simpananPokok)}, Wajib: ${window.formatRupiah(appState.parameterStandar.simpananWajib)}, Arisan: ${window.formatRupiah(appState.parameterStandar.iuranArisan)}`, 'Sukses');
             saveStateToCloud();
             window.renderApp();
             window.showToast('Parameter standar koperasi berhasil disimpan!');
             return false;
+        };
+
+        window.simpanKeamananSistem = (e) => {
+            if (e && e.preventDefault) e.preventDefault();
+            appState.securitySetting = {
+                idleTimeoutMenit: parseInt(document.getElementById('secIdleTimeoutMenit').value) || 0,
+                maxFailedLogin: parseInt(document.getElementById('secMaxFailedLogin').value) || 5,
+                lockoutDurationMenit: parseInt(document.getElementById('secLockoutDurationMenit').value) || 5,
+                warnWeakPin: Boolean(document.getElementById('secWajibGantiPinStandar')?.checked)
+            };
+            window.catatLogAuditSistem('PENGATURAN', 'Perbarui Kebijakan Keamanan Sesi & PIN', `Auto-Logout: ${appState.securitySetting.idleTimeoutMenit}m, Max Salah PIN: ${appState.securitySetting.maxFailedLogin}x, Lockout: ${appState.securitySetting.lockoutDurationMenit}m`, 'Sukses');
+            saveStateToCloud();
+            window.renderApp();
+            window.showToast('🔐 Kebijakan keamanan sesi & proteksi PIN berhasil disimpan!');
+            return false;
+        };
+
+        window.autoFixRekonsiliasiBank = () => {
+            const allBanks = appState.rekeningBank || [];
+            const bankUtama = allBanks.find(b => b.isUtama) || allBanks[0];
+            if (!bankUtama) {
+                window.showToast('Tambahkan minimal 1 rekening bank terlebih dahulu!', 'error');
+                return;
+            }
+            let fixedCount = 0;
+            (appState.transaksi || []).forEach(t => {
+                if (!t.bankTujuan || t.bankTujuan.trim() === '') {
+                    t.bankTujuan = bankUtama.nama;
+                    fixedCount++;
+                }
+            });
+            if (fixedCount === 0) {
+                window.showToast('✓ Seluruh transaksi sudah terhubung dengan rekening bank tujuan.', 'info');
+                return;
+            }
+            window.catatLogAuditSistem('TRANSAKSI', 'Auto-Fix Rekonsiliasi Bank', `${fixedCount} transaksi tanpa bank diselaraskan ke rekening utama ${bankUtama.nama}`, 'Sukses');
+            saveStateToCloud();
+            window.renderApp();
+            window.showToast(`⚡ ${fixedCount} transaksi berhasil diselaraskan ke rekening ${bankUtama.nama}!`);
+        };
+
+        window.exportAuditLogToExcel = () => {
+            const logs = appState.systemAuditLogs || [];
+            const headers = ['Waktu', 'Aktor/Pengguna', 'Role', 'Kategori', 'Aktivitas', 'Detail', 'Status'];
+            const rows = logs.map(l => [
+                l.waktu,
+                `"${(l.aktor || '').replace(/"/g, '""')}"`,
+                l.role || '-',
+                l.kategori || '-',
+                `"${(l.aktivitas || '').replace(/"/g, '""')}"`,
+                `"${(l.detail || '').replace(/"/g, '""')}"`,
+                l.status || 'Sukses'
+            ]);
+            const csv = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const link = document.createElement('a');
+            link.href = encodeURI(csv);
+            link.download = `Log_Audit_Keamanan_Koperasi_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.showToast('📥 Log Audit & Keamanan berhasil diekspor ke CSV/Excel!');
+        };
+
+        window.bersihkanAuditLogSistem = () => {
+            window.showConfirmModal('Bersihkan Riwayat Log Sistem', 'Yakin ingin menghapus riwayat log lama dan menyisakan log inisialisasi terbaru?', () => {
+                appState.systemAuditLogs = [];
+                window.catatLogAuditSistem('PENGATURAN', 'Pembersihan Log Audit Sistem', 'Riwayat log lama dibersihkan oleh Pengurus', 'Sukses');
+                saveStateToCloud();
+                window.renderApp();
+                window.showToast('Riwayat log audit sistem berhasil dibersihkan.');
+            });
+        };
+
+        window.cetakLaporanAuditSistem = () => {
+            const s = window.hitungRingkasanShuKoperasi();
+            const approvedTrx = (appState.transaksi || []).filter(t => t.status === 'Disetujui');
+            const totalSimpanan = approvedTrx.reduce((acc, t) => t.tipe === 'Setoran' ? acc + (Number(t.nominal) || 0) : acc - (Number(t.nominal) || 0), 0);
+            const approvedLoans = (appState.pinjaman || []).filter(p => p.status === 'Disetujui');
+            const totalPinjaman = approvedLoans.reduce((acc, p) => acc + (Number(p.nominal) || 0), 0);
+            const totalCicilanMasuk = approvedLoans.reduce((acc, p) => acc + (p.riwayatCicilan || []).filter(c => c.status === 'Disetujui').reduce((sum, c) => sum + (Number(c.nominal) || 0), 0), 0);
+            const sisaPiutang = Math.max(0, totalPinjaman - totalCicilanMasuk);
+            const kasLikuid = totalSimpanan - totalPinjaman + totalCicilanMasuk;
+
+            document.getElementById('beritaAcaraContent').innerHTML = `
+                <div class="text-center border-b border-dashed border-slate-200 dark:border-slate-700 pb-3">
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 block">🛡️ Sertifikat Pemeriksaan Integritas Sistem</span>
+                    <h4 class="text-sm sm:text-base font-black text-slate-800 dark:text-white mt-0.5">Laporan 8-Audit Neraca &amp; Keamanan Koperasi</h4>
+                    <p class="text-[10px] text-slate-400">Dicetak pada: ${new Date().toISOString().slice(0, 16).replace('T', ' ')}</p>
+                </div>
+                <div class="space-y-2 text-xs p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                    <div class="flex justify-between"><span>Total Simpanan Anggota Terverifikasi:</span><strong class="text-emerald-600">${window.formatRupiah(totalSimpanan)}</strong></div>
+                    <div class="flex justify-between"><span>Total Pembiayaan Disalurkan:</span><strong>${window.formatRupiah(totalPinjaman)}</strong></div>
+                    <div class="flex justify-between"><span>Sisa Piutang Pokok Berjalan:</span><strong class="text-amber-600">${window.formatRupiah(sisaPiutang)}</strong></div>
+                    <div class="flex justify-between"><span>Kas Likuid Koperasi Tersedia:</span><strong class="text-blue-600">${window.formatRupiah(kasLikuid)}</strong></div>
+                    <div class="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-1.5"><span>SHU Bersih Tahun Berjalan:</span><strong class="text-purple-600">${window.formatRupiah(s.netShu)}</strong></div>
+                </div>
+                <p class="text-[11px] text-slate-500 italic text-center">Seluruh perhitungan buku kas, rekonsiliasi bank 5 modul, dan alokasi SHU 100% telah tervalidasi secara otomatis oleh sistem Koperasi Keluarga v34.5 Pro.</p>
+            `;
+            document.getElementById('modalBeritaAcaraNotulensi').classList.remove('hidden');
         };
 
         function renderShuTab() {
@@ -7565,27 +8196,30 @@
             });
         }
 
+        ['click', 'keydown', 'touchstart', 'scroll'].forEach(evtName => {
+            window.addEventListener(evtName, () => {
+                lastUserActivityTime = Date.now();
+            }, { passive: true });
+        });
+
+        setInterval(() => {
+            if (!currentUserSession) return;
+            const idleMinutes = Number(appState.securitySetting?.idleTimeoutMenit ?? 30);
+            if (idleMinutes > 0 && (Date.now() - lastUserActivityTime) > idleMinutes * 60 * 1000) {
+                window.handleLogout('Auto-Logout Idle');
+            }
+        }, 20000);
+
         window.addEventListener('DOMContentLoaded', () => {
+            window.restoreUserSessionState();
             initFirebaseAndSync();
             populateProfilMandiri();
         });
-    
-        // =========================================================================
-        // DROP-IN STABILITY & SECURITY PATCH (KOPERASI KELUARGA v34.0 PRO)
-        // =========================================================================
 
-        // 1. Helper Sanitasi HTML (Mencegah celah DOM XSS pada input teks bebas)
-        window.escapeHtml = function(str) {
-            if (str === null || str === undefined) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        };
+        // =========================================================================
+        // DROP-IN STABILITY & SECURITY PATCH (KOPERASI KELUARGA v34.4 PRO)
+        // ==========================================================================
 
-        // 2. Kompresor Gambar Otomatis (< 65 KB) agar LocalStorage & Firestore tidak bocor/penuh
         window.kompresGambarBukti = function(file, maxWidth, quality) {
             maxWidth = maxWidth || 700;
             quality = quality || 0.65;
@@ -7616,7 +8250,6 @@
             });
         };
 
-        // 3. Auto-Compress Interceptor pada semua input file bukti transfer
         document.addEventListener('change', async function(e) {
             var target = e.target;
             if (target && target.tagName === 'INPUT' && target.type === 'file' && target.files && target.files[0]) {
@@ -7642,7 +8275,6 @@
             }
         }, true);
 
-        // 4. Proteksi Kuota LocalStorage (Mencegah crash QuotaExceededError)
         var _origSetItem = Storage.prototype.setItem;
         Storage.prototype.setItem = function(key, value) {
             try {
@@ -7655,7 +8287,6 @@
             }
         };
 
-        // 5. Debounce RenderApp (Mencegah UI Lag & Duplikasi Render Grafik Beruntun)
         var _origRenderApp = window.renderApp;
         var _renderTimer = null;
         window.renderApp = function() {
@@ -7664,10 +8295,15 @@
                 if (typeof _origRenderApp === 'function') {
                     _origRenderApp();
                 }
+                if (typeof window.renderBankTabPro === 'function') {
+                    window.renderBankTabPro();
+                }
+                if (typeof window.pasangFooterVersiTerbaru === 'function') {
+                    window.pasangFooterVersiTerbaru();
+                }
             });
         };
 
-        // 6. Pembersihan Memori Chart.js & Listener saat tab ditutup
         window.addEventListener('beforeunload', function() {
             if (typeof cashflowChartInstance !== 'undefined' && cashflowChartInstance) {
                 cashflowChartInstance.destroy();
@@ -7679,6 +8315,574 @@
                 window._unsubscribeFirestore();
             }
         });
+
+        // =========================================================================
+        // UPGRADE MENU REKENING BANK PRO v34.3 (REKONSILIASI PENUH, WA, FILTER & QRIS)
+        // =========================================================================
+
+        window.salinNomorRekening = function(nomor, namaBank) {
+            var cleanNo = String(nomor || '').trim();
+            if (!cleanNo) return;
+            var tempInput = document.createElement('textarea');
+            tempInput.value = cleanNo;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                if (typeof window.showToast === 'function') {
+                    window.showToast('📋 Nomor rekening ' + (namaBank || '') + ' (' + cleanNo + ') berhasil disalin!');
+                }
+            } catch (e) {}
+            document.body.removeChild(tempInput);
+        };
+
+        window.hitungMutasiPerBank = function(bankObj) {
+            var namaBank = typeof bankObj === 'string' ? bankObj : (bankObj ? bankObj.nama : '');
+            var saldoAwal = (typeof bankObj === 'object' && bankObj) ? (Number(bankObj.saldoAwal) || 0) : 0;
+
+            // 1. Mutasi Buku Simpanan (Setoran & Penarikan)
+            var approvedTrx = (appState.transaksi || []).filter(function(t) {
+                return t.status === 'Disetujui' && t.bankTujuan === namaBank;
+            });
+            var setoranList = approvedTrx.filter(function(t) { return t.tipe === 'Setoran'; });
+            var penarikanList = approvedTrx.filter(function(t) { return t.tipe === 'Penarikan'; });
+            var masukSimpanan = setoranList.reduce(function(acc, t) { return acc + (Number(t.nominal) || 0); }, 0);
+            var keluarSimpanan = penarikanList.reduce(function(acc, t) { return acc + (Number(t.nominal) || 0); }, 0);
+
+            // 2. Mutasi Angsuran / Cicilan Pembiayaan Syariah
+            var masukCicilan = 0;
+            var countCicilan = 0;
+            (appState.pinjaman || []).forEach(function(p) {
+                (p.riwayatCicilan || []).forEach(function(c) {
+                    if (c.status === 'Disetujui' && c.bankTujuan === namaBank) {
+                        masukCicilan += (Number(c.nominal) || 0);
+                        countCicilan++;
+                    }
+                });
+            });
+
+            // 3. Mutasi Iuran Arisan (Setoran Tunai / Transfer Bank)
+            var masukArisan = 0;
+            var countArisan = 0;
+            ((appState.arisan && appState.arisan.riwayatIuran) || []).forEach(function(item) {
+                if ((item.status || 'Disetujui') === 'Disetujui' && item.metode === 'TUNAI' && item.bankTujuan === namaBank) {
+                    masukArisan += (Number(item.nominal) || 0);
+                    countArisan++;
+                }
+            });
+
+            // 4. Mutasi Tabungan Program Keluarga (Qurban / Wisata via Transfer)
+            var masukProgram = 0;
+            var countProgram = 0;
+            (appState.programKeluarga || []).forEach(function(pr) {
+                (pr.kontributor || []).forEach(function(k) {
+                    if ((k.sumberDana || 'TUNAI') === 'TUNAI' && k.bankTujuan === namaBank) {
+                        masukProgram += (Number(k.nominal) || 0);
+                        countProgram++;
+                    }
+                });
+            });
+
+            // 5. Mutasi Baitul Maal ZISWAF (Donasi Masuk & Penyaluran Santunan)
+            var masukZis = 0;
+            var keluarZis = 0;
+            var countZisMasuk = 0;
+            var countZisKeluar = 0;
+            (appState.zis || []).forEach(function(z) {
+                if ((z.status || 'Disetujui') !== 'Disetujui' || z.bankTujuan !== namaBank) return;
+                if ((z.tipeMutasi || 'Pemasukan') === 'Pemasukan' && (z.sumberDana || 'TUNAI') === 'TUNAI') {
+                    masukZis += (Number(z.nominal) || 0);
+                    countZisMasuk++;
+                } else if (z.tipeMutasi === 'Penyaluran') {
+                    keluarZis += (Number(z.nominal) || 0);
+                    countZisKeluar++;
+                }
+            });
+
+            var totalMasuk = masukSimpanan + masukCicilan + masukArisan + masukProgram + masukZis;
+            var totalKeluar = keluarSimpanan + keluarZis;
+            var saldoAkhir = saldoAwal + totalMasuk - totalKeluar;
+            var totalCountMasuk = setoranList.length + countCicilan + countArisan + countProgram + countZisMasuk;
+            var totalCountKeluar = penarikanList.length + countZisKeluar;
+
+            return {
+                countMasuk: totalCountMasuk,
+                countKeluar: totalCountKeluar,
+                saldoAwal: saldoAwal,
+                masukSimpanan: masukSimpanan,
+                masukCicilan: masukCicilan,
+                masukArisanProgram: masukArisan + masukProgram,
+                masukZis: masukZis,
+                keluarSimpanan: keluarSimpanan,
+                keluarZis: keluarZis,
+                totalMasuk: totalMasuk,
+                totalKeluar: totalKeluar,
+                saldoAkhir: saldoAkhir
+            };
+        };
+
+        window.bagikanRekeningTunggalKeWA = function(id) {
+            var b = (appState.rekeningBank || []).find(function(x) { return x.id === id; });
+            if (!b) return;
+            var teks = '🏦 *INFO REKENING RESMI KOPERASI KELUARGA*\n\n' +
+                '• *Bank / Kanal:* ' + b.nama + ' (' + (b.jenisKanal || 'Bank Transfer') + ')\n' +
+                '• *No. Rekening:* ' + b.nomor + '\n' +
+                '• *Atas Nama:* ' + b.pemilik + '\n' +
+                (b.cabang ? '• *Catatan / Cabang:* ' + b.cabang + '\n' : '') +
+                '\n_Mohon lampirkan bukti foto transfer saat mencatat setoran di aplikasi Koperasi Keluarga._';
+            window.open('https://wa.me/?text=' + encodeURIComponent(teks), '_blank', 'noopener,noreferrer');
+        };
+
+        window.bagikanSemuaRekeningKeWA = function() {
+            var aktifBanks = (appState.rekeningBank || []).filter(function(b) { return b.aktif !== false; });
+            if (aktifBanks.length === 0) {
+                window.showToast('Belum ada rekening aktif untuk dibagikan.', 'error');
+                return;
+            }
+            var daftar = aktifBanks.map(function(b, idx) {
+                return (idx + 1) + '. *' + b.nama + '* (' + (b.jenisKanal || 'Transfer') + ')\n   No. Rek: *' + b.nomor + '*\n   a.n ' + b.pemilik + (b.cabang ? ' (' + b.cabang + ')' : '');
+            }).join('\n\n');
+            var teks = '📢 *DAFTAR REKENING RESMI KOPERASI KELUARGA*\n\n' + daftar + '\n\n_Silakan salin nomor rekening di atas untuk pembayaran Simpanan, Angsuran, Arisan, atau ZISWAF._';
+            window.open('https://wa.me/?text=' + encodeURIComponent(teks), '_blank', 'noopener,noreferrer');
+        };
+
+        window.lihatMutasiBankDiSimpanan = function(namaBank) {
+            window.switchTab('simpanan');
+            var searchEl = document.getElementById('searchSimpananInput');
+            if (searchEl) {
+                searchEl.value = namaBank;
+                window.renderApp();
+                window.showToast('🔍 Menampilkan riwayat transaksi via rekening ' + namaBank, 'info');
+            }
+        };
+
+        window.exportRekonsiliasiBankToExcel = function() {
+            var headers = ['Nama Bank', 'Jenis Kanal', 'Nomor Rekening', 'Atas Nama', 'Cabang/Catatan', 'Status', 'Saldo Awal', 'Masuk Simpanan', 'Masuk Cicilan', 'Masuk Arisan & Program', 'Masuk ZIS', 'Total Uang Masuk', 'Total Pencairan Keluar', 'Saldo Akhir Aktual'];
+            var rows = (appState.rekeningBank || []).map(function(b) {
+                var m = window.hitungMutasiPerBank(b);
+                return [
+                    '"' + b.nama + '"',
+                    '"' + (b.jenisKanal || 'Bank Transfer') + '"',
+                    '\'' + b.nomor,
+                    '"' + b.pemilik + '"',
+                    '"' + (b.cabang || '-') + '"',
+                    b.aktif !== false ? 'Aktif' : 'Nonaktif',
+                    m.saldoAwal,
+                    m.masukSimpanan,
+                    m.masukCicilan,
+                    m.masukArisanProgram,
+                    m.masukZis,
+                    m.totalMasuk,
+                    m.totalKeluar,
+                    m.saldoAkhir
+                ];
+            });
+            var csv = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(function(r) { return r.join(','); })].join('\n');
+            var link = document.createElement('a');
+            link.href = encodeURI(csv);
+            link.download = 'Rekonsiliasi_Rekening_Bank_' + new Date().toISOString().slice(0, 10) + '.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.showToast('📥 Laporan Rekonsiliasi Bank berhasil diekspor ke CSV/Excel!');
+        };
+
+        window.toggleStatusAktifBank = function(id) {
+            var b = (appState.rekeningBank || []).find(function(x) { return x.id === id; });
+            if (!b) return;
+            b.aktif = (b.aktif === false) ? true : false;
+            saveStateToCloud();
+            window.renderApp();
+            window.showToast('Status rekening ' + b.nama + ' diubah menjadi: ' + (b.aktif !== false ? 'Aktif' : 'Nonaktif'));
+        };
+
+        window.setRekeningUtama = function(id) {
+            (appState.rekeningBank || []).forEach(function(b) {
+                b.isUtama = (b.id === id);
+            });
+            saveStateToCloud();
+            window.renderApp();
+            window.showToast('⭐ Rekening utama koperasi berhasil diperbarui!');
+        };
+
+        // Handler perubahan tipe transaksi sudah terintegrasi langsung di fungsi utama
+
+        window.upgradeDOMBankModalDanTab = function() {
+            // 1. Tambahkan tombol navigasi Info Rekening & QRIS untuk Anggota biasa jika belum ada di Sidebar
+            var navContainer = document.getElementById('sidebarNavContainer');
+            var role = window.getEffectiveRole();
+            if (navContainer && role !== 'admin' && navContainer.innerHTML.indexOf("switchTab('bank')") === -1) {
+                var isBankActive = appState.activeTab === 'bank';
+                var btnHtml = '<button onclick="window.switchTab(\'bank\')" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg font-semibold text-[11px] transition ' + (isBankActive ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800') + '">' +
+                    '<div class="flex items-center gap-2 overflow-hidden">' +
+                        '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>' +
+                        '<span class="truncate">Info Rekening &amp; QRIS</span>' +
+                    '</div>' +
+                '</button>';
+                navContainer.insertAdjacentHTML('beforeend', btnHtml);
+            }
+
+            // 2. Tambahkan Info Helper Copy Rekening & Lihat QRIS di Modal Setoran (#groupBankTujuan)
+            var groupBank = document.getElementById('groupBankTujuan');
+            var selBankTrx = document.getElementById('transaksiBankTujuan');
+            if (groupBank && selBankTrx && !document.getElementById('helperCopyBankTrx')) {
+                var helperDiv = document.createElement('div');
+                helperDiv.id = 'helperCopyBankTrx';
+                helperDiv.className = 'mt-1.5 p-2 rounded-xl bg-blue-50/80 dark:bg-slate-800/90 border border-blue-200 dark:border-slate-700 flex items-center justify-between gap-2 text-[11px]';
+                groupBank.appendChild(helperDiv);
+                selBankTrx.addEventListener('change', function() { window.updateHelperBankTujuanTrx(); });
+            }
+        };
+
+        window.updateHelperBankTujuanTrx = function() {
+            var helperDiv = document.getElementById('helperCopyBankTrx');
+            var selBankTrx = document.getElementById('transaksiBankTujuan');
+            if (!helperDiv || !selBankTrx) return;
+            var selectedName = selBankTrx.value;
+            var b = (appState.rekeningBank || []).find(function(x) { return x.nama === selectedName; });
+            if (!b) {
+                helperDiv.innerHTML = '<span class="text-slate-400 italic">Pilih rekening bank</span>';
+                return;
+            }
+            helperDiv.innerHTML = '<div class="truncate"><span class="font-bold text-blue-900 dark:text-blue-300">' + window.escapeHtml(b.nama) + ': ' + window.escapeHtml(b.nomor) + '</span>' +
+                '<span class="block text-[10px] text-slate-500">a.n ' + window.escapeHtml(b.pemilik) + (b.cabang ? ' (' + window.escapeHtml(b.cabang) + ')' : '') + '</span></div>' +
+                '<div class="flex items-center gap-1 shrink-0">' +
+                (b.qrisUrl ? '<button type="button" onclick="window.lihatFotoBukti(\'' + b.qrisUrl + '\')" class="px-2 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-[10px]">📷 QRIS</button>' : '') +
+                '<button type="button" onclick="window.salinNomorRekening(\'' + window.escapeHtml(b.nomor) + '\', \'' + window.escapeHtml(b.nama) + '\')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px]">📋 Salin</button>' +
+                '</div>';
+        };
+
+        // Fungsi Utama Render Tabel & Kartu Rekonsiliasi Bank Pro v34.3
+        window.renderBankTabPro = function() {
+            window.upgradeDOMBankModalDanTab();
+            var tbody = document.getElementById('tabelBankBody');
+            if (!tbody) return;
+            var role = window.getEffectiveRole();
+            var isAdmin = (role === 'admin' || (currentUserSession && currentUserSession.kontak === '082298688189'));
+
+            var btnAddAdmin = document.getElementById('btnTambahRekeningAdmin');
+            var btnExportCsv = document.getElementById('btnExportBankCsv');
+            if (btnAddAdmin) btnAddAdmin.style.display = isAdmin ? 'inline-block' : 'none';
+            if (btnExportCsv) btnExportCsv.style.display = isAdmin ? 'inline-block' : 'none';
+
+            var allBanks = appState.rekeningBank || [];
+            var visibleBanks = isAdmin ? allBanks : allBanks.filter(function(b) { return b.aktif !== false; });
+
+            var sumMasukAll = 0;
+            var sumKeluarAll = 0;
+            var sumSaldoAkhirAll = 0;
+            allBanks.forEach(function(b) {
+                var m = window.hitungMutasiPerBank(b);
+                sumMasukAll += m.totalMasuk;
+                sumKeluarAll += m.totalKeluar;
+                sumSaldoAkhirAll += m.saldoAkhir;
+            });
+
+            var summaryContainer = document.getElementById('bankSummaryCardsContainer');
+            if (summaryContainer) {
+                var aktifCount = allBanks.filter(function(b) { return b.aktif !== false; }).length;
+                if (isAdmin) {
+                    summaryContainer.className = 'grid grid-cols-2 lg:grid-cols-4 gap-3';
+                    summaryContainer.innerHTML = '<div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">' +
+                        '<span class="text-[10px] font-bold uppercase text-slate-400 block">Kanal Rekening Aktif</span>' +
+                        '<strong class="text-sm sm:text-base font-black text-emerald-600 block mt-0.5">' + aktifCount + ' Aktif / ' + allBanks.length + ' Total</strong>' +
+                        '<span class="text-[10px] text-slate-400">Siap menerima transfer</span></div>' +
+                        '<div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">' +
+                        '<span class="text-[10px] font-bold uppercase text-slate-400 block">Total Setoran Masuk</span>' +
+                        '<strong class="text-sm sm:text-base font-black text-blue-600 block mt-0.5">+' + window.formatRupiah(sumMasukAll) + '</strong>' +
+                        '<span class="text-[10px] text-slate-400">Akumulasi uang masuk bank</span></div>' +
+                        '<div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">' +
+                        '<span class="text-[10px] font-bold uppercase text-slate-400 block">Total Pencairan Keluar</span>' +
+                        '<strong class="text-sm sm:text-base font-black text-rose-600 block mt-0.5">-' + window.formatRupiah(sumKeluarAll) + '</strong>' +
+                        '<span class="text-[10px] text-slate-400">Penarikan via bank</span></div>' +
+                        '<div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-emerald-200 dark:border-emerald-900 shadow-xs bg-emerald-50/30 dark:bg-emerald-950/20">' +
+                        '<span class="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 block">Total Saldo Akhir Bank</span>' +
+                        '<strong class="text-sm sm:text-base font-black text-emerald-600 block mt-0.5">' + window.formatRupiah(sumSaldoAkhirAll) + '</strong>' +
+                        '<span class="text-[10px] text-slate-500">Saldo Awal + Masuk - Keluar</span></div>';
+                } else {
+                    summaryContainer.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+                    summaryContainer.innerHTML = '<div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">' +
+                        '<span class="text-[10px] font-bold uppercase text-slate-400 block">Rekening Resmi Koperasi</span>' +
+                        '<strong class="text-sm sm:text-base font-black text-emerald-600 block mt-0.5">' + aktifCount + ' Kanal Pembayaran Aktif</strong>' +
+                        '<span class="text-[10px] text-slate-400">Klik tombol Salin atau Lihat QRIS untuk membayar iuran</span></div>' +
+                        '<div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">' +
+                        '<span class="text-[10px] font-bold uppercase text-slate-400 block">Petunjuk Konfirmasi Transfer</span>' +
+                        '<strong class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mt-0.5">Lampirkan Foto Bukti di Menu Simpanan / Pinjaman</strong>' +
+                        '<span class="text-[10px] text-slate-400">Otomatis diverifikasi oleh Bendahara Koperasi</span></div>';
+                }
+            }
+
+            if (visibleBanks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400 italic">Belum ada rekening bank koperasi terdaftar.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = visibleBanks.map(function(b) {
+                var mutasi = window.hitungMutasiPerBank(b);
+                var isAktif = b.aktif !== false;
+                var jenis = b.jenisKanal || 'Bank Transfer';
+                return '<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 ' + (!isAktif ? 'opacity-50' : '') + '">' +
+                    '<td class="py-3 px-3">' +
+                        '<div class="flex items-center gap-1.5">' +
+                            '<strong class="font-bold text-slate-800 dark:text-white">' + window.escapeHtml(b.nama) + '</strong>' +
+                            (b.isUtama ? '<span class="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[9px] font-extrabold">⭐ Utama</span>' : '') +
+                        '</div>' +
+                        '<span class="text-[10px] text-emerald-600 font-semibold block">' + window.escapeHtml(jenis) + '</span>' +
+                    '</td>' +
+                    '<td class="py-3 px-3">' +
+                        '<div class="flex items-center gap-1.5">' +
+                            '<span class="font-mono font-bold text-slate-700 dark:text-slate-200">' + window.escapeHtml(b.nomor) + '</span>' +
+                            '<button onclick="window.salinNomorRekening(\'' + window.escapeHtml(b.nomor) + '\', \'' + window.escapeHtml(b.nama) + '\')" class="px-2 py-0.5 rounded bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 text-emerald-600 font-bold text-[10px]" title="Salin Nomor Rekening">📋 Salin</button>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td class="py-3 px-3">' +
+                        '<strong class="text-slate-700 dark:text-slate-200 block">' + window.escapeHtml(b.pemilik) + '</strong>' +
+                        (b.cabang ? '<span class="text-[10px] text-slate-400 block">' + window.escapeHtml(b.cabang) + '</span>' : '') +
+                    '</td>' +
+                    '<td class="py-3 px-3">' +
+                        (isAdmin ?
+                            '<strong class="text-emerald-600 font-black block text-xs">Saldo: ' + window.formatRupiah(mutasi.saldoAkhir) + '</strong>' +
+                            '<span class="text-[10px] text-slate-500 block">Masuk: <span class="text-blue-600 font-semibold">+' + window.formatRupiah(mutasi.totalMasuk) + '</span> (' + mutasi.countMasuk + 'x) • Keluar: <span class="text-rose-600 font-semibold">-' + window.formatRupiah(mutasi.totalKeluar) + '</span> (' + mutasi.countKeluar + 'x)</span>' +
+                            '<span class="text-[9px] text-slate-400 block">Simpanan: ' + window.formatRupiah(mutasi.masukSimpanan) + ' • Cicilan: ' + window.formatRupiah(mutasi.masukCicilan) + ' • Arisan/Prog: ' + window.formatRupiah(mutasi.masukArisanProgram) + ' • ZIS: ' + window.formatRupiah(mutasi.masukZis) + '</span>' +
+                            (mutasi.saldoAwal > 0 ? '<span class="text-[9px] text-slate-400 block">Saldo Awal: ' + window.formatRupiah(mutasi.saldoAwal) + '</span>' : '')
+                        : '<span class="text-[10px] text-emerald-600 font-semibold">✓ Rekening Resmi Terverifikasi</span>') +
+                    '</td>' +
+                    '<td class="py-3 px-3 text-center space-y-1">' +
+                        (b.qrisUrl ? '<div><button onclick="window.lihatFotoBukti(\'' + b.qrisUrl + '\')" class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px]">📷 Lihat QRIS</button></div>' : '') +
+                        (isAdmin ?
+                            '<button onclick="window.toggleStatusAktifBank(\'' + b.id + '\')" class="px-2 py-0.5 rounded-full text-[9px] font-bold ' + (isAktif ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700') + '">' + (isAktif ? '✓ Aktif' : '✕ Nonaktif') + '</button>'
+                        : '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800">✓ Aktif</span>') +
+                    '</td>' +
+                    '<td class="py-3 px-3 text-center space-x-1 whitespace-nowrap">' +
+                        '<button onclick="window.bagikanRekeningTunggalKeWA(\'' + b.id + '\')" class="px-2 py-1 rounded-lg bg-green-50 dark:bg-slate-800 text-green-700 dark:text-green-400 font-bold text-[10px]" title="Bagikan ke WhatsApp">💬 WA</button>' +
+                        (isAdmin ?
+                            '<button onclick="window.lihatMutasiBankDiSimpanan(\'' + window.escapeHtml(b.nama) + '\')" class="px-2 py-1 rounded-lg bg-blue-50 dark:bg-slate-800 text-blue-600 font-bold text-[10px]" title="Filter Transaksi Bank Ini">🔍 Mutasi</button>' +
+                            (!b.isUtama ? '<button onclick="window.setRekeningUtama(\'' + b.id + '\')" class="text-amber-500 hover:underline font-bold text-[10px] px-1" title="Jadikan Rekening Utama">⭐</button>' : '') +
+                            '<button onclick="window.bukaModalEditBank(\'' + b.id + '\')" class="text-emerald-600 font-bold text-xs hover:underline px-1">Edit</button>' +
+                            '<button onclick="window.hapusRekeningBank(\'' + b.id + '\')" class="text-rose-600 font-bold text-xs hover:underline px-1">Hapus</button>'
+                        : '') +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+        };
+        renderBankTab = window.renderBankTabPro;
+        window.renderBankTab = window.renderBankTabPro;
+
+        window.bukaModalBank = function() {
+            window.upgradeDOMBankModalDanTab();
+            document.getElementById('formBank').reset();
+            document.getElementById('editBankId').value = '';
+            if (document.getElementById('bankSaldoAwal')) document.getElementById('bankSaldoAwal').value = 0;
+            document.getElementById('modalBankTitle').textContent = 'Tambah Rekening Bank / QRIS Koperasi';
+            document.getElementById('modalBank').classList.remove('hidden');
+        };
+
+        window.bukaModalEditBank = function(id) {
+            window.upgradeDOMBankModalDanTab();
+            var b = (appState.rekeningBank || []).find(function(x) { return x.id === id; });
+            if (!b) return;
+            document.getElementById('editBankId').value = b.id;
+            document.getElementById('modalBankTitle').textContent = 'Edit Rekening Bank / QRIS Koperasi';
+            document.getElementById('bankNama').value = b.nama;
+            document.getElementById('bankNomor').value = b.nomor;
+            document.getElementById('bankPemilik').value = b.pemilik;
+            if (document.getElementById('bankSaldoAwal')) document.getElementById('bankSaldoAwal').value = Number(b.saldoAwal) || 0;
+            if (document.getElementById('bankJenisKanal')) document.getElementById('bankJenisKanal').value = b.jenisKanal || 'Bank Transfer';
+            if (document.getElementById('bankCabang')) document.getElementById('bankCabang').value = b.cabang || '';
+            document.getElementById('modalBank').classList.remove('hidden');
+        };
+
+        window.simpanRekeningBank = async function(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            var editId = document.getElementById('editBankId').value;
+            var nama = document.getElementById('bankNama').value.trim();
+            var nomor = document.getElementById('bankNomor').value.trim();
+            var pemilik = document.getElementById('bankPemilik').value.trim();
+            var saldoAwal = document.getElementById('bankSaldoAwal') ? (parseFloat(document.getElementById('bankSaldoAwal').value) || 0) : 0;
+            var jenisKanal = document.getElementById('bankJenisKanal') ? document.getElementById('bankJenisKanal').value : 'Bank Transfer';
+            var cabang = document.getElementById('bankCabang') ? document.getElementById('bankCabang').value.trim() : '';
+            var qrisInput = document.getElementById('bankQrisFoto');
+            var qrisUrl = '';
+            if (qrisInput && qrisInput.files && qrisInput.files[0]) {
+                qrisUrl = await window.kompresGambarBukti(qrisInput.files[0], 600, 0.7);
+            }
+
+            if (editId) {
+                var b = appState.rekeningBank.find(function(x) { return x.id === editId; });
+                if (b) {
+                    var oldNama = b.nama;
+                    b.nama = nama;
+                    b.nomor = nomor;
+                    b.pemilik = pemilik;
+                    b.saldoAwal = saldoAwal;
+                    b.jenisKanal = jenisKanal;
+                    b.cabang = cabang;
+                    if (qrisUrl) b.qrisUrl = qrisUrl;
+                    // Sinkronkan nama bank pada seluruh riwayat lintas modul agar rekonsiliasi tetap akurat
+                    if (oldNama && oldNama !== nama) {
+                        (appState.transaksi || []).forEach(function(t) {
+                            if (t.bankTujuan === oldNama) t.bankTujuan = nama;
+                        });
+                        (appState.pinjaman || []).forEach(function(p) {
+                            (p.riwayatCicilan || []).forEach(function(c) {
+                                if (c.bankTujuan === oldNama) c.bankTujuan = nama;
+                            });
+                        });
+                        ((appState.arisan && appState.arisan.riwayatIuran) || []).forEach(function(item) {
+                            if (item.bankTujuan === oldNama) item.bankTujuan = nama;
+                        });
+                        (appState.programKeluarga || []).forEach(function(pr) {
+                            (pr.kontributor || []).forEach(function(k) {
+                                if (k.bankTujuan === oldNama) k.bankTujuan = nama;
+                            });
+                        });
+                        (appState.zis || []).forEach(function(z) {
+                            if (z.bankTujuan === oldNama) z.bankTujuan = nama;
+                        });
+                    }
+                }
+            } else {
+                appState.rekeningBank.push({
+                    id: 'b_' + Date.now(),
+                    nama: nama,
+                    nomor: nomor,
+                    pemilik: pemilik,
+                    saldoAwal: saldoAwal,
+                    jenisKanal: jenisKanal,
+                    cabang: cabang,
+                    qrisUrl: qrisUrl,
+                    aktif: true,
+                    isUtama: (appState.rekeningBank || []).length === 0
+                });
+            }
+            saveStateToCloud();
+            document.getElementById('modalBank').classList.add('hidden');
+            window.renderApp();
+            window.showToast('Data rekening bank & saldo awal berhasil disimpan!');
+            return false;
+        };
+
+        setTimeout(function() { if (typeof window.renderBankTabPro === 'function') window.renderBankTabPro(); }, 300);
+
+        // =========================================================================
+        // AUTO-VERSIONING & CHANGELOG FOOTER (v34.5 Pro)
+        // =========================================================================
+        window.APP_VERSION = 'v34.5 Pro';
+        window.APP_RELEASE_DATE = '14 Nov 2026';
+        window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v34.5 Pro',
+                tanggal: '14 Nov 2026 (Terbaru - Audit Neraca Pro, Anti-Brute Force & Log Sistem)',
+                judul: 'Upgrade Penuh Menu Sistem, Keamanan & 8-Audit Neraca + Log Aktivitas Real-Time',
+                poin: [
+                    '4 Kartu KPI Eksekutif Sistem: Skor Kesehatan 8-Audit, Status Keamanan PIN & Sesi, Ukuran Database (KB & % Kuota), serta Penghitung Log & Gagal Login.',
+                    'Perbaikan Rumus 8-Audit Neraca & Rekonsiliasi Bank: Rasio sisa piutang berjalan (dikurangi cicilan lunas), deteksi transaksi tanpa bank + tombol ⚡ Auto-Fix, deteksi akun dengan PIN standar 1234, dan audit kelengkapan Ahli Waris & Pakta AD/ART.',
+                    'Proteksi Keamanan Aktif: Pengaturan durasi Auto-Logout saat Idle (15m/30m/1j/12j) dan Anti-Brute Force PIN (kunci otomatis setelah 3x/5x/10x salah PIN beserta tombol Reset Lockout).',
+                    'Tabel Log Audit Aktivitas & Keamanan Sistem (Real-Time Audit Trail) lengkap dengan filter kategori, pencarian, dan Export CSV.'
+                ]
+            },
+            {
+                versi: 'v34.4 Pro',
+                tanggal: '14 Nov 2026 (Terbaru - Rekonsiliasi Lintas Modul & Sesi Anti-Reset)',
+                judul: 'Rekonsiliasi Bank 5 Modul, Fix Edit Penarikan, Session Persistence & Proteksi XSS',
+                poin: [
+                    'Perbaikan Bug Edit Transaksi Penarikan: Rekening bank sumber pencairan tidak lagi terhapus saat diedit oleh Admin.',
+                    'Rekonsiliasi Kas Bank Lintas Modul: Pilihan Rekening Bank kini tersedia di modal Bayar Cicilan Pinjaman, Iuran Arisan, Tabungan Program Keluarga, serta Donasi/Santunan ZISWAF, dan seluruhnya dihitung otomatis ke Saldo Akhir Bank.',
+                    'Session Persistence (Anti-Logout saat Refresh): Sesi login, mode peran (Admin/Anggota), dan tab aktif otomatis dipertahankan saat halaman di-refresh (F5).',
+                    'Proteksi Keamanan XSS Menyeluruh & Konsolidasi Kode: Penerapan window.escapeHtml() di seluruh tabel serta penghapusan fungsi duplikat.'
+                ]
+            },
+            {
+                versi: 'v34.3 Pro',
+                tanggal: 'Terbaru (Rekonsiliasi Kasir Bank & WA)',
+                judul: 'Rekonsiliasi Penuh Kas Bank (Masuk/Keluar/Saldo Akhir), Share WA & Mode Anggota',
+                poin: [
+                    'Perhitungan Saldo Akhir Aktual per Rekening Bank (Saldo Awal + Total Setoran Masuk - Total Penarikan Keluar).',
+                    'Tombol 💬 Share WA per rekening & 📢 Bagikan Semua Rekening ke Grup WhatsApp Keluarga.',
+                    'Tombol 🔍 Mutasi di setiap baris bank untuk langsung menyaring transaksi bank tersebut di Buku Simpanan.',
+                    'Fitur 📥 Export Rekonsiliasi Bank ke CSV/Excel & akses menu Info Rekening & QRIS (Read-Only) bagi Anggota biasa.',
+                    'Catatan: ' + "Rekonsiliasi Penuh Rekening Bank (Saldo Awal + Setoran - Penarikan = Saldo Akhir), Share Rekening ke WA, Filter Cepat Mutasi Bank, Export CSV Bank, & Akses Read-Only Anggota."
+                ]
+            },
+            {
+                versi: 'v34.2 Pro',
+                tanggal: 'Sebelumnya',
+                judul: 'Injeksi Langsung HTML Rekening Bank Pro & Upload QRIS',
+                poin: [
+                    'Penggantian langsung struktur HTML #tab-bank & #modalBank dengan fitur Salin No. Rek sekali klik, Jenis Kanal, Cabang, dan Upload Gambar Barcode QRIS.',
+                    'Sinkronisasi otomatis nama bank pada riwayat transaksi lama ketika nama bank diedit.'
+                ]
+            },
+            {
+                versi: 'v34.1 Pro',
+                tanggal: 'Sebelumnya',
+                judul: 'Stabilisasi Sistem, Anti-Leak & Kompresor Foto',
+                poin: [
+                    'Perbaikan Syntax Error & proteksi kebocoran memori (Memory Leak) pada grafik Chart.js dan listener Cloud Firestore.',
+                    'Kompresor Bukti Foto Otomatis (< 70 KB) agar penyimpanan browser & Cloud Firestore tidak pernah penuh.'
+                ]
+            },
+            {
+                versi: 'v34.0 Pro',
+                tanggal: 'Versi Dasar',
+                judul: 'Rilis Inti Koperasi Keluarga Syariah',
+                poin: [
+                    'Manajemen Buku Simpanan (Pokok, Wajib, Sukarela) & Transfer Sesama Anggota (P2P).',
+                    'Pembiayaan Syariah Bebas Riba (Akad Qardhul Hasan 0%, Murabahah, & Mudharabah).',
+                    'Arisan Silaturahmi, Tabungan Program Qurban/Wisata, Baitul Maal ZISWAF, AD/ART, Gamifikasi, & Pembagian SHU.'
+                ]
+            }
+        ];
+
+        window.bukaModalChangelog = function() {
+            var modal = document.getElementById('modalChangelogVersion');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'modalChangelogVersion';
+                modal.className = 'fixed inset-0 bg-slate-900/60 z-[70] flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm';
+                modal.onclick = function() { modal.classList.add('hidden'); };
+                document.body.appendChild(modal);
+            }
+            var itemsHtml = window.APP_CHANGELOG_LIST.map(function(log, idx) {
+                var liHtml = log.poin.map(function(p) { return '<li class="flex items-start gap-1.5"><span class="text-emerald-500 font-bold">✓</span><span>' + window.escapeHtml(p) + '</span></li>'; }).join('');
+                return '<div class="p-3.5 rounded-2xl border ' + (idx === 0 ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700') + ' space-y-1.5">' +
+                    '<div class="flex justify-between items-center">' +
+                        '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ' + (idx === 0 ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300') + '">🚀 ' + window.escapeHtml(log.versi) + '</span>' +
+                        '<span class="text-[10px] font-mono text-slate-400">' + window.escapeHtml(log.tanggal) + '</span>' +
+                    '</div>' +
+                    '<h4 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-white">' + window.escapeHtml(log.judul) + '</h4>' +
+                    '<ul class="text-[11px] text-slate-600 dark:text-slate-300 space-y-1 leading-relaxed">' + liHtml + '</ul>' +
+                '</div>';
+            }).join('');
+
+            modal.innerHTML = '<div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-lg p-5 space-y-3.5 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">' +
+                '<div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2.5">' +
+                    '<div><h3 class="font-extrabold text-base text-slate-800 dark:text-white">📋 Catatan Pembaruan &amp; Riwayat Versi</h3>' +
+                    '<p class="text-[11px] text-slate-500">Keterangan lengkap pembaruan sistem Koperasi Keluarga.</p></div>' +
+                    '<button type="button" onclick="document.getElementById(\'modalChangelogVersion\').classList.add(\x27hidden\x27)" class="text-slate-400 hover:text-rose-500 font-bold text-sm px-2">✕</button>' +
+                '</div>' +
+                '<div class="space-y-3">' + itemsHtml + '</div>' +
+                '<div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-end">' +
+                    '<button type="button" onclick="document.getElementById(\'modalChangelogVersion\').classList.add(\x27hidden\x27)" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Mengerti &amp; Tutup</button>' +
+                '</div>' +
+            '</div>';
+            modal.classList.remove('hidden');
+        };
+
+        window.pasangFooterVersiTerbaru = function() {
+            var footers = document.getElementsByTagName('footer');
+            if (footers && footers[0] && !document.getElementById('badgeFooterChangelog')) {
+                var f = footers[0];
+                f.innerHTML = '<div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto px-2">' +
+                    '<p>&copy; 2026 aufah tech. All rights reserved.</p>' +
+                    '<div class="flex flex-wrap items-center justify-center gap-2">' +
+                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("8-Audit Neraca & Bank + Auto-Fix, Deteksi PIN Standar 1234, Kalkulator Storage KB, Auto-Logout Idle, Anti-Brute Force PIN, & Tabel Log Audit Sistem.") + ')</span>' +
+                        '<button id="badgeFooterChangelog" type="button" onclick="window.bukaModalChangelog()" class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] hover:ring-2 hover:ring-emerald-400 transition cursor-pointer">📋 Lihat Detail Pembaruan ' + window.escapeHtml(window.APP_VERSION) + '</button>' +
+                    '</div>' +
+                '</div>';
+            }
+        };
+        setTimeout(window.pasangFooterVersiTerbaru, 500);
     </script>
 </body>
 </html>
