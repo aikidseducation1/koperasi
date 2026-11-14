@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Koperasi Keluarga v34.8 Pro</title>
+    <title>Aplikasi Koperasi Keluarga v34.9 Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -159,8 +159,10 @@
 
         <div class="flex items-center gap-1.5 relative shrink-0">
             <div id="modeSwitcherContainer" class="bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg flex items-center gap-0.5 text-[11px] font-semibold hidden">
-                <button onclick="window.switchMode('admin')" id="modeAdminBtn" class="px-2.5 py-1 rounded-md transition bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs text-[11px]">Admin</button>
-                <button onclick="window.switchMode('member')" id="modeMemberBtn" class="px-2.5 py-1 rounded-md transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-[11px]">Anggota</button>
+                <button onclick="window.switchMode('admin')" id="modeAdminBtn" class="px-2 py-1 rounded-md transition bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs text-[10px]" title="Mode Super Admin (Akses Penuh Sistem)">Admin</button>
+                <button onclick="window.switchMode('bendahara')" id="modeBendaharaBtn" class="px-2 py-1 rounded-md transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-[10px]" title="Simulasi Mode Pengurus Bendahara (Hanya Mencatat Keuangan)">Bendahara</button>
+                <button onclick="window.switchMode('sekretaris')" id="modeSekretarisBtn" class="px-2 py-1 rounded-md transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-[10px]" title="Simulasi Mode Pengurus Sekretaris (Hanya Mencatat Administrasi)">Sekretaris</button>
+                <button onclick="window.switchMode('member')" id="modeMemberBtn" class="px-2 py-1 rounded-md transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-[10px]" title="Simulasi Mode Anggota Biasa">Anggota</button>
             </div>
 
             <div class="flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-slate-800">
@@ -186,7 +188,7 @@
             <span class="text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">Info</span>
         </div>
         <div class="running-text-wrapper flex-1 overflow-hidden" title="Arahkan kursor / sentuh untuk menghentikan sejenak">
-            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v34.8 Pro!</p>
+            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v34.9 Pro!</p>
         </div>
         <button id="btnEditPengumuman" onclick="window.bukaModalEditPengumuman()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
             ✏️ Edit
@@ -204,7 +206,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v34.8 Pro</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v34.9 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -1118,8 +1120,26 @@
                         <select id="filterRoleAnggota" onchange="window.renderAnggotaTab()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
                             <option value="ALL">Semua Peran (Admin & Anggota)</option>
                             <option value="admin">Pengurus / Admin</option>
+                            <option value="bendahara">💰 Pengurus: Bendahara</option>
+                            <option value="sekretaris">📝 Pengurus: Sekretaris</option>
                             <option value="member">Anggota Biasa</option>
                         </select>
+                    </div>
+
+                    <!-- Matriks Pembagian Wewenang Pengurus (RBAC v34.9 Pro) -->
+                    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-emerald-950 text-white p-3.5 rounded-2xl shadow-xs border border-emerald-500/30 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px] no-print">
+                        <div class="p-2.5 rounded-xl bg-white/5 border border-amber-400/30">
+                            <span class="font-extrabold text-amber-300 block mb-0.5">👑 Super Admin (Pengelola Sistem)</span>
+                            <p class="text-[10px] text-slate-300 leading-relaxed">Akses penuh edit sistem, parameter iuran, aturan keamanan, alokasi % SHU, kelola rekening bank, ubah role pengurus, reset PIN &amp; hapus data.</p>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-white/5 border border-emerald-400/30">
+                            <span class="font-extrabold text-emerald-300 block mb-0.5">💰 Bendahara (Pencatat Keuangan)</span>
+                            <p class="text-[10px] text-slate-300 leading-relaxed">Hanya mencatat &amp; memverifikasi Simpanan, Pinjaman/Cicilan, Arisan, Program, ZISWAF &amp; Beban/Pendapatan SHU. <strong>Tidak bisa edit sistem/hapus data.</strong></p>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-white/5 border border-blue-400/30">
+                            <span class="font-extrabold text-blue-300 block mb-0.5">📝 Sekretaris (Pencatat Administrasi)</span>
+                            <p class="text-[10px] text-slate-300 leading-relaxed">Hanya mencatat Anggota Baru, Edit Biodata Anggota, Notulensi Rapat, Info Pengumuman &amp; Voting. <strong>Tidak bisa edit sistem/kas/ubah role.</strong></p>
+                        </div>
                     </div>
 
                     <div id="gridAnggota" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
@@ -2237,8 +2257,10 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Peran / Role</label>
-                        <select id="anggotaRole" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs outline-none">
+                        <select id="anggotaRole" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs outline-none font-bold">
                             <option value="member">Anggota</option>
+                            <option value="bendahara">💰 Bendahara (Catat Keuangan)</option>
+                            <option value="sekretaris">📝 Sekretaris (Catat Administrasi)</option>
                             <option value="admin">Admin Pengurus</option>
                         </select>
                     </div>
@@ -2765,7 +2787,7 @@
             currentRole: 'member',
             activeTab: 'dashboard',
             totalShu: 2500000,
-            pengumuman: "Selamat datang di Koperasi Keluarga v34.8 Pro! Cloud Auto-Sync (koperasi-4a4fe) Tertanam Permanen, Matriks 12 Bulan, SHU Adil & Anti-Copy Aktif.",
+            pengumuman: "Selamat datang di Koperasi Keluarga v34.9 Pro! Hak Akses Pengurus Kini Terpisah: Super Admin (Sistem) vs Bendahara (Catat Kas) vs Sekretaris (Catat Administrasi).",
             rekeningBank: [
                 { id: 'b1', nama: 'BCA', nomor: '1234567890', pemilik: 'Koperasi Keluarga aufah' },
                 { id: 'b2', nama: 'Mandiri', nomor: '0987654321', pemilik: 'Koperasi Keluarga aufah' }
@@ -3195,6 +3217,11 @@
         };
 
         window.ubahMetodePerhitunganShu = (metodeBaru) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Perubahan rumus/metode perhitungan SHU hanya dapat dilakukan oleh Super Admin!', 'error');
+                window.renderApp();
+                return;
+            }
             if (!appState.shuSetting) appState.shuSetting = { alokasiModal: 40, alokasiUsaha: 20, alokasiCadangan: 25, alokasiSosial: 15 };
             appState.shuSetting.metodePerhitungan = metodeBaru;
             window.catatLogAuditSistem('PENGATURAN', 'Ubah Metode Perhitungan SHU', `Metode SHU diubah ke: ${metodeBaru === 'TERTIMBANG' ? 'Bobot Waktu Mengendap (Adil Syariah)' : 'Saldo Akhir'}`, 'Sukses');
@@ -3399,7 +3426,39 @@
 
         window.getEffectiveRole = () => {
             if (!currentUserSession) return 'member';
-            return currentUserSession.kontak === '082298688189' ? appState.currentRole : currentUserSession.role;
+            if (currentUserSession.kontak === '082298688189') {
+                return appState.currentRole || 'admin';
+            }
+            if (currentUserSession.role === 'admin') return 'bendahara';
+            return currentUserSession.role || 'member';
+        };
+
+        window.isSuperAdminMode = () => {
+            if (!currentUserSession) return false;
+            return currentUserSession.kontak === '082298688189' && (appState.currentRole === 'admin' || !appState.currentRole);
+        };
+
+        window.isBendaharaOrSuper = () => {
+            const r = window.getEffectiveRole();
+            return r === 'admin' || r === 'bendahara';
+        };
+
+        window.isSekretarisOrSuper = () => {
+            const r = window.getEffectiveRole();
+            return r === 'admin' || r === 'sekretaris';
+        };
+
+        window.isPengurusAny = () => {
+            const r = window.getEffectiveRole();
+            return r === 'admin' || r === 'bendahara' || r === 'sekretaris';
+        };
+
+        window.getLabelJabatanRole = (anggotaObj) => {
+            if (!anggotaObj) return 'Anggota';
+            if (anggotaObj.kontak === '082298688189') return '👑 Super Admin';
+            if (anggotaObj.role === 'bendahara' || anggotaObj.role === 'admin') return '💰 Bendahara';
+            if (anggotaObj.role === 'sekretaris') return '📝 Sekretaris';
+            return '👤 Anggota';
         };
 
         async function saveStateToCloud() {
@@ -3557,6 +3616,19 @@
         };
 
         window.switchTab = (tabId) => {
+            const role = window.getEffectiveRole();
+            if (tabId === 'pengaturan' && role !== 'admin') {
+                window.showToast('🔒 Akses Dibatasi: Menu Sistem, Keamanan & Audit hanya untuk Super Admin!', 'error');
+                return;
+            }
+            if (tabId === 'persetujuan' && !window.isPengurusAny()) {
+                window.showToast('🔒 Menu Pusat Persetujuan hanya untuk Pengurus.', 'error');
+                return;
+            }
+            if (tabId === 'anggota' && !window.isPengurusAny()) {
+                window.showToast('🔒 Menu Direktori Anggota hanya untuk Pengurus.', 'error');
+                return;
+            }
             appState.activeTab = tabId;
             const tabs = ['dashboard', 'persetujuan', 'simpanan', 'pinjaman', 'arisan', 'ad-art', 'zis', 'gamifikasi', 'anggota', 'bank', 'pengaturan', 'shu', 'profil-saya'];
             tabs.forEach(t => {
@@ -3625,12 +3697,21 @@
         window.switchMode = (mode) => {
             if (currentUserSession && currentUserSession.kontak === '082298688189') {
                 appState.currentRole = mode;
+                if (mode !== 'admin' && appState.activeTab === 'pengaturan') {
+                    appState.activeTab = 'dashboard';
+                }
                 if (mode === 'member' && ['persetujuan', 'anggota', 'pengaturan'].includes(appState.activeTab)) {
                     window.switchTab('dashboard');
                     return;
                 }
                 window.saveUserSessionState();
-                window.showToast(`Beralih ke tampilan ${mode === 'admin' ? 'Admin' : 'Anggota'}`, 'info');
+                const modeLabelMap = {
+                    admin: '👑 Super Admin (Akses Sistem Penuh)',
+                    bendahara: '💰 Pengurus Bendahara (Pencatat Kas & Keuangan)',
+                    sekretaris: '📝 Pengurus Sekretaris (Pencatat Rapat & Anggota)',
+                    member: '👤 Anggota Biasa'
+                };
+                window.showToast(`Beralih ke tampilan ${modeLabelMap[mode] || mode}`, 'info');
                 window.renderApp();
             }
         };
@@ -3650,10 +3731,18 @@
             if (!currentUserSession) return;
 
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const role = window.getEffectiveRole();
 
             document.getElementById('headerUserName').textContent = currentUserSession.nama;
-            document.getElementById('headerUserRole').textContent = isSuperAdmin ? `Super Admin (${appState.currentRole.toUpperCase()})` : 'Anggota Keluarga';
+            const roleHeaderLabelMap = {
+                admin: '👑 Super Admin (Sistem)',
+                bendahara: '💰 Bendahara (Pencatat Kas)',
+                sekretaris: '📝 Sekretaris (Administrasi)',
+                member: '👤 Anggota Keluarga'
+            };
+            document.getElementById('headerUserRole').textContent = isSuperAdmin
+                ? `Super Admin (${(appState.currentRole || 'admin').toUpperCase()})`
+                : (roleHeaderLabelMap[role] || 'Anggota Keluarga');
             const headerAvatarText = document.getElementById('headerUserAvatarText');
             const headerAvatarImg = document.getElementById('headerUserAvatarImg');
             if (currentUserSession.fotoProfil) {
@@ -3673,13 +3762,21 @@
             const modeContainer = document.getElementById('modeSwitcherContainer');
             if (isSuperAdmin) {
                 modeContainer.classList.remove('hidden');
-                if (appState.currentRole === 'admin') {
-                    document.getElementById('modeAdminBtn').className = "px-2 sm:px-3 py-1.5 rounded-lg transition bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm text-xs";
-                    document.getElementById('modeMemberBtn').className = "px-2 sm:px-3 py-1.5 rounded-lg transition text-slate-600 dark:text-slate-300 hover:text-slate-900 text-xs";
-                } else {
-                    document.getElementById('modeMemberBtn').className = "px-2 sm:px-3 py-1.5 rounded-lg transition bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm text-xs";
-                    document.getElementById('modeAdminBtn').className = "px-2 sm:px-3 py-1.5 rounded-lg transition text-slate-600 dark:text-slate-300 hover:text-slate-900 text-xs";
-                }
+                const btnMap = {
+                    admin: document.getElementById('modeAdminBtn'),
+                    bendahara: document.getElementById('modeBendaharaBtn'),
+                    sekretaris: document.getElementById('modeSekretarisBtn'),
+                    member: document.getElementById('modeMemberBtn')
+                };
+                Object.keys(btnMap).forEach(k => {
+                    const btn = btnMap[k];
+                    if (!btn) return;
+                    if ((appState.currentRole || 'admin') === k) {
+                        btn.className = "px-2 py-1 rounded-md transition bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 font-extrabold shadow-xs text-[10px]";
+                    } else {
+                        btn.className = "px-2 py-1 rounded-md transition text-slate-600 dark:text-slate-300 hover:text-slate-900 text-[10px]";
+                    }
+                });
             } else {
                 modeContainer.classList.add('hidden');
             }
@@ -3700,19 +3797,22 @@
             let navs = [
                 { id: 'dashboard', label: 'Dashboard Utama', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
                 { id: 'simpanan', label: 'Buku Simpanan & Kas', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-                { id: 'pinjaman', label: 'Pembiayaan Syariah', badge: role === 'admin' ? (pendingLoans.length + pendingCicilanCount) : 0, icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
+                { id: 'pinjaman', label: 'Pembiayaan Syariah', badge: window.isBendaharaOrSuper() ? (pendingLoans.length + pendingCicilanCount) : 0, icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
                 { id: 'shu', label: 'Bagi Hasil (SHU) Syariah', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
                 { id: 'arisan', label: 'Arisan & Program', icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' },
-                { id: 'zis', label: 'ZIS & Dana Sosial', badge: role === 'admin' ? pendingZisCount : 0, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
+                { id: 'zis', label: 'ZIS & Dana Sosial', badge: window.isBendaharaOrSuper() ? pendingZisCount : 0, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
                 { id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
                 { id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' },
                 { id: 'profil-saya', label: 'Profil & Kartu Saya', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
             ];
 
-            if (role === 'admin') {
-                navs.splice(1, 0, { id: 'persetujuan', label: 'Pusat Persetujuan', badge: totalAllPending, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' });
+            if (window.isPengurusAny()) {
+                const badgePersetujuan = role === 'sekretaris' ? pendingRegLen : totalAllPending;
+                navs.splice(1, 0, { id: 'persetujuan', label: 'Pusat Persetujuan', badge: badgePersetujuan, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' });
                 navs.splice(navs.length - 1, 0, { id: 'anggota', label: 'Data Anggota Keluarga', badge: pendingRegLen, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
-                navs.splice(navs.length - 1, 0, { id: 'bank', label: 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
+                navs.splice(navs.length - 1, 0, { id: 'bank', label: role === 'sekretaris' ? 'Info Rekening & QRIS' : 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
+            }
+            if (role === 'admin') {
                 navs.splice(navs.length - 1, 0, { id: 'pengaturan', label: 'Sistem, Keamanan & Audit', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' });
             }
 
@@ -3727,11 +3827,27 @@
             `).join('');
 
             document.getElementById('teksPengumuman').textContent = appState.pengumuman;
-            const adminBtns = ['btnEditPengumuman', 'btnBukaModalVoting', 'btnSettingPinjam', 'btnSettingShu', 'btnTambahBeban', 'thAksiBeban', 'btnTambahPendapatanShu', 'thAksiPendapatanShu', 'adminShuControl', 'btnTambahAnggota', 'btnKocokArisan', 'btnResetPutaranArisan', 'btnTambahProgram', 'btnTambahNotulensi', 'btnEditAdArt', 'btnAdminPoinBonus', 'btnAdminTambahBadge'];
-            adminBtns.forEach(btnId => {
+            const superAdminOnlyBtns = ['btnSettingPinjam', 'btnSettingShu', 'adminShuControl', 'btnResetPutaranArisan', 'btnEditAdArt', 'btnAdminPoinBonus', 'btnAdminTambahBadge'];
+            superAdminOnlyBtns.forEach(btnId => {
                 const el = document.getElementById(btnId);
                 if (el) {
                     if (role === 'admin') el.classList.remove('hidden');
+                    else el.classList.add('hidden');
+                }
+            });
+            const bendaharaBtns = ['btnTambahBeban', 'thAksiBeban', 'btnTambahPendapatanShu', 'thAksiPendapatanShu', 'btnKocokArisan', 'btnTambahProgram'];
+            bendaharaBtns.forEach(btnId => {
+                const el = document.getElementById(btnId);
+                if (el) {
+                    if (window.isBendaharaOrSuper()) el.classList.remove('hidden');
+                    else el.classList.add('hidden');
+                }
+            });
+            const sekretarisBtns = ['btnEditPengumuman', 'btnBukaModalVoting', 'btnTambahAnggota', 'btnTambahNotulensi'];
+            sekretarisBtns.forEach(btnId => {
+                const el = document.getElementById(btnId);
+                if (el) {
+                    if (window.isSekretarisOrSuper()) el.classList.remove('hidden');
                     else el.classList.add('hidden');
                 }
             });
@@ -3767,10 +3883,15 @@
             document.getElementById('dashboardGreetingTitle').textContent = `Halo, ${currentUserSession.nama}! 👋`;
             const badgePriv = document.getElementById('privacyRoleBadgeDashboard');
             if (badgePriv) {
-                badgePriv.textContent = role === 'admin' ? '🛡️ Mode Pengurus (Akses Penuh)' : '🔒 Mode Pribadi (Data Anda)';
-                badgePriv.className = role === 'admin'
-                    ? 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-                    : 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300';
+                const badgeMap = {
+                    admin: { text: '👑 Mode Super Admin (Akses Sistem Penuh)', cls: 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' },
+                    bendahara: { text: '💰 Mode Bendahara (Pencatat & Verifikator Kas)', cls: 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' },
+                    sekretaris: { text: '📝 Mode Sekretaris (Pencatat Administrasi & Rapat)', cls: 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' },
+                    member: { text: '🔒 Mode Pribadi (Data Anda)', cls: 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' }
+                };
+                const bInfo = badgeMap[role] || badgeMap.member;
+                badgePriv.textContent = bInfo.text;
+                badgePriv.className = bInfo.cls;
             }
             document.getElementById('dashboardSaldoPribadi').textContent = window.formatRupiah(userSaldo);
             document.getElementById('dashboardPorsiModalBadge').textContent = `${(userShuObj.porsiModal * 100).toFixed(1)}% Modal`;
@@ -3794,9 +3915,15 @@
             document.getElementById('dashboardDanaSosialZisText').innerHTML = `Kas ZIS & Sosial: <strong class="text-emerald-600">${window.formatRupiah(totalZisTerkumpul)}</strong>`;
 
             const adminAlertBanner = document.getElementById('adminPendingAlertBanner');
-            if (role === 'admin' && totalAllPending > 0) {
+            const pendingKeuanganTotal = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisCount;
+            const relevantPending = role === 'admin' ? totalAllPending : role === 'bendahara' ? pendingKeuanganTotal : role === 'sekretaris' ? pendingRegLen : 0;
+            if (window.isPengurusAny() && relevantPending > 0) {
                 adminAlertBanner.classList.remove('hidden');
-                document.getElementById('adminPendingAlertText').textContent = `Terdapat ${totalAllPending} antrean verifikasi (${pendingTrx.length} Simpanan, ${pendingLoans.length} Pinjaman, ${pendingCicilanCount} Cicilan, ${pendingZisCount} ZIS, ${pendingRegLen} Calon Anggota) di Pusat Persetujuan.`;
+                document.getElementById('adminPendingAlertText').textContent = role === 'sekretaris'
+                    ? `Terdapat ${pendingRegLen} pendaftaran Calon Anggota Baru yang menunggu verifikasi administrasi Anda di Pusat Persetujuan.`
+                    : role === 'bendahara'
+                        ? `Terdapat ${pendingKeuanganTotal} antrean keuangan (${pendingTrx.length} Simpanan, ${pendingLoans.length} Pinjaman, ${pendingCicilanCount} Cicilan, ${pendingZisCount} ZIS) di Pusat Persetujuan.`
+                        : `Terdapat ${totalAllPending} antrean verifikasi (${pendingTrx.length} Simpanan, ${pendingLoans.length} Pinjaman, ${pendingCicilanCount} Cicilan, ${pendingZisCount} ZIS, ${pendingRegLen} Calon Anggota) di Pusat Persetujuan.`;
             } else {
                 adminAlertBanner.classList.add('hidden');
             }
@@ -3910,8 +4037,9 @@
                 return;
             }
 
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const role = window.getEffectiveRole();
+            const bolehKelolaVoting = window.isSekretarisOrSuper();
+            const bolehHapusVoting = (role === 'admin');
 
             container.innerHTML = appState.votings.map(v => {
                 const suaraObj = v.suara || {};
@@ -3920,10 +4048,10 @@
 
                 return `
                     <div class="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3 relative">
-                        ${(role === 'admin' || isSuperAdmin) ? `
+                        ${bolehKelolaVoting ? `
                             <div class="absolute top-3 right-3 flex items-center gap-1">
                                 <button onclick="window.bukaModalEditVoting('${v.id}')" class="text-emerald-600 hover:text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40" title="Edit Voting">✏️ Edit</button>
-                                <button onclick="window.hapusVoting('${v.id}')" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold px-2 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40" title="Hapus Voting">🗑️</button>
+                                ${bolehHapusVoting ? `<button onclick="window.hapusVoting('${v.id}')" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold px-2 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40" title="Hapus Voting">🗑️</button>` : ''}
                             </div>
                         ` : ''}
                         <div class="pr-24">
@@ -3970,10 +4098,8 @@
         };
 
         window.hapusVoting = (votingId) => {
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
-            if (role !== 'admin' && !isSuperAdmin) {
-                window.showToast('Hanya admin yang dapat menghapus voting.', 'error');
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus topik voting secara permanen.', 'error');
                 return;
             }
             window.showConfirmModal('Hapus Topik Voting', 'Yakin ingin menghapus topik voting keluarga ini?', () => {
@@ -3996,10 +4122,8 @@
 
         window.simpanTopikVoting = (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
-            if (role !== 'admin' && !isSuperAdmin) {
-                window.showToast('Hanya admin yang dapat mengelola topik voting.', 'error');
+            if (!window.isSekretarisOrSuper()) {
+                window.showToast('🔒 Hanya Sekretaris atau Super Admin yang dapat mencatat/mengelola topik voting keluarga.', 'error');
                 return false;
             }
 
@@ -4065,13 +4189,13 @@
 
         function renderRecentTransactions() {
             const tbody = document.getElementById('recentTransaksiBody');
-            const role = window.getEffectiveRole();
+            const isKeuangan = window.isBendaharaOrSuper();
             const titleEl = document.getElementById('recentTransaksiTitle');
             if (titleEl) {
-                titleEl.textContent = role === 'admin' ? '5 Aktivitas Transaksi Terakhir (Seluruh Anggota)' : '5 Aktivitas Transaksi Terakhir Anda';
+                titleEl.textContent = isKeuangan ? '5 Aktivitas Transaksi Terakhir (Seluruh Anggota)' : '5 Aktivitas Transaksi Terakhir Anda';
             }
 
-            const sourceTrx = role === 'admin'
+            const sourceTrx = isKeuangan
                 ? (appState.transaksi || [])
                 : (appState.transaksi || []).filter(t => t.anggotaId === currentUserSession.id);
 
@@ -4101,6 +4225,9 @@
 
         function renderPersetujuanTab() {
             const tbody = document.getElementById('tabelPersetujuanBody');
+            const role = window.getEffectiveRole();
+            const isKeuangan = window.isBendaharaOrSuper();
+            const isAdmSekretaris = window.isSekretarisOrSuper();
             const pending = (appState.transaksi || []).filter(t => t.status === 'Menunggu');
             const pendingLoans = (appState.pinjaman || []).filter(p => p.status === 'Menunggu');
             const pendingZis = (appState.zis || []).filter(z => z.status === 'Menunggu');
@@ -4153,8 +4280,10 @@
                         </td>
                         <td class="py-3 px-3 text-slate-500">${t.keterangan || '-'}</td>
                         <td class="py-3 px-3 text-center space-x-1">
-                            <button onclick="window.updateStatusTransaksi('${t.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px] hover:bg-emerald-700">Setujui</button>
-                            <button onclick="window.updateStatusTransaksi('${t.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px] hover:bg-rose-700">Tolak</button>
+                            ${isKeuangan ? `
+                                <button onclick="window.updateStatusTransaksi('${t.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px] hover:bg-emerald-700">Setujui</button>
+                                <button onclick="window.updateStatusTransaksi('${t.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px] hover:bg-rose-700">Tolak</button>
+                            ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Bendahara</span>`}
                         </td>
                     </tr>
                 `}).join('');
@@ -4189,8 +4318,10 @@
                                     <span class="text-[10px] text-slate-500 block">Tenor ${p.tenor} bln (Angsuran ${window.formatRupiah(cicilanBln)}/bln) • Tujuan: ${p.keperluan || '-'}</span>
                                 </div>
                                 <div class="flex gap-1 shrink-0">
-                                    <button onclick="window.updateStatusPinjaman('${p.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px]">Setujui Akad</button>
-                                    <button onclick="window.updateStatusPinjaman('${p.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                    ${isKeuangan ? `
+                                        <button onclick="window.updateStatusPinjaman('${p.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px]">Setujui Akad</button>
+                                        <button onclick="window.updateStatusPinjaman('${p.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                    ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Bendahara</span>`}
                                 </div>
                             </div>
                             <div class="pt-1.5 border-t border-slate-200/70 dark:border-slate-700 flex flex-wrap justify-between items-center text-[10px] gap-1">
@@ -4216,8 +4347,10 @@
                                 ${item.bukti ? `<button onclick="window.lihatFotoBukti('${item.bukti}')" class="block text-blue-600 underline text-[10px] font-bold mt-0.5">🖼️ Lihat Bukti Transfer</button>` : ''}
                             </div>
                             <div class="flex gap-1 shrink-0">
-                                <button onclick="window.verifikasiCicilanPinjaman('${item.pinjamanId}', '${item.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
-                                <button onclick="window.verifikasiCicilanPinjaman('${item.pinjamanId}', '${item.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                ${isKeuangan ? `
+                                    <button onclick="window.verifikasiCicilanPinjaman('${item.pinjamanId}', '${item.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
+                                    <button onclick="window.verifikasiCicilanPinjaman('${item.pinjamanId}', '${item.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Bendahara</span>`}
                             </div>
                         </div>
                     `).join('');
@@ -4237,8 +4370,10 @@
                                 <span class="text-[10px] text-slate-400">${z.tanggal} • ${z.jenis} (${z.tipeMutasi || 'Pemasukan'})</span>
                             </div>
                             <div class="flex gap-1 shrink-0">
-                                <button onclick="window.verifikasiZis('${z.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
-                                <button onclick="window.verifikasiZis('${z.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                ${isKeuangan ? `
+                                    <button onclick="window.verifikasiZis('${z.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
+                                    <button onclick="window.verifikasiZis('${z.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Bendahara</span>`}
                             </div>
                         </div>
                     `).join('');
@@ -4258,8 +4393,10 @@
                                 <span class="text-[10px] text-slate-400">WA: ${c.kontak}</span>
                             </div>
                             <div class="flex gap-1 shrink-0">
-                                <button onclick="window.verifikasiCalonAnggota('${c.id}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Terima</button>
-                                <button onclick="window.verifikasiCalonAnggota('${c.id}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                ${isAdmSekretaris ? `
+                                    <button onclick="window.verifikasiCalonAnggota('${c.id}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Terima</button>
+                                    <button onclick="window.verifikasiCalonAnggota('${c.id}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Sekretaris</span>`}
                             </div>
                         </div>
                     `).join('');
@@ -4291,7 +4428,7 @@
                             <td class="py-2.5 px-3 font-extrabold">${window.formatRupiah(h.nominal)}</td>
                             <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${h.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${h.status}</span></td>
                             <td class="py-2.5 px-3 text-center">
-                                <button onclick="window.batalkanKeputusanVerifikasi('${h.tipeItem}', '${h.id}')" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-amber-50 dark:hover:bg-slate-800 text-amber-600 font-bold text-[10px]" title="Kembalikan ke status Menunggu">↩️ Kembalikan ke Antrean</button>
+                                ${isKeuangan ? `<button onclick="window.batalkanKeputusanVerifikasi('${h.tipeItem}', '${h.id}')" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-amber-50 dark:hover:bg-slate-800 text-amber-600 font-bold text-[10px]" title="Kembalikan ke status Menunggu">↩️ Kembalikan ke Antrean</button>` : `<span class="text-[10px] text-slate-400 italic">-</span>`}
                             </td>
                         </tr>
                     `).join('');
@@ -4300,6 +4437,10 @@
         }
 
         window.batalkanKeputusanVerifikasi = (tipeItem, id) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang dapat mengembalikan status verifikasi keuangan!', 'error');
+                return;
+            }
             if (tipeItem === 'SIMPANAN') {
                 const t = (appState.transaksi || []).find(x => x.id === id);
                 if (t) t.status = 'Menunggu';
@@ -4316,6 +4457,10 @@
         };
 
         window.updateStatusTransaksi = (id, statusBaru) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang berwenang memverifikasi transaksi simpanan!', 'error');
+                return;
+            }
             const t = appState.transaksi.find(x => x.id === id);
             if (t) {
                 if (statusBaru === 'Disetujui' && t.tipe === 'Penarikan') {
@@ -4334,6 +4479,10 @@
         };
 
         window.approveAllSelected = () => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang berwenang menyetujui transaksi simpanan!', 'error');
+                return;
+            }
             const checkboxes = document.querySelectorAll('.rowCheckbox:checked');
             const ids = Array.from(checkboxes).map(cb => cb.value);
             if (ids.length === 0) {
@@ -4365,6 +4514,10 @@
         };
 
         window.rejectAllSelected = () => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang berwenang menolak transaksi simpanan!', 'error');
+                return;
+            }
             const checkboxes = document.querySelectorAll('.rowCheckbox:checked');
             const ids = Array.from(checkboxes).map(cb => cb.value);
             if (ids.length === 0) {
@@ -4382,6 +4535,10 @@
         };
 
         window.approveAllEverything = () => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Aksi massal antrean keuangan hanya untuk Bendahara atau Super Admin!', 'error');
+                return;
+            }
             const pendingTrx = (appState.transaksi || []).filter(t => t.status === 'Menunggu');
             const pendingLoans = (appState.pinjaman || []).filter(p => p.status === 'Menunggu');
             const pendingZis = (appState.zis || []).filter(z => z.status === 'Menunggu');
@@ -4429,19 +4586,20 @@
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const role = window.getEffectiveRole();
 
-            // Privasi dropdown filter anggota: Member hanya melihat dirinya sendiri
+            const isKeuangan = window.isBendaharaOrSuper();
+            // Privasi dropdown filter anggota: Bendahara & Super Admin dapat memilih semua anggota
             const filterAnggotaEl = document.getElementById('filterAnggotaSimpanan');
             if (filterAnggotaEl) {
-                if (role === 'admin') {
+                if (isKeuangan) {
                     filterAnggotaEl.disabled = false;
                     const currentSelectedAnggota = filterAnggotaEl.value || 'ALL';
                     filterAnggotaEl.innerHTML = `<option value="ALL">Semua Anggota (${appState.anggota.length})</option>` +
-                        appState.anggota.map(a => `<option value="${a.id}">${a.nama}</option>`).join('');
+                        appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)}</option>`).join('');
                     if ([...filterAnggotaEl.options].some(o => o.value === currentSelectedAnggota)) {
                         filterAnggotaEl.value = currentSelectedAnggota;
                     }
                 } else {
-                    filterAnggotaEl.innerHTML = `<option value="${currentUserSession.id}">🔒 Hanya Simpanan Saya (${currentUserSession.nama})</option>`;
+                    filterAnggotaEl.innerHTML = `<option value="${currentUserSession.id}">🔒 Hanya Simpanan Saya (${window.escapeHtml(currentUserSession.nama)})</option>`;
                     filterAnggotaEl.value = currentUserSession.id;
                     filterAnggotaEl.disabled = true;
                 }
@@ -4449,7 +4607,7 @@
 
             // Hitung 3 Kartu Ringkasan Simpanan sesuai hak akses role
             let totalPokokAll = 0, totalWajibAll = 0, totalSukarelaAll = 0;
-            const targetAnggotaList = role === 'admin' ? appState.anggota : appState.anggota.filter(a => a.id === currentUserSession.id);
+            const targetAnggotaList = isKeuangan ? appState.anggota : appState.anggota.filter(a => a.id === currentUserSession.id);
             targetAnggotaList.forEach(a => {
                 const r = window.hitungRincianSimpananAnggota(a.id);
                 totalPokokAll += r.pokok;
@@ -4463,13 +4621,13 @@
             setCard('simpananCardSukarela', window.formatRupiah(totalSukarelaAll));
 
             const q = (document.getElementById('searchSimpananInput')?.value || '').toLowerCase();
-            const filterAnggota = role === 'admin' ? (document.getElementById('filterAnggotaSimpanan')?.value || 'ALL') : currentUserSession.id;
+            const filterAnggota = isKeuangan ? (document.getElementById('filterAnggotaSimpanan')?.value || 'ALL') : currentUserSession.id;
             const kat = document.getElementById('filterKategoriSimpanan')?.value || 'ALL';
             const filterTipe = document.getElementById('filterTipeSimpanan')?.value || 'ALL';
             const filterStatus = document.getElementById('filterStatusSimpanan')?.value || 'ALL';
 
             // Hanya ambil transaksi yang berhak dilihat oleh role aktif
-            const baseTransaksi = role === 'admin'
+            const baseTransaksi = isKeuangan
                 ? (appState.transaksi || [])
                 : (appState.transaksi || []).filter(t => t.anggotaId === currentUserSession.id);
 
@@ -4524,8 +4682,8 @@
                         <td class="py-3 px-3 text-slate-500">${window.escapeHtml(t.keterangan || '-')}</td>
                         <td class="py-3 px-3 text-center no-print space-x-1 whitespace-nowrap">
                             <button onclick="window.bukaKwitansiTransaksi('${t.id}')" class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 font-bold text-[10px]" title="Cetak Struk / Kwitansi">🧾 Struk</button>
-                            ${(role === 'admin' || isSuperAdmin) ? `<button onclick="window.bukaModalEditTransaksi('${t.id}')" class="text-emerald-600 hover:underline font-bold text-[11px]">Edit</button>` : ''}
-                            ${(role === 'admin' || isSuperAdmin) ? `<button onclick="window.hapusTransaksi('${t.id}')" class="text-rose-500 hover:underline font-bold text-[11px]">Hapus</button>` : ''}
+                            ${isKeuangan ? `<button onclick="window.bukaModalEditTransaksi('${t.id}')" class="text-emerald-600 hover:underline font-bold text-[11px]">Edit</button>` : ''}
+                            ${role === 'admin' ? `<button onclick="window.hapusTransaksi('${t.id}')" class="text-rose-500 hover:underline font-bold text-[11px]">Hapus</button>` : ''}
                         </td>
                     </tr>
                 `).join('');
@@ -4565,7 +4723,7 @@
                             <td class="py-2.5 px-3 font-semibold text-purple-600 dark:text-purple-400">${window.formatRupiah(r.sukarela)}</td>
                             <td class="py-2.5 px-3 font-black text-emerald-600">${window.formatRupiah(r.total)}</td>
                             <td class="py-2.5 px-3 text-center no-print">
-                                ${role === 'admin' ? `<button onclick="window.filterSimpananByAnggota('${a.id}')" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-slate-800 text-[10px] font-bold text-emerald-600">🔍 Lihat Rincian</button>` : `<span class="text-[10px] text-slate-400">🔒 Data Pribadi</span>`}
+                                ${isKeuangan ? `<button onclick="window.filterSimpananByAnggota('${a.id}')" class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-slate-800 text-[10px] font-bold text-emerald-600">🔍 Lihat Rincian</button>` : `<span class="text-[10px] text-slate-400">🔒 Data Pribadi</span>`}
                             </td>
                         </tr>
                     `;
@@ -4609,10 +4767,8 @@
         };
 
         window.toggleBulanMatriksIuran = (anggotaId, tahun, bulanIdx) => {
-            const role = window.getEffectiveRole();
-            const isSuperAdmin = currentUserSession && currentUserSession.kontak === '082298688189';
-            if (role !== 'admin' && !isSuperAdmin) {
-                window.showToast('Hanya Pengurus / Admin yang dapat mengubah checklist matriks manual.', 'info');
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('Hanya Bendahara atau Super Admin yang dapat mencatat verifikasi matriks iuran.', 'info');
                 return;
             }
             const jenis = document.getElementById('filterJenisMatriksIuran')?.value || 'WAJIB';
@@ -4636,10 +4792,9 @@
         window.renderMatriksIuran12Bulan = () => {
             const tbody = document.getElementById('tabelMatriksIuran12BulanBody');
             if (!tbody || !currentUserSession) return;
-            const role = window.getEffectiveRole();
             const tahun = parseInt(document.getElementById('filterTahunMatriksIuran')?.value || '2026') || 2026;
             const jenis = document.getElementById('filterJenisMatriksIuran')?.value || 'WAJIB';
-            const listAnggota = role === 'admin' ? (appState.anggota || []) : (appState.anggota || []).filter(a => a.id === currentUserSession.id);
+            const listAnggota = window.isBendaharaOrSuper() ? (appState.anggota || []) : (appState.anggota || []).filter(a => a.id === currentUserSession.id);
 
             tbody.innerHTML = listAnggota.map(a => {
                 let lunasCount = 0;
@@ -4682,10 +4837,10 @@
         };
 
         window.exportMatriksIuranToExcel = () => {
-            const role = window.getEffectiveRole();
+            const isKeuangan = window.isBendaharaOrSuper();
             const tahun = parseInt(document.getElementById('filterTahunMatriksIuran')?.value || '2026') || 2026;
             const jenis = document.getElementById('filterJenisMatriksIuran')?.value || 'WAJIB';
-            const listAnggota = role === 'admin' ? (appState.anggota || []) : (appState.anggota || []).filter(a => a.id === currentUserSession.id);
+            const listAnggota = isKeuangan ? (appState.anggota || []) : (appState.anggota || []).filter(a => a.id === currentUserSession.id);
             const headers = ['Nama Anggota', 'Keluarga (KK)', 'Tanggal Bergabung', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Total Bulan Lunas'];
             const rows = listAnggota.map(a => {
                 let lunas = 0;
@@ -4719,8 +4874,7 @@
         window.bukaKwitansiTransaksi = (id) => {
             const t = (appState.transaksi || []).find(x => x.id === id);
             if (!t) return;
-            const role = window.getEffectiveRole();
-            if (role !== 'admin' && t.anggotaId !== currentUserSession.id) {
+            if (!window.isBendaharaOrSuper() && t.anggotaId !== currentUserSession.id) {
                 window.showToast('Privasi: Anda hanya dapat melihat struk transaksi milik Anda sendiri.', 'error');
                 return;
             }
@@ -4839,8 +4993,9 @@
         };
 
         window.exportToExcel = () => {
+            const isKeuangan = window.isBendaharaOrSuper();
             const role = window.getEffectiveRole();
-            const sourceTrx = role === 'admin'
+            const sourceTrx = isKeuangan
                 ? (appState.transaksi || [])
                 : (appState.transaksi || []).filter(t => t.anggotaId === currentUserSession.id);
             const headers = ['Waktu', 'Nama Anggota', 'Tipe', 'Kategori', 'Bank Tujuan', 'Nominal', 'Status', 'Keterangan'];
@@ -4863,6 +5018,10 @@
         };
 
         window.hapusTransaksi = (id) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Akses Ditolak: Bendahara/Pengurus hanya bertugas mencatat, penghapusan permanen hanya oleh Super Admin!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Transaksi', 'Yakin ingin menghapus catatan transaksi ini secara permanen?', () => {
                 appState.transaksi = appState.transaksi.filter(t => t.id !== id);
                 saveStateToCloud();
@@ -4895,9 +5054,7 @@
             document.getElementById('modalTransaksiTitle').textContent = 'Catat Setoran / Penarikan Simpanan';
             window.populateDropdownBankAktif('transaksiBankTujuan');
 
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
-            if (role !== 'admin') {
+            if (!window.isBendaharaOrSuper()) {
                 select.value = currentUserSession.id;
                 document.getElementById('wrapperPilihAnggota').style.display = 'none';
             } else {
@@ -4912,9 +5069,8 @@
         };
 
         window.updateInfoSaldoModalTransaksi = () => {
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
-            const anggotaId = role === 'admin' ? (document.getElementById('transaksiAnggotaId')?.value || currentUserSession.id) : currentUserSession.id;
+            const isKeuangan = window.isBendaharaOrSuper();
+            const anggotaId = isKeuangan ? (document.getElementById('transaksiAnggotaId')?.value || currentUserSession.id) : currentUserSession.id;
             const r = window.hitungRincianSimpananAnggota(anggotaId);
             const lbl = document.getElementById('lblSaldoModalTransaksi');
             if (lbl) lbl.textContent = `${window.formatRupiah(r.total)} (Sukarela: ${window.formatRupiah(r.sukarela)})`;
@@ -4960,11 +5116,10 @@
 
         window.simpanTransaksiBaru = async (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isKeuangan = window.isBendaharaOrSuper();
             
             const editId = document.getElementById('editTransaksiId')?.value || '';
-            const anggotaId = role === 'admin' ? document.getElementById('transaksiAnggotaId').value : currentUserSession.id;
+            const anggotaId = isKeuangan ? document.getElementById('transaksiAnggotaId').value : currentUserSession.id;
             const anggotaObj = appState.anggota.find(a => a.id === anggotaId);
             const tipe = document.getElementById('transaksiTipe').value;
             const kategori = document.getElementById('transaksiKategori').value;
@@ -5036,7 +5191,7 @@
                 tipe,
                 kategori,
                 nominal,
-                status: role === 'admin' ? 'Disetujui' : 'Menunggu',
+                status: isKeuangan ? 'Disetujui' : 'Menunggu',
                 bukti: buktiUrl,
                 bankTujuan: bankTujuan,
                 keterangan
@@ -5047,7 +5202,7 @@
             saveStateToCloud();
             document.getElementById('modalTransaksi').classList.add('hidden');
             window.renderApp();
-            window.showToast(role === 'admin' ? 'Transaksi berhasil dicatat & disetujui!' : 'Transaksi diajukan dan menunggu persetujuan Admin.');
+            window.showToast(isKeuangan ? 'Transaksi berhasil dicatat & disetujui!' : 'Transaksi diajukan dan menunggu persetujuan Bendahara/Admin.');
             return false;
         };
 
@@ -5065,7 +5220,8 @@
 
             const role = window.getEffectiveRole();
 
-            const visibleLoans = role === 'admin'
+            const isKeuangan = window.isBendaharaOrSuper();
+            const visibleLoans = isKeuangan
                 ? (appState.pinjaman || [])
                 : (appState.pinjaman || []).filter(p => p.anggotaId === currentUserSession.id);
 
@@ -5086,14 +5242,14 @@
 
             const setCard = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
             setCard('pinjamanCardPokok', window.formatRupiah(sumPokok));
-            setCard('pinjamanCardCountSub', `${approvedLoans.length} Akad ${role === 'admin' ? 'Koperasi' : 'Anda'}`);
+            setCard('pinjamanCardCountSub', `${approvedLoans.length} Akad ${isKeuangan ? 'Koperasi' : 'Anda'}`);
             setCard('pinjamanCardTerbayar', window.formatRupiah(sumTerbayar));
             setCard('pinjamanCardSisaPiutang', window.formatRupiah(sumSisaPiutang));
             setCard('pinjamanCardTotalJasa', window.formatRupiah(sumTotalJasa));
 
             const container = document.getElementById('gridPinjaman');
             if (visibleLoans.length === 0) {
-                container.innerHTML = `<div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 text-center col-span-2 text-slate-400 italic">${role === 'admin' ? 'Belum ada pengajuan pembiayaan syariah keluarga.' : 'Anda belum memiliki pengajuan atau akad pembiayaan syariah aktif.'}</div>`;
+                container.innerHTML = `<div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 text-center col-span-2 text-slate-400 italic">${isKeuangan ? 'Belum ada pengajuan pembiayaan syariah keluarga.' : 'Anda belum memiliki pengajuan atau akad pembiayaan syariah aktif.'}</div>`;
                 return;
             }
 
@@ -5155,9 +5311,11 @@
                             </div>
                             <div class="flex items-center gap-1.5 shrink-0">
                                 <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${sisaTagihan === 0 && p.status === 'Disetujui' ? 'bg-blue-100 text-blue-800' : p.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : p.status === 'Ditolak' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}">${sisaTagihan === 0 && p.status === 'Disetujui' ? '✓ Lunas' : p.status}</span>
-                                ${(role === 'admin' || currentUserSession.kontak === '082298688189') ? `
-                                    <button onclick="window.bukaModalEditPinjaman('${p.id}')" class="text-emerald-600 hover:underline text-[11px] font-bold px-1" title="Edit Akad Pembiayaan">✏️ Edit</button>
-                                    <button onclick="window.hapusPinjaman('${p.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-1" title="Hapus Akad">🗑️</button>
+                                                                ${isKeuangan ? `
+                                    <button onclick="window.bukaModalEditPinjaman('${p.id}')" class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 text-slate-600 dark:text-slate-300 text-[10px] font-bold" title="Edit Catatan Pinjaman">✏️</button>
+                                ` : ''}
+                                ${role === 'admin' ? `
+                                    <button onclick="window.hapusPinjaman('${p.id}')" class="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-slate-800 hover:bg-rose-100 text-rose-600 text-[10px] font-bold" title="Hapus Pinjaman (Khusus Super Admin)">🗑️</button>
                                 ` : ''}
                             </div>
                         </div>
@@ -5199,9 +5357,11 @@
                                             <div class="flex items-center gap-1.5 shrink-0">
                                                 <strong class="text-emerald-600">${window.formatRupiah(c.nominal)}</strong>
                                                 <span class="px-1.5 py-0.2 rounded text-[9px] font-bold ${c.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : c.status === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${c.status}</span>
-                                                ${(role === 'admin' || currentUserSession.kontak === '082298688189') ? `
+                                                ${isKeuangan ? `
                                                     <button onclick="window.editCicilanPinjaman('${p.id}', '${c.id}')" class="text-emerald-600 hover:underline text-[10px] font-bold ml-1" title="Edit Cicilan">✏️</button>
-                                                    <button onclick="window.hapusCicilanPinjaman('${p.id}', '${c.id}')" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Hapus Cicilan">🗑️</button>
+                                                ` : ''}
+                                                ${role === 'admin' ? `
+                                                    <button onclick="window.hapusCicilanPinjaman('${p.id}', '${c.id}')" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Hapus Cicilan (Khusus Super Admin)">🗑️</button>
                                                 ` : ''}
                                             </div>
                                         </div>
@@ -5218,7 +5378,7 @@
                                 <button onclick="window.bukaModalBayarCicilan('${p.id}', ${Math.round(sisaTagihan)}, ${Math.round(sisaTagihan)})" class="py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-sm transition">⚡ Lunasi Sekaligus</button>
                             </div>
                         ` : ''}
-                        ${role === 'admin' && p.status === 'Menunggu' ? `
+                        ${isKeuangan && p.status === 'Menunggu' ? `
                             <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-2">
                                 <button onclick="window.updateStatusPinjaman('${p.id}', 'Disetujui')" class="flex-1 py-1.5 bg-emerald-600 text-white rounded-xl font-bold text-xs">Setujui Pinjaman</button>
                                 <button onclick="window.updateStatusPinjaman('${p.id}', 'Ditolak')" class="flex-1 py-1.5 bg-rose-600 text-white rounded-xl font-bold text-xs">Tolak</button>
@@ -5232,8 +5392,7 @@
         window.bukaModalAkadPinjaman = (pinjamanId) => {
             const p = (appState.pinjaman || []).find(x => x.id === pinjamanId);
             if (!p) return;
-            const role = window.getEffectiveRole();
-            if (role !== 'admin' && p.anggotaId !== currentUserSession.id) {
+            if (!window.isBendaharaOrSuper() && p.anggotaId !== currentUserSession.id) {
                 window.showToast('Privasi: Anda hanya dapat melihat dokumen akad milik Anda sendiri.', 'error');
                 return;
             }
@@ -5308,8 +5467,9 @@
         };
 
         window.exportPinjamanToExcel = () => {
+            const isKeuangan = window.isBendaharaOrSuper();
             const role = window.getEffectiveRole();
-            const sourceLoans = role === 'admin'
+            const sourceLoans = isKeuangan
                 ? (appState.pinjaman || [])
                 : (appState.pinjaman || []).filter(p => p.anggotaId === currentUserSession.id);
             const bungaDefault = Number(appState.pinjamanSetting?.bungaPerBulan ?? 1);
@@ -5337,6 +5497,10 @@
         };
 
         window.hapusPinjaman = (id) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Akses Ditolak: Penghapusan kontrak pembiayaan hanya dapat dilakukan oleh Super Admin!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Data Pinjaman', 'Yakin ingin menghapus catatan pinjaman ini?', () => {
                 appState.pinjaman = (appState.pinjaman || []).filter(p => p.id !== id);
                 saveStateToCloud();
@@ -5402,6 +5566,10 @@
         };
 
         window.hapusCicilanPinjaman = (pinjamanId, cicilanId) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Akses Ditolak: Penghapusan permanen angsuran hanya oleh Super Admin!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Riwayat Angsuran', 'Yakin ingin menghapus catatan pembayaran angsuran ini?', () => {
                 const p = (appState.pinjaman || []).find(x => x.id === pinjamanId);
                 if (p && Array.isArray(p.riwayatCicilan)) {
@@ -5418,6 +5586,7 @@
             if (!listEl || !gridProg) return;
 
             const role = window.getEffectiveRole();
+            const isKeuangan = window.isBendaharaOrSuper();
 
             // Sinkronkan peserta arisan dengan daftar anggota terbaru
             if (!appState.arisan || !Array.isArray(appState.arisan.peserta)) {
@@ -5480,7 +5649,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-1 shrink-0">
-                        ${(role === 'admin' || currentUserSession.kontak === '082298688189') ? `
+                        ${isKeuangan ? `
                             <button onclick="window.toggleLunasIuranArisan('${ps.anggotaId}')" class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 text-[9px] font-bold text-slate-600 dark:text-slate-300" title="Ubah Status Lunas Iuran">${ps.lunasPutaranIni ? 'Batal Lunas' : 'Tandai Lunas'}</button>
                             <button onclick="window.toggleMenangPesertaArisan('${ps.anggotaId}')" class="px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-amber-50 text-[9px] font-bold text-amber-600" title="Ubah Status Menang Undian">🔄</button>
                         ` : ''}
@@ -5501,8 +5670,8 @@
                             <span class="font-semibold text-slate-700 dark:text-slate-200">#${h.putaranKe || (i + 1)} • ${h.nama}</span>
                             <div class="flex items-center gap-1.5">
                                 <span class="font-mono text-[10px] text-emerald-600 font-bold">${window.formatRupiah(h.nominalPot || totalPotArisan)} (${h.tanggal})</span>
-                                ${(role === 'admin' || currentUserSession.kontak === '082298688189') ? `
-                                    <button onclick="window.hapusRiwayatPemenangArisan(${i})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Hapus Riwayat Pemenang">🗑️</button>
+                                ${role === 'admin' ? `
+                                    <button onclick="window.hapusRiwayatPemenangArisan(${i})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Hapus Riwayat Pemenang (Khusus Super Admin)">🗑️</button>
                                 ` : ''}
                             </div>
                         </div>
@@ -5522,8 +5691,8 @@
                     .filter(k => k.anggotaId === currentUserSession.id || k.nama === currentUserSession.nama)
                     .reduce((s, k) => s + (Number(k.nominal) || 0), 0);
 
-                // Privasi: Admin melihat seluruh rincian kontributor, Member hanya melihat riwayat setoran miliknya sendiri
-                const visibleKontrib = role === 'admin'
+                // Privasi: Bendahara & Super Admin melihat seluruh rincian kontributor, Member hanya melihat riwayat setoran miliknya sendiri
+                const visibleKontrib = isKeuangan
                     ? kontribList
                     : kontribList.filter(k => k.anggotaId === currentUserSession.id || k.nama === currentUserSession.nama);
 
@@ -5535,10 +5704,10 @@
                                     <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm">${pr.nama}</h4>
                                     <span class="text-[10px] text-emerald-600 font-semibold">Tabungan Anda di Program Ini: <strong>${window.formatRupiah(myKontribNominal)}</strong></span>
                                 </div>
-                                ${role === 'admin' ? `
+                                ${isKeuangan ? `
                                     <div class="flex items-center gap-1 shrink-0">
                                         <button onclick="window.bukaModalEditProgram('${pr.id}')" class="text-emerald-600 hover:underline text-[10px] font-bold">Edit</button>
-                                        <button onclick="window.hapusProgramKeluarga('${pr.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold">🗑️</button>
+                                        ${role === 'admin' ? `<button onclick="window.hapusProgramKeluarga('${pr.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold" title="Hapus Program (Khusus Super Admin)">🗑️</button>` : ''}
                                     </div>
                                 ` : ''}
                             </div>
@@ -5552,16 +5721,18 @@
 
                             ${visibleKontrib.length > 0 ? `
                                 <div class="pt-1.5 border-t border-slate-200/70 dark:border-slate-700 space-y-1">
-                                    <span class="text-[9px] font-bold uppercase text-slate-400 block">${role === 'admin' ? `Rincian Kontributor (${visibleKontrib.length} Setoran):` : `Riwayat Setoran Anda (${visibleKontrib.length}):`}</span>
+                                    <span class="text-[9px] font-bold uppercase text-slate-400 block">${isKeuangan ? `Rincian Kontributor (${visibleKontrib.length} Setoran):` : `Riwayat Setoran Anda (${visibleKontrib.length}):`}</span>
                                     <div class="max-h-24 overflow-y-auto space-y-1 pr-1">
                                         ${visibleKontrib.slice().reverse().map(k => `
                                             <div class="flex justify-between items-center text-[10px] bg-white dark:bg-slate-900 px-2 py-1 rounded border border-slate-100 dark:border-slate-800">
                                                 <span class="truncate">${k.tanggal} • <strong>${k.nama}</strong> ${k.catatan ? '(' + k.catatan + ')' : ''}</span>
                                                 <div class="flex items-center gap-1 shrink-0 ml-1">
                                                     <strong class="text-emerald-600">+${window.formatRupiah(k.nominal)}</strong>
-                                                    ${(role === 'admin' || currentUserSession.kontak === '082298688189') ? `
+                                                    ${isKeuangan ? `
                                                         <button onclick="window.editKontributorProgram('${pr.id}', '${k.id}')" class="text-emerald-600 hover:underline font-bold" title="Edit Setoran">✏️</button>
-                                                        <button onclick="window.hapusKontributorProgram('${pr.id}', '${k.id}')" class="text-rose-500 hover:text-rose-700 font-bold" title="Hapus Setoran">🗑️</button>
+                                                    ` : ''}
+                                                    ${role === 'admin' ? `
+                                                        <button onclick="window.hapusKontributorProgram('${pr.id}', '${k.id}')" class="text-rose-500 hover:text-rose-700 font-bold" title="Hapus Setoran (Khusus Super Admin)">🗑️</button>
                                                     ` : ''}
                                                 </div>
                                             </div>
@@ -5581,7 +5752,7 @@
         }
 
         window.toggleLunasIuranArisan = (anggotaId) => {
-            if (window.getEffectiveRole() !== 'admin' && currentUserSession.kontak !== '082298688189') return;
+            if (!window.isBendaharaOrSuper()) return;
             const ps = (appState.arisan?.peserta || []).find(p => p.anggotaId === anggotaId);
             if (ps) {
                 ps.lunasPutaranIni = !ps.lunasPutaranIni;
@@ -5592,7 +5763,7 @@
         };
 
         window.toggleMenangPesertaArisan = (anggotaId) => {
-            if (window.getEffectiveRole() !== 'admin' && currentUserSession.kontak !== '082298688189') return;
+            if (!window.isBendaharaOrSuper()) return;
             const ps = (appState.arisan?.peserta || []).find(p => p.anggotaId === anggotaId);
             if (ps) {
                 ps.sudahMenang = !ps.sudahMenang;
@@ -5604,6 +5775,10 @@
         };
 
         window.hapusRiwayatPemenangArisan = (idx) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus riwayat pemenang arisan!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Riwayat Undian', 'Hapus catatan pemenang arisan ini dari riwayat?', () => {
                 if (appState.arisan && Array.isArray(appState.arisan.riwayatPemenang)) {
                     appState.arisan.riwayatPemenang.splice(idx, 1);
@@ -5620,14 +5795,13 @@
         };
 
         window.bukaModalBayarArisan = () => {
-            const role = window.getEffectiveRole();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
+            const isKeuangan = window.isBendaharaOrSuper();
             const wrapEl = document.getElementById('wrapArisanPilihAnggota');
             const selEl = document.getElementById('arisanPesertaSelect');
             if (selEl && wrapEl) {
                 selEl.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
                 selEl.value = currentUserSession.id;
-                if (role === 'admin' || isSuperAdmin) wrapEl.classList.remove('hidden');
+                if (isKeuangan) wrapEl.classList.remove('hidden');
                 else wrapEl.classList.add('hidden');
             }
             window.populateDropdownBankAktif('arisanBankTujuan');
@@ -5641,9 +5815,8 @@
 
         window.simpanBayarIuranArisan = (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            const role = window.getEffectiveRole();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const targetId = ((role === 'admin' || isSuperAdmin) && document.getElementById('arisanPesertaSelect')?.value)
+            const isKeuangan = window.isBendaharaOrSuper();
+            const targetId = (isKeuangan && document.getElementById('arisanPesertaSelect')?.value)
                 ? document.getElementById('arisanPesertaSelect').value
                 : currentUserSession.id;
             const targetObj = appState.anggota.find(a => a.id === targetId) || currentUserSession;
@@ -5744,6 +5917,10 @@
         };
 
         window.hapusKontributorProgram = (progId, kontribId) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus riwayat setoran program!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Setoran Program', 'Hapus catatan setoran kontributor ini dari program keluarga?', () => {
                 const pr = (appState.programKeluarga || []).find(x => x.id === progId);
                 if (pr && Array.isArray(pr.kontributor)) {
@@ -5832,6 +6009,10 @@
         };
 
         window.hapusProgramKeluarga = (progId) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus program kolektif keluarga!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Program Keluarga', 'Yakin ingin menghapus program tabungan kolektif ini?', () => {
                 appState.programKeluarga = (appState.programKeluarga || []).filter(p => p.id !== progId);
                 saveStateToCloud();
@@ -5856,8 +6037,8 @@
             const listNot = document.getElementById('listNotulensiRapat');
             if (!elAdArt || !listNot) return;
 
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const role = window.getEffectiveRole();
+            const bolehKelolaNotulensi = window.isSekretarisOrSuper();
 
             if (!Array.isArray(appState.adArtSignedBy)) appState.adArtSignedBy = ['a1'];
             const signedIds = appState.adArtSignedBy;
@@ -5942,9 +6123,11 @@
                             </div>
                             <div class="flex items-center gap-1.5 shrink-0">
                                 <button onclick="window.bukaBeritaAcaraNotulensi('${n.id}')" class="px-2 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-blue-600 dark:text-blue-400 font-bold text-[10px]" title="Buka & Cetak Berita Acara">📜 Berita Acara</button>
-                                ${(role === 'admin' || isSuperAdmin) ? `
+                                ${bolehKelolaNotulensi ? `
                                     <button onclick="window.bukaModalEditNotulensi('${n.id}')" class="text-emerald-600 hover:underline text-[10px] font-bold px-1">✏️ Edit</button>
-                                    <button onclick="window.hapusNotulensi('${n.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-1">🗑️</button>
+                                ` : ''}
+                                ${role === 'admin' ? `
+                                    <button onclick="window.hapusNotulensi('${n.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-1" title="Hapus Notulensi (Khusus Super Admin)">🗑️</button>
                                 ` : ''}
                             </div>
                         </div>
@@ -6057,6 +6240,10 @@
         };
 
         window.hapusNotulensi = (id) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus arsip notulensi rapat secara permanen!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Notulensi', 'Hapus arsip notulensi rapat ini?', () => {
                 appState.notulensiRapat = (appState.notulensiRapat || []).filter(n => n.id !== id);
                 saveStateToCloud();
@@ -6071,15 +6258,14 @@
             if (editPinjEl) editPinjEl.value = '';
             const titleEl = document.getElementById('modalPinjamanTitle');
             if (titleEl) titleEl.textContent = 'Ajukan Pembiayaan Syariah';
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isKeuangan = window.isBendaharaOrSuper();
 
             const selAnggota = document.getElementById('pinjamanAnggotaId');
             const wrapAnggota = document.getElementById('wrapperPilihAnggotaPinjaman');
             if (selAnggota && wrapAnggota) {
-                selAnggota.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${a.nama} (${a.namaKeluarga})</option>`).join('');
+                selAnggota.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
                 selAnggota.value = currentUserSession.id;
-                if (role === 'admin') wrapAnggota.classList.remove('hidden');
+                if (isKeuangan) wrapAnggota.classList.remove('hidden');
                 else wrapAnggota.classList.add('hidden');
             }
 
@@ -6099,9 +6285,8 @@
         };
 
         window.updatePlafonPemohonModal = () => {
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
-            const targetId = (role === 'admin' && document.getElementById('pinjamanAnggotaId')?.value) ? document.getElementById('pinjamanAnggotaId').value : currentUserSession.id;
+            const isKeuangan = window.isBendaharaOrSuper();
+            const targetId = (isKeuangan && document.getElementById('pinjamanAnggotaId')?.value) ? document.getElementById('pinjamanAnggotaId').value : currentUserSession.id;
 
             const userSaldo = window.hitungSaldoAnggota(targetId);
             const mult = Number(appState.pinjamanSetting?.maxPlafonMultiplier ?? 3);
@@ -6157,10 +6342,9 @@
 
         window.simpanPinjamanBaru = (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isKeuangan = window.isBendaharaOrSuper();
             const editId = document.getElementById('editPinjamanId')?.value || '';
-            const pemohonId = ((role === 'admin' || isSuperAdmin) && document.getElementById('pinjamanAnggotaId')?.value) ? document.getElementById('pinjamanAnggotaId').value : currentUserSession.id;
+            const pemohonId = (isKeuangan && document.getElementById('pinjamanAnggotaId')?.value) ? document.getElementById('pinjamanAnggotaId').value : currentUserSession.id;
             const pemohonObj = appState.anggota.find(a => a.id === pemohonId) || currentUserSession;
 
             const jenisAkad = document.getElementById('pinjamanJenisAkad')?.value || 'Qardhul Hasan';
@@ -6209,7 +6393,7 @@
             }, 0);
             const sisaPlafon = Math.max(0, (userSaldo * mult) - sisaPokokPinjaman);
 
-            if (nominal > sisaPlafon && role !== 'admin' && !isSuperAdmin) {
+            if (nominal > sisaPlafon && !isKeuangan) {
                 window.showToast(`Nominal melebihi batas plafon pembiayaan Anda (${window.formatRupiah(sisaPlafon)})!`, 'error');
                 return false;
             }
@@ -6226,20 +6410,24 @@
                 marginTotalNominal,
                 bankSumber,
                 keperluan: keperluan || '-',
-                status: role === 'admin' ? 'Disetujui' : 'Menunggu',
+                status: isKeuangan ? 'Disetujui' : 'Menunggu',
                 riwayatCicilan: []
             };
 
             appState.pinjaman.push(newPinjaman);
-            window.catatLogAuditSistem('TRANSAKSI', role === 'admin' ? 'Pencairan Akad Pembiayaan Baru' : 'Pengajuan Akad Pembiayaan Baru', `${jenisAkad} a.n ${pemohonObj.nama} (${window.formatRupiah(nominal)}) Sumber: ${bankSumber}`, newPinjaman.status);
+            window.catatLogAuditSistem('TRANSAKSI', isKeuangan ? 'Pencairan Akad Pembiayaan Baru' : 'Pengajuan Akad Pembiayaan Baru', `${jenisAkad} a.n ${pemohonObj.nama} (${window.formatRupiah(nominal)}) Sumber: ${bankSumber}`, newPinjaman.status);
             saveStateToCloud();
             document.getElementById('modalPinjaman').classList.add('hidden');
             window.renderApp();
-            window.showToast(role === 'admin' ? `Akad ${jenisAkad} berhasil dicatat & disetujui!` : `Pengajuan Akad ${jenisAkad} berhasil dikirim ke Pengurus!`);
+            window.showToast(isKeuangan ? `Akad ${jenisAkad} berhasil dicatat & disetujui!` : `Pengajuan Akad ${jenisAkad} berhasil dikirim ke Pengurus!`);
             return false;
         };
 
         window.bukaModalSettingPinjaman = () => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Pengaturan parameter plafon & margin sistem hanya untuk Super Admin!', 'error');
+                return;
+            }
             document.getElementById('inputPlafonMultiplier').value = appState.pinjamanSetting?.maxPlafonMultiplier ?? 3;
             document.getElementById('inputBungaPersen').value = appState.pinjamanSetting?.bungaPerBulan ?? 1;
             document.getElementById('inputMaxTenor').value = appState.pinjamanSetting?.maxTenor ?? 12;
@@ -6261,8 +6449,8 @@
         };
 
         function renderZisTab() {
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const role = window.getEffectiveRole();
+            const isKeuangan = window.isBendaharaOrSuper();
             const shuSummary = window.hitungRingkasanShuKoperasi();
 
             const zisDisetujui = (appState.zis || []).filter(z => (z.status || 'Disetujui') === 'Disetujui');
@@ -6296,8 +6484,8 @@
             const fJenis = document.getElementById('filterJenisZis')?.value || 'ALL';
 
             const tbody = document.getElementById('tabelZisBody');
-            // Privasi: Member dapat melihat catatan miliknya sendiri, penyaluran santunan umum, atau donasi Hamba Allah (tanpa membocorkan identitas asli)
-            const baseZis = (role === 'admin' || isSuperAdmin)
+            // Privasi: Bendahara & Super Admin melihat semua mutasi ZIS; Member melihat miliknya sendiri, penyaluran santunan, atau Hamba Allah
+            const baseZis = isKeuangan
                 ? (appState.zis || [])
                 : (appState.zis || []).filter(z => z.anggotaId === currentUserSession.id || z.nama === currentUserSession.nama || z.tipeMutasi === 'Penyaluran' || z.isAnonim);
 
@@ -6316,7 +6504,7 @@
                 const isKeluar = z.tipeMutasi === 'Penyaluran';
                 const st = z.status || 'Disetujui';
                 const isMine = z.anggotaId === currentUserSession.id || z.nama === currentUserSession.nama;
-                const displayNama = (z.isAnonim && role !== 'admin' && !isSuperAdmin && !isMine)
+                const displayNama = (z.isAnonim && !isKeuangan && !isMine)
                     ? '🕊️ Hamba Allah (Keluarga)'
                     : `${z.nama}${z.isAnonim ? ' <span class="text-[9px] text-purple-600 font-semibold">(Hamba Allah)</span>' : ''}`;
 
@@ -6334,8 +6522,10 @@
                     <td class="py-2.5 px-3 text-slate-500">${z.keterangan || '-'}</td>
                     <td class="py-2.5 px-3 text-center space-x-1 whitespace-nowrap no-print">
                         <button onclick="window.bukaBuktiSertifikatZis('${z.id}')" class="px-2 py-0.5 rounded bg-purple-50 dark:bg-slate-800 text-purple-700 dark:text-purple-300 font-bold text-[10px]" title="Cetak Bukti ZIS">🧾 Bukti</button>
-                        ${(role === 'admin' || isSuperAdmin) ? `
+                        ${isKeuangan ? `
                             <button onclick="window.bukaModalEditZis('${z.id}')" class="text-emerald-600 hover:underline font-bold text-[10px]">Edit</button>
+                        ` : ''}
+                        ${role === 'admin' ? `
                             <button onclick="window.hapusZis('${z.id}')" class="text-rose-600 hover:underline font-bold text-[10px]">Hapus</button>
                         ` : ''}
                     </td>
@@ -6405,12 +6595,11 @@
             const titleEl = document.getElementById('modalZisTitle');
             if (titleEl) titleEl.textContent = 'Catat ZISWAF / Penyaluran Dana Sosial';
             window.populateDropdownBankAktif('zisBankTujuan');
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isKeuangan = window.isBendaharaOrSuper();
             const tipeSel = document.getElementById('zisTipeMutasi');
             if (tipeSel) {
                 tipeSel.value = 'Pemasukan';
-                tipeSel.disabled = (role !== 'admin' && !isSuperAdmin);
+                tipeSel.disabled = !isKeuangan;
                 window.handleTipeMutasiZisChange(tipeSel);
             }
             document.getElementById('modalZis').classList.remove('hidden');
@@ -6444,8 +6633,7 @@
 
         window.simpanZisBaru = async (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isKeuangan = window.isBendaharaOrSuper();
 
             const editId = document.getElementById('editZisId')?.value || '';
             const tipeMutasi = document.getElementById('zisTipeMutasi')?.value || 'Pemasukan';
@@ -6531,7 +6719,7 @@
                 bukti: buktiUrl,
                 nominal,
                 keterangan,
-                status: (role === 'admin' || isSuperAdmin || sumberDana === 'POTONG_SUKARELA') ? 'Disetujui' : 'Menunggu'
+                status: (isKeuangan || sumberDana === 'POTONG_SUKARELA') ? 'Disetujui' : 'Menunggu'
             };
 
             appState.zis.push(newZis);
@@ -6574,14 +6762,13 @@
         };
 
         window.exportZisToExcel = () => {
-            const role = window.getEffectiveRole();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const sourceZis = (role === 'admin' || isSuperAdmin)
+            const isKeuangan = window.isBendaharaOrSuper();
+            const sourceZis = isKeuangan
                 ? (appState.zis || [])
                 : (appState.zis || []).filter(z => z.anggotaId === currentUserSession.id || z.nama === currentUserSession.nama || z.tipeMutasi === 'Penyaluran');
             const headers = ['Tanggal', 'Nama Donatur/Pencatat', 'Tipe Mutasi', 'Kategori ZIS', 'Nominal', 'Status', 'Keterangan'];
             const rows = sourceZis.map(z => [
-                z.tanggal, `"${z.isAnonim && role !== 'admin' ? 'Hamba Allah' : z.nama}"`, z.tipeMutasi || 'Pemasukan', z.jenis, z.nominal, z.status || 'Disetujui', `"${z.keterangan || ''}"`
+                z.tanggal, `"${z.isAnonim && !isKeuangan ? 'Hamba Allah' : z.nama}"`, z.tipeMutasi || 'Pemasukan', z.jenis, z.nominal, z.status || 'Disetujui', `"${z.keterangan || ''}"`
             ]);
             const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
             const encodedUri = encodeURI(csvContent);
@@ -6595,6 +6782,10 @@
         };
 
         window.verifikasiZis = (id, statusBaru) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang berwenang memverifikasi ZISWAF!', 'error');
+                return;
+            }
             const z = (appState.zis || []).find(x => x.id === id);
             if (z) {
                 z.status = statusBaru;
@@ -6606,6 +6797,10 @@
         };
 
         window.hapusZis = (id) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus catatan ZISWAF secara permanen!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Catatan ZIS', 'Yakin ingin menghapus riwayat mutasi ZIS ini?', () => {
                 appState.zis = (appState.zis || []).filter(z => z.id !== id);
                 saveStateToCloud();
@@ -6667,8 +6862,8 @@
             const container = document.getElementById('gridBadges');
             if (!klasemenEl || !container) return;
 
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const role = window.getEffectiveRole();
+            const isKeuangan = window.isBendaharaOrSuper();
 
             if (!Array.isArray(appState.badgesList) || appState.badgesList.length === 0) {
                 appState.badgesList = JSON.parse(JSON.stringify(defaultState.badgesList));
@@ -6728,7 +6923,7 @@
             klasemenEl.innerHTML = filteredRanked.map((r) => {
                 const realIdx = rankedAll.findIndex(x => x.id === r.id);
                 const isMe = r.id === currentUserSession.id;
-                const bolehLihatNominal = role === 'admin' || isSuperAdmin || isMe;
+                const bolehLihatNominal = isKeuangan || isMe;
                 return `
                 <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border ${isMe ? 'border-emerald-400 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-700'} flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div class="flex items-start sm:items-center gap-3">
@@ -6794,7 +6989,7 @@
                             <span class="text-slate-400">Progres Anda: ${progressLabel}</span>
                             <div class="flex items-center gap-1.5">
                                 <span class="${b.unlocked ? 'text-emerald-600 font-bold' : 'text-slate-500'}">${b.progress}%</span>
-                                ${(role === 'admin' || isSuperAdmin) ? `
+                                ${role === 'admin' ? `
                                     <button onclick="window.bukaModalEditBadge('${b.id}')" class="text-emerald-600 hover:underline font-bold no-print" title="Edit Lencana">✏️</button>
                                     <button onclick="window.hapusBadgeCustom('${b.id}')" class="text-rose-500 hover:text-rose-700 font-bold no-print" title="Hapus Lencana">🗑️</button>
                                 ` : ''}
@@ -6911,9 +7106,7 @@
         };
 
         window.bukaPiagamTeladan = (anggotaId) => {
-            const role = window.getEffectiveRole();
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            if (role !== 'admin' && !isSuperAdmin && anggotaId !== currentUserSession.id) {
+            if (!window.isPengurusAny() && anggotaId !== currentUserSession.id) {
                 window.showToast('Privasi: Anda hanya dapat mencetak piagam milik Anda sendiri.', 'error');
                 return;
             }
@@ -6950,7 +7143,7 @@
 
             const allMembers = appState.anggota || [];
             const uniqueKKs = [...new Set(allMembers.map(a => a.namaKeluarga))];
-            const adminCount = allMembers.filter(a => a.role === 'admin' || a.kontak === '082298688189').length;
+            const adminCount = allMembers.filter(a => ['admin', 'bendahara', 'sekretaris'].includes(a.role) || a.kontak === '082298688189').length;
             const warisCount = allMembers.filter(a => a.ahliWaris && a.ahliWaris.trim() !== '').length;
 
             // Populate dropdown filter KK
@@ -7037,7 +7230,7 @@
                                     <span class="text-[9px] text-slate-400 block">📅 Gabung: ${window.escapeHtml(window.formatDurasiBergabung(a.tglGabung || '2026-01-01'))}</span>
                                 </div>
                             </div>
-                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0 ${a.kontak === '082298688189' ? 'bg-amber-100 text-amber-800' : a.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${a.kontak === '082298688189' ? '👑 Super Admin' : a.role === 'admin' ? '🛡️ Pengurus' : 'Anggota'}</span>
+                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0 ${a.kontak === '082298688189' ? 'bg-amber-100 text-amber-800' : (a.role === 'bendahara' || a.role === 'admin') ? 'bg-emerald-100 text-emerald-800' : a.role === 'sekretaris' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${window.getLabelJabatanRole(a)}</span>
                         </div>
 
                         <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700 space-y-1 text-[10px]">
@@ -7071,10 +7264,10 @@
                         </div>
                         <div class="flex justify-between items-center text-[11px] pt-1">
                             <div class="flex gap-2.5">
-                                <button onclick="window.bukaModalEditAnggota('${a.id}')" class="text-emerald-600 font-bold hover:underline">✏️ Edit</button>
-                                <button onclick="window.bukaModalResetPin('${a.id}')" class="text-blue-600 font-bold hover:underline">🔑 Reset PIN</button>
+                                ${window.isSekretarisOrSuper() ? `<button onclick="window.bukaModalEditAnggota('${a.id}')" class="text-emerald-600 font-bold hover:underline">✏️ Edit</button>` : '<span class="text-[10px] text-slate-400 italic">Mode Baca</span>'}
+                                ${window.getEffectiveRole() === 'admin' ? `<button onclick="window.bukaModalResetPin('${a.id}')" class="text-blue-600 font-bold hover:underline">🔑 Reset PIN</button>` : ''}
                             </div>
-                            ${(a.id !== currentUserSession.id || appState.anggota.length > 1) ? `<button onclick="window.hapusAnggota('${a.id}')" class="text-rose-600 font-bold hover:underline">🗑️ Hapus</button>` : '<span class="text-[9px] text-slate-400 italic">Sesi Aktif</span>'}
+                            ${(window.getEffectiveRole() === 'admin' && (a.id !== currentUserSession.id || appState.anggota.length > 1)) ? `<button onclick="window.hapusAnggota('${a.id}')" class="text-rose-600 font-bold hover:underline">🗑️ Hapus</button>` : ''}
                         </div>
                     </div>
                 </div>
@@ -7190,6 +7383,10 @@
         };
 
         window.hapusAnggota = (id) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Akses Ditolak: Sekretaris/Bendahara tidak diizinkan menghapus anggota. Hubungi Super Admin!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Anggota', 'Yakin ingin menghapus anggota keluarga ini?', () => {
                 appState.anggota = appState.anggota.filter(a => a.id !== id);
                 if (appState.arisan && Array.isArray(appState.arisan.peserta)) {
@@ -7250,14 +7447,26 @@
             const stdPokok = Number(appState.parameterStandar?.simpananPokok ?? 500000);
             const nomPokokEl = document.getElementById('inputNominalPokokAwal');
             if (nomPokokEl) nomPokokEl.value = stdPokok;
+            const pinEl = document.getElementById('anggotaPin');
+            if (pinEl) pinEl.disabled = false;
+            const roleSel = document.getElementById('anggotaRole');
+            if (roleSel) {
+                roleSel.value = 'member';
+                roleSel.disabled = (window.getEffectiveRole() !== 'admin');
+            }
             const boxOpsi = document.getElementById('boxOpsiAwalAnggotaBaru');
             if (boxOpsi) boxOpsi.classList.remove('hidden');
             document.getElementById('modalAnggota').classList.remove('hidden');
         };
 
         window.bukaModalEditAnggota = (id) => {
+            if (!window.isSekretarisOrSuper()) {
+                window.showToast('🔒 Hanya Sekretaris atau Super Admin yang berwenang mengedit biodata anggota!', 'error');
+                return;
+            }
             const a = appState.anggota.find(x => x.id === id);
             if (!a) return;
+            const isSuper = (window.getEffectiveRole() === 'admin');
             document.getElementById('editAnggotaId').value = a.id;
             document.getElementById('modalAnggotaTitle').textContent = 'Edit Data Anggota Keluarga';
             document.getElementById('anggotaNama').value = a.nama;
@@ -7270,8 +7479,16 @@
             const rekEl = document.getElementById('anggotaRekening');
             if (warisEl) warisEl.value = a.ahliWaris || '';
             if (rekEl) rekEl.value = a.rekeningPribadi || '';
-            document.getElementById('anggotaPin').value = a.pin;
-            document.getElementById('anggotaRole').value = a.role;
+            const pinEl = document.getElementById('anggotaPin');
+            if (pinEl) {
+                pinEl.value = a.pin;
+                pinEl.disabled = !isSuper;
+            }
+            const roleSel = document.getElementById('anggotaRole');
+            if (roleSel) {
+                roleSel.value = a.kontak === '082298688189' ? 'admin' : (a.role === 'admin' ? 'bendahara' : (a.role || 'member'));
+                roleSel.disabled = !isSuper;
+            }
             const tglEl = document.getElementById('anggotaTglGabung');
             if (tglEl) tglEl.value = a.tglGabung || '2026-01-01';
             const boxOpsi = document.getElementById('boxOpsiAwalAnggotaBaru');
@@ -7281,6 +7498,11 @@
 
         window.simpanAnggotaBaru = async (e) => {
             if (e && e.preventDefault) e.preventDefault();
+            if (!window.isSekretarisOrSuper()) {
+                window.showToast('🔒 Hanya Sekretaris atau Super Admin yang dapat menambah/mengedit data anggota!', 'error');
+                return false;
+            }
+            const isSuper = (window.getEffectiveRole() === 'admin');
             const editId = document.getElementById('editAnggotaId').value;
             const nama = document.getElementById('anggotaNama').value.trim();
             const hubungan = document.getElementById('anggotaHubungan')?.value || 'Kepala Keluarga';
@@ -7289,8 +7511,8 @@
             const email = document.getElementById('anggotaEmail').value.trim();
             const ahliWaris = document.getElementById('anggotaAhliWaris')?.value.trim() || '';
             const rekeningPribadi = document.getElementById('anggotaRekening')?.value.trim() || '';
-            const pin = document.getElementById('anggotaPin').value.trim() || '1234';
-            const role = document.getElementById('anggotaRole').value;
+            const rawPin = document.getElementById('anggotaPin').value.trim() || '1234';
+            const rawRole = document.getElementById('anggotaRole').value;
             const tglGabung = document.getElementById('anggotaTglGabung')?.value || new Date().toISOString().slice(0, 10);
 
             const fotoInput = document.getElementById('anggotaFotoInput');
@@ -7304,6 +7526,8 @@
                 if (idx !== -1) {
                     const oldName = appState.anggota[idx].nama;
                     const fotoProfil = fotoProfilBaru || appState.anggota[idx].fotoProfil || '';
+                    const pin = isSuper ? rawPin : appState.anggota[idx].pin;
+                    const role = isSuper ? rawRole : appState.anggota[idx].role;
                     appState.anggota[idx] = { ...appState.anggota[idx], nama, hubungan, namaKeluarga, kontak, email, ahliWaris, rekeningPribadi, pin, role, tglGabung, fotoProfil };
                     // Sinkronkan perubahan nama di seluruh riwayat terkait
                     (appState.transaksi || []).forEach(t => { if (t.anggotaId === editId) t.nama = nama; });
@@ -7340,8 +7564,8 @@
                 email,
                 ahliWaris,
                 rekeningPribadi,
-                pin,
-                role,
+                pin: rawPin,
+                role: isSuper ? rawRole : 'member',
                 saldo: 0,
                 simpananPokok: 0,
                 simpananWajib: 0,
@@ -7404,6 +7628,10 @@
         };
 
         window.updateStatusPinjaman = (id, status) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang berwenang memverifikasi akad pembiayaan!', 'error');
+                return;
+            }
             const p = appState.pinjaman.find(x => x.id === id);
             if (p) {
                 p.status = status;
@@ -7446,8 +7674,7 @@
             const keterangan = document.getElementById('cicilanKeteranganInput').value.trim();
             const fileInput = document.getElementById('cicilanBuktiFoto');
 
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isKeuangan = window.isBendaharaOrSuper();
 
             const p = (appState.pinjaman || []).find(x => x.id === pinjamanId);
             if (!p || nominal <= 0) return false;
@@ -7475,7 +7702,7 @@
             }
 
             if (!Array.isArray(p.riwayatCicilan)) p.riwayatCicilan = [];
-            const stCicil = role === 'admin' ? 'Disetujui' : 'Menunggu';
+            const stCicil = isKeuangan ? 'Disetujui' : 'Menunggu';
             p.riwayatCicilan.push({
                 id: 'cicil_' + Date.now(),
                 tanggal: new Date().toISOString().slice(0, 10),
@@ -7489,11 +7716,15 @@
             saveStateToCloud();
             document.getElementById('modalBayarCicilan').classList.add('hidden');
             window.renderApp();
-            window.showToast(role === 'admin' ? 'Pembayaran cicilan berhasil dicatat & disetujui!' : 'Pembayaran cicilan dikirim dan menunggu verifikasi Admin.');
+            window.showToast(isKeuangan ? 'Pembayaran cicilan berhasil dicatat & disetujui!' : 'Pembayaran cicilan dikirim dan menunggu verifikasi Bendahara/Admin.');
             return false;
         };
 
         window.verifikasiCicilanPinjaman = (pinjamanId, cicilanId, statusBaru) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang berwenang memverifikasi angsuran!', 'error');
+                return;
+            }
             const p = (appState.pinjaman || []).find(x => x.id === pinjamanId);
             if (p && Array.isArray(p.riwayatCicilan)) {
                 const c = p.riwayatCicilan.find(x => x.id === cicilanId);
@@ -7675,6 +7906,10 @@
         };
 
         window.bukaModalEditAdArt = () => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Perubahan Pasal Konstitusi AD/ART hanya untuk Super Admin!', 'error');
+                return;
+            }
             document.getElementById('inputTeksAdArt').value = appState.adArtTeks || defaultState.adArtTeks;
             document.getElementById('modalEditAdArt').classList.remove('hidden');
         };
@@ -7720,6 +7955,10 @@
         };
 
         window.verifikasiCalonAnggota = (id, diterima) => {
+            if (!window.isSekretarisOrSuper()) {
+                window.showToast('🔒 Hanya Sekretaris atau Super Admin yang berwenang memverifikasi pendaftaran calon anggota!', 'error');
+                return;
+            }
             const c = (appState.calonAnggota || []).find(x => x.id === id);
             if (!c) return;
             appState.calonAnggota = appState.calonAnggota.filter(x => x.id !== id);
@@ -8070,8 +8309,9 @@
         };
 
         function renderShuTab() {
-            const isSuperAdmin = currentUserSession.kontak === '082298688189';
-            const role = isSuperAdmin ? appState.currentRole : currentUserSession.role;
+            const isSuperAdmin = window.isSuperAdminMode();
+            const role = window.getEffectiveRole();
+            const isKeuangan = window.isBendaharaOrSuper();
             const s = window.hitungRingkasanShuKoperasi();
 
             // Render Tabel Sumber Pendapatan Usaha SHU
@@ -8086,11 +8326,9 @@
                             <td class="py-2 px-2.5 font-mono text-[10px] text-slate-500">${window.escapeHtml(item.tanggal)}</td>
                             <td class="py-2 px-2.5 font-bold">${window.escapeHtml(item.keterangan)} ${item.bankTujuan ? `<span class="block text-[9px] text-emerald-600 font-semibold">Masuk ke Bank: ${window.escapeHtml(item.bankTujuan)}</span>` : ''}</td>
                             <td class="py-2 px-2.5 font-extrabold text-emerald-600">+${window.formatRupiah(item.nominal)}</td>
-                            <td class="py-2 px-2.5 text-center space-x-1.5 ${role === 'admin' ? '' : 'hidden'}">
-                                ${role === 'admin' ? `
-                                    <button onclick="window.bukaModalEditPendapatanShu('${item.id}')" class="text-emerald-600 hover:underline font-bold text-[10px]">Edit</button>
-                                    <button onclick="window.hapusPendapatanShu('${item.id}')" class="text-rose-600 hover:underline font-bold text-[10px]">Hapus</button>
-                                ` : '-'}
+                                                        <td class="py-2 px-2.5 text-center space-x-1.5 ${isKeuangan ? '' : 'hidden'}">
+                                ${isKeuangan ? `<button onclick="window.bukaModalEditPendapatanShu('${item.id}')" class="text-emerald-600 font-bold hover:underline">Edit</button>` : ''}
+                                ${role === 'admin' ? `<button onclick="window.hapusPendapatanShu('${item.id}')" class="text-rose-500 font-bold hover:underline">Hapus</button>` : ''}
                             </td>
                         </tr>
                     `).join('');
@@ -8098,7 +8336,7 @@
                         <tr class="bg-emerald-50/60 dark:bg-emerald-950/30 font-bold border-t-2 border-emerald-200 dark:border-emerald-900">
                             <td colspan="2" class="py-2 px-2.5 text-right uppercase text-[9px] tracking-wider text-emerald-700 dark:text-emerald-300">Total Pendapatan Usaha (+SHU Dasar ${window.formatRupiah(s.shuDasar)}):</td>
                             <td class="py-2 px-2.5 font-black text-emerald-600">+${window.formatRupiah(s.shuDasar + s.totalPendapatanTambahan)}</td>
-                            <td class="${role === 'admin' ? '' : 'hidden'}"></td>
+                            <td class="${isKeuangan ? '' : 'hidden'}"></td>
                         </tr>
                     `;
                     pendBody.innerHTML = pRows + pFooter;
@@ -8115,11 +8353,9 @@
                         <td class="py-2 px-2.5 font-mono text-[10px] text-slate-500">${window.escapeHtml(b.tanggal)}</td>
                         <td class="py-2 px-2.5 font-bold">${window.escapeHtml(b.keterangan)} ${b.bankTujuan ? `<span class="block text-[9px] text-rose-500 font-semibold">Sumber Bank: ${window.escapeHtml(b.bankTujuan)}</span>` : ''}</td>
                         <td class="py-2 px-2.5 font-extrabold text-rose-600">-${window.formatRupiah(b.nominal)}</td>
-                        <td class="py-2 px-2.5 text-center space-x-1.5 ${role === 'admin' ? '' : 'hidden'}">
-                            ${role === 'admin' ? `
-                                <button onclick="window.bukaModalEditBeban('${b.id}')" class="text-emerald-600 hover:underline font-bold text-[10px]">Edit</button>
-                                <button onclick="window.hapusBeban('${b.id}')" class="text-rose-600 hover:underline font-bold text-[10px]">Hapus</button>
-                            ` : '-'}
+                                                <td class="py-2 px-2.5 text-center space-x-1.5 ${isKeuangan ? '' : 'hidden'}">
+                            ${isKeuangan ? `<button onclick="window.bukaModalEditBeban('${b.id}')" class="text-emerald-600 font-bold hover:underline">Edit</button>` : ''}
+                            ${role === 'admin' ? `<button onclick="window.hapusBeban('${b.id}')" class="text-rose-500 font-bold hover:underline">Hapus</button>` : ''}
                         </td>
                     </tr>
                 `).join('');
@@ -8127,7 +8363,7 @@
                     <tr class="bg-rose-50/60 dark:bg-rose-950/30 font-bold border-t-2 border-rose-200 dark:border-rose-900">
                         <td colspan="2" class="py-2 px-2.5 text-right uppercase text-[9px] tracking-wider text-rose-700 dark:text-rose-300">Total Beban Operasional:</td>
                         <td class="py-2 px-2.5 font-black text-rose-600">-${window.formatRupiah(s.totalBeban)}</td>
-                        <td class="${role === 'admin' ? '' : 'hidden'}"></td>
+                        <td class="${isKeuangan ? '' : 'hidden'}"></td>
                     </tr>
                 `;
                 tbody.innerHTML = rowsHtml + footerBebanHtml;
@@ -8159,7 +8395,10 @@
             setShuEl('lblAlokasiSosial', `${s.setting.alokasiSosial}% (${window.formatRupiah(s.nominalSosial)})`);
 
             const selMetodeShu = document.getElementById('selectMetodeShuModal');
-            if (selMetodeShu) selMetodeShu.value = s.metodePerhitungan || 'TERTIMBANG';
+            if (selMetodeShu) {
+                selMetodeShu.value = s.metodePerhitungan || 'TERTIMBANG';
+                selMetodeShu.disabled = (role !== 'admin');
+            }
 
             const infoDist = document.getElementById('infoLastDistribusiShu');
             if (infoDist) {
@@ -8183,7 +8422,7 @@
             const filterToolbar = document.getElementById('shuFilterToolbar');
             const selKK = document.getElementById('filterKeluargaShu');
             if (filterToolbar && selKK) {
-                if (role === 'admin') {
+                if (isKeuangan) {
                     filterToolbar.classList.remove('hidden');
                     const curKK = selKK.value || 'ALL';
                     const uniqueKKs = [...new Set(appState.anggota.map(a => a.namaKeluarga))];
@@ -8198,8 +8437,8 @@
             const headRow = document.getElementById('shuTableHeadRow');
             const titleShuTable = document.getElementById('shuTableHeaderTitle');
             if (titleShuTable) {
-                titleShuTable.textContent = role === 'admin'
-                    ? 'Rincian Pembagian SHU Seluruh Anggota (Mode Pengurus)'
+                titleShuTable.textContent = isKeuangan
+                    ? 'Rincian Pembagian SHU Seluruh Anggota (Mode Keuangan / Pengurus)'
                     : '🔒 Rincian Perolehan SHU Pribadi Anda';
             }
             headRow.innerHTML = `
@@ -8217,9 +8456,8 @@
             let sumSimpanan = 0, sumJasaModal = 0, sumJasaUsaha = 0, sumTotalTerima = 0;
 
             const qShu = (document.getElementById('searchShuInput')?.value || '').toLowerCase();
-            const kkFilter = role === 'admin' ? (document.getElementById('filterKeluargaShu')?.value || 'ALL') : 'ALL';
-
-            const visibleShuMembers = (role === 'admin'
+                        const kkFilter = isKeuangan ? (document.getElementById('filterKeluargaShu')?.value || 'ALL') : 'ALL';
+            const visibleShuMembers = (isKeuangan
                 ? appState.anggota
                 : appState.anggota.filter(a => a.id === currentUserSession.id)
             ).filter(a => {
@@ -8273,7 +8511,7 @@
             }).join('');
 
             const porsiFilterTotal = s.totalSimpananAll > 0 ? ((sumSimpanan / s.totalSimpananAll) * 100).toFixed(1) + '%' : '0.0%';
-            const footerRow = role === 'admin' ? `
+            const footerRow = isKeuangan ? `
                 <tr class="bg-slate-100 dark:bg-slate-800/90 font-extrabold border-t-2 border-slate-300 dark:border-slate-700 text-xs">
                     <td colspan="2" class="py-2.5 px-2.5 text-right uppercase text-[10px] tracking-wider text-slate-600 dark:text-slate-300">Total (${visibleShuMembers.length} Anggota):</td>
                     <td class="py-2.5 px-2.5 text-blue-600">${window.formatRupiah(sumSimpanan)}</td>
@@ -8404,6 +8642,10 @@
         };
 
         window.hapusPendapatanShu = (id) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus catatan sumber pendapatan usaha!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Sumber Pendapatan', 'Yakin ingin menghapus catatan sumber pendapatan usaha ini?', () => {
                 const target = (appState.pendapatanShuList || []).find(x => x.id === id);
                 appState.pendapatanShuList = (appState.pendapatanShuList || []).filter(x => x.id !== id);
@@ -8415,8 +8657,7 @@
         };
 
         window.bukaSlipShuAnggota = (anggotaId) => {
-            const role = window.getEffectiveRole();
-            if (role !== 'admin' && anggotaId !== currentUserSession.id) {
+            if (!window.isBendaharaOrSuper() && anggotaId !== currentUserSession.id) {
                 window.showToast('Privasi: Anda hanya dapat membuka slip SHU milik Anda sendiri.', 'error');
                 return;
             }
@@ -8529,9 +8770,10 @@
         };
 
         window.exportShuToExcel = () => {
+            const isKeuangan = window.isBendaharaOrSuper();
             const role = window.getEffectiveRole();
             const s = window.hitungRingkasanShuKoperasi();
-            const targetMembers = role === 'admin'
+            const targetMembers = isKeuangan
                 ? appState.anggota
                 : appState.anggota.filter(a => a.id === currentUserSession.id);
             const headers = ['Nama Anggota', 'Keluarga (KK)', 'Simpanan Pokok', 'Simpanan Wajib', 'Simpanan Sukarela', 'Total Simpanan', 'Porsi Modal (%)', 'SHU Jasa Modal', 'SHU Jasa Pinjaman', 'Total SHU Diterima'];
@@ -8617,6 +8859,10 @@
         };
 
         window.hapusBeban = (id) => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menghapus catatan beban operasional!', 'error');
+                return;
+            }
             window.showConfirmModal('Hapus Beban Operasional', 'Hapus catatan beban operasional ini?', () => {
                 const target = (appState.bebanOperasional || []).find(b => b.id === id);
                 appState.bebanOperasional = appState.bebanOperasional.filter(b => b.id !== id);
@@ -8640,6 +8886,10 @@
         };
 
         window.bukaModalSettingShu = () => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Perubahan persentase alokasi SHU hanya untuk Super Admin!', 'error');
+                return;
+            }
             document.getElementById('shuInputModal').value = appState.shuSetting?.alokasiModal ?? 40;
             document.getElementById('shuInputUsaha').value = appState.shuSetting?.alokasiUsaha ?? 20;
             document.getElementById('shuInputCadangan').value = appState.shuSetting?.alokasiCadangan ?? 25;
@@ -9319,7 +9569,7 @@
             // 1. Tambahkan tombol navigasi Info Rekening & QRIS untuk Anggota biasa jika belum ada di Sidebar
             var navContainer = document.getElementById('sidebarNavContainer');
             var role = window.getEffectiveRole();
-            if (navContainer && role !== 'admin' && navContainer.innerHTML.indexOf("switchTab('bank')") === -1) {
+            if (navContainer && !window.isPengurusAny() && navContainer.innerHTML.indexOf("switchTab('bank')") === -1) {
                 var isBankActive = appState.activeTab === 'bank';
                 var btnHtml = '<button onclick="window.switchTab(\'bank\')" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg font-semibold text-[11px] transition ' + (isBankActive ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800') + '">' +
                     '<div class="flex items-center gap-2 overflow-hidden">' +
@@ -9366,15 +9616,16 @@
             var tbody = document.getElementById('tabelBankBody');
             if (!tbody) return;
             var role = window.getEffectiveRole();
-            var isAdmin = (role === 'admin' || (currentUserSession && currentUserSession.kontak === '082298688189'));
+            var isSuper = (role === 'admin');
+            var isKeuangan = window.isBendaharaOrSuper();
 
             var btnAddAdmin = document.getElementById('btnTambahRekeningAdmin');
             var btnExportCsv = document.getElementById('btnExportBankCsv');
-            if (btnAddAdmin) btnAddAdmin.style.display = isAdmin ? 'inline-block' : 'none';
-            if (btnExportCsv) btnExportCsv.style.display = isAdmin ? 'inline-block' : 'none';
+            if (btnAddAdmin) btnAddAdmin.style.display = isSuper ? 'inline-block' : 'none';
+            if (btnExportCsv) btnExportCsv.style.display = isKeuangan ? 'inline-block' : 'none';
 
             var allBanks = appState.rekeningBank || [];
-            var visibleBanks = isAdmin ? allBanks : allBanks.filter(function(b) { return b.aktif !== false; });
+            var visibleBanks = isKeuangan ? allBanks : allBanks.filter(function(b) { return b.aktif !== false; });
 
             var sumMasukAll = 0;
             var sumKeluarAll = 0;
@@ -9389,7 +9640,7 @@
             var summaryContainer = document.getElementById('bankSummaryCardsContainer');
             if (summaryContainer) {
                 var aktifCount = allBanks.filter(function(b) { return b.aktif !== false; }).length;
-                if (isAdmin) {
+                if (isKeuangan) {
                     summaryContainer.className = 'grid grid-cols-2 lg:grid-cols-4 gap-3';
                     summaryContainer.innerHTML = '<div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">' +
                         '<span class="text-[10px] font-bold uppercase text-slate-400 block">Kanal Rekening Aktif</span>' +
@@ -9448,7 +9699,7 @@
                         (b.cabang ? '<span class="text-[10px] text-slate-400 block">' + window.escapeHtml(b.cabang) + '</span>' : '') +
                     '</td>' +
                     '<td class="py-3 px-3">' +
-                        (isAdmin ?
+                        (isKeuangan ?
                             '<strong class="text-emerald-600 font-black block text-xs">Saldo: ' + window.formatRupiah(mutasi.saldoAkhir) + '</strong>' +
                             '<span class="text-[10px] text-slate-500 block">Masuk: <span class="text-blue-600 font-semibold">+' + window.formatRupiah(mutasi.totalMasuk) + '</span> (' + mutasi.countMasuk + 'x) • Keluar: <span class="text-rose-600 font-semibold">-' + window.formatRupiah(mutasi.totalKeluar) + '</span> (' + mutasi.countKeluar + 'x)</span>' +
                             '<span class="text-[9px] text-slate-400 block">Masuk — Simpanan: ' + window.formatRupiah(mutasi.masukSimpanan) + ' • Cicilan: ' + window.formatRupiah(mutasi.masukCicilan) + ' • Arisan/Prog: ' + window.formatRupiah(mutasi.masukArisanProgram) + ' • ZIS/SHU: ' + window.formatRupiah(mutasi.masukZis + mutasi.masukPendapatanShu) + '</span>' +
@@ -9458,14 +9709,16 @@
                     '</td>' +
                     '<td class="py-3 px-3 text-center space-y-1">' +
                         (b.qrisUrl ? '<div><button onclick="window.lihatFotoBukti(\'' + b.qrisUrl + '\')" class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px]">📷 Lihat QRIS</button></div>' : '') +
-                        (isAdmin ?
+                        (isSuper ?
                             '<button onclick="window.toggleStatusAktifBank(\'' + b.id + '\')" class="px-2 py-0.5 rounded-full text-[9px] font-bold ' + (isAktif ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700') + '">' + (isAktif ? '✓ Aktif' : '✕ Nonaktif') + '</button>'
-                        : '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800">✓ Aktif</span>') +
+                        : '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ' + (isAktif ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700') + '">' + (isAktif ? '✓ Aktif' : '✕ Nonaktif') + '</span>') +
                     '</td>' +
                     '<td class="py-3 px-3 text-center space-x-1 whitespace-nowrap">' +
                         '<button onclick="window.bagikanRekeningTunggalKeWA(\'' + b.id + '\')" class="px-2 py-1 rounded-lg bg-green-50 dark:bg-slate-800 text-green-700 dark:text-green-400 font-bold text-[10px]" title="Bagikan ke WhatsApp">💬 WA</button>' +
-                        (isAdmin ?
-                            '<button onclick="window.lihatMutasiBankDiSimpanan(\'' + window.escapeHtml(b.nama) + '\')" class="px-2 py-1 rounded-lg bg-blue-50 dark:bg-slate-800 text-blue-600 font-bold text-[10px]" title="Filter Transaksi Bank Ini">🔍 Mutasi</button>' +
+                        (isKeuangan ?
+                            '<button onclick="window.lihatMutasiBankDiSimpanan(\'' + window.escapeHtml(b.nama) + '\')" class="px-2 py-1 rounded-lg bg-blue-50 dark:bg-slate-800 text-blue-600 font-bold text-[10px]" title="Rincian Buku Besar Mutasi Bank Ini">🔍 Mutasi</button>'
+                        : '') +
+                        (isSuper ?
                             (!b.isUtama ? '<button onclick="window.setRekeningUtama(\'' + b.id + '\')" class="text-amber-500 hover:underline font-bold text-[10px] px-1" title="Jadikan Rekening Utama">⭐</button>' : '') +
                             '<button onclick="window.bukaModalEditBank(\'' + b.id + '\')" class="text-emerald-600 font-bold text-xs hover:underline px-1">Edit</button>' +
                             '<button onclick="window.hapusRekeningBank(\'' + b.id + '\')" class="text-rose-600 font-bold text-xs hover:underline px-1">Hapus</button>'
@@ -9583,11 +9836,22 @@
         setTimeout(function() { if (typeof window.renderBankTabPro === 'function') window.renderBankTabPro(); }, 300);
 
         // =========================================================================
-        // AUTO-VERSIONING & CHANGELOG FOOTER (v34.8 Pro)
+        // AUTO-VERSIONING & CHANGELOG FOOTER (v34.9 Pro)
         // =========================================================================
-        window.APP_VERSION = 'v34.8 Pro';
+        window.APP_VERSION = 'v34.9 Pro';
         window.APP_RELEASE_DATE = '14 Nov 2026';
         window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v34.9 Pro',
+                tanggal: '14 Nov 2026 (Terbaru - Fix ReferenceError isAdmin & Penyempurnaan RBAC 4 Peran)',
+                judul: 'Perbaikan Bug Tabel Bank (isAdmin) & Penyempurnaan Penuh Hak Akses Bendahara vs Sekretaris',
+                poin: [
+                    'Perbaikan Bug ReferenceError isAdmin pada renderBankTabPro(): Tabel Rekening Bank, saldo rekonsiliasi 7 alur kas, dan tombol 🔍 Mutasi kini tampil sempurna untuk Super Admin & Bendahara.',
+                    'Penyempurnaan Wewenang Bendahara (Pencatat Keuangan): Bendahara kini dapat menginput Simpanan, Pinjaman, Cicilan, Arisan, dan ZISWAF untuk seluruh anggota (langsung berstatus Disetujui), memverifikasi antrean keuangan di Pusat Persetujuan, serta mencetak Struk/Akad/Slip SHU dan Export CSV lengkap tanpa akses hapus permanen atau pengaturan sistem.',
+                    'Penyempurnaan Wewenang Sekretaris (Pencatat Administrasi): Sekretaris kini dapat membuat & mengedit Topik Voting Keluarga, mencatat & mengedit Notulensi Rapat, menambah/mengedit biodata anggota (tanpa bisa mengubah Role/PIN), serta memverifikasi Calon Anggota Baru.',
+                    'Isolasi Bersih Simulasi 4 Mode (Admin / Bendahara / Sekretaris / Anggota): Menghilangkan kebocoran tombol Edit/Hapus saat Super Admin sedang menguji mode Anggota atau Sekretaris.'
+                ]
+            },
             {
                 versi: 'v34.8 Pro',
                 tanggal: '14 Nov 2026 (Terbaru - Auto-Sync Cloud koperasi-4a4fe & Auto-Parser SDK)',
@@ -9726,7 +9990,7 @@
                 f.innerHTML = '<div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto px-2">' +
                     '<p>&copy; 2026 aufah tech. All rights reserved.</p>' +
                     '<div class="flex flex-wrap items-center justify-center gap-2">' +
-                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Cloud Auto-Sync (koperasi-4a4fe) Tertanam Permanen, Auto-Parser Script SDK Firebase, Matriks Iuran 12 Bulan, SHU Adil, & Anti-Copy Bukti.") + ')</span>' +
+                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Pemisahan Role Super Admin (Sistem) vs Bendahara (Catat Kas) vs Sekretaris (Catat Administrasi), Cloud Auto-Sync koperasi-4a4fe, Matriks 12 Bulan & Anti-Copy.") + ')</span>' +
                         '<button id="badgeFooterChangelog" type="button" onclick="window.bukaModalChangelog()" class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] hover:ring-2 hover:ring-emerald-400 transition cursor-pointer">📋 Lihat Detail Pembaruan ' + window.escapeHtml(window.APP_VERSION) + '</button>' +
                     '</div>' +
                 '</div>';
