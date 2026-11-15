@@ -728,20 +728,21 @@
                         </div>
                         <div class="flex flex-wrap gap-1.5">
                             <button type="button" onclick="window.bukaModalDaftarProgramArisan()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">✋ Pilih &amp; Daftar Program</button>
-                            <button type="button" onclick="window.bukaModalBayarArisan()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">💰 Setor Iuran Arisan</button>
+                            <button type="button" onclick="window.bukaModalBayarArisan()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">💰 Setor Iuran / Program</button>
+                            <button type="button" id="btnAutoDebetArisan" onclick="window.autoDebetIuranArisanMassal()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0" title="Potong otomatis iuran peserta dari Saldo Simpanan Sukarela">⚡ Auto-Debet Sukarela</button>
                             <button type="button" id="btnAturPeriodeArisan" onclick="window.bukaModalAturPeriodeArisan()" class="hidden bg-teal-600 hover:bg-teal-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">📅 Periode Arisan</button>
-                            <button type="button" id="btnKocokArisan" onclick="window.kocokUndianArisan()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">🎲 Kocok Undian</button>
+                            <button type="button" id="btnKocokArisan" onclick="window.bukaModalKocokArisanAuto()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">🎲 Kocok &amp; Cairkan</button>
                             <button type="button" id="btnResetPutaranArisan" onclick="window.resetPutaranArisanManual()" class="hidden bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-lg text-xs transition shrink-0">🔄 Reset Putaran</button>
                             <button type="button" id="btnTambahProgram" onclick="window.bukaModalProgramKeluarga()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow-xs transition shrink-0">+ Buat Program</button>
                         </div>
                     </div>
 
-                    <!-- Panel Antrean Persetujuan Pendaftaran Program & Arisan (Khusus Pengurus/Admin) -->
+                    <!-- Panel Konfirmasi Pendaftaran Peserta & Verifikasi Transaksi Setoran Arisan / Program -->
                     <div id="boxAntreanPesertaProgramArisan" class="hidden bg-amber-50/90 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800 rounded-xl p-3.5 space-y-2.5 shadow-xs">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h3 class="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">🔔 Pengajuan Anggota Ingin Mengikuti Program / Arisan (Menunggu Persetujuan Admin)</h3>
-                                <p class="text-[10px] text-amber-700 dark:text-amber-300">Setujui pendaftaran di bawah ini agar anggota resmi terdaftar di program yang dipilih dan dapat mulai menyetor iuran.</p>
+                                <h3 class="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">🔔 Pusat Konfirmasi Kepesertaan &amp; Transaksi Setoran Arisan / Program</h3>
+                                <p class="text-[10px] text-amber-700 dark:text-amber-300">Verifikasi pengajuan ikut program serta konfirmasi bukti transfer setoran iuran arisan &amp; tabungan program sebelum masuk ke saldo kas/bank.</p>
                             </div>
                             <span id="badgeCountPendingProgramArisan" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-200 text-amber-900">0 Menunggu</span>
                         </div>
@@ -789,8 +790,14 @@
 
                             <!-- Riwayat Pemenang Kocokan Arisan -->
                             <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                                <span class="text-[10px] font-bold uppercase text-slate-400 block">🏆 Riwayat Pemenang Undian Terakhir:</span>
+                                <span class="text-[10px] font-bold uppercase text-slate-400 block">🏆 Riwayat Pemenang &amp; Pencairan Pot:</span>
                                 <div id="listRiwayatPemenangArisan" class="space-y-1 max-h-28 overflow-y-auto text-[11px]"></div>
+                            </div>
+
+                            <!-- Riwayat Transaksi Setoran Iuran Arisan & Struk -->
+                            <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                                <span class="text-[10px] font-bold uppercase text-slate-400 block">🧾 Riwayat Transaksi Iuran Arisan:</span>
+                                <div id="listRiwayatTransaksiIuranArisan" class="space-y-1 max-h-36 overflow-y-auto text-[10px]"></div>
                             </div>
                         </div>
 
@@ -1907,9 +1914,18 @@
                         <option value="POTONG_SUKARELA">Potong Saldo Simpanan Sukarela</option>
                     </select>
                 </div>
-                <div id="wrapArisanBankTujuan">
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Tujuan Setoran Arisan</label>
-                    <select id="arisanBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                <div id="wrapArisanBankTujuan" class="space-y-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Tujuan Transfer</label>
+                        <select id="arisanBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Upload Bukti Foto Transfer (Untuk Verifikasi Admin)</label>
+                        <input type="file" id="arisanBuktiFoto" accept="image/*" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs outline-none file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-blue-50 file:text-blue-700">
+                    </div>
+                </div>
+                <div id="infoAutoDebetArisanModal" class="hidden p-2.5 rounded-xl bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-[11px] text-emerald-800 dark:text-emerald-300">
+                    ⚡ <strong>Otomatis Terverifikasi:</strong> Saldo Simpanan Sukarela Anda akan dipotong otomatis dan iuran langsung tercatat <strong>Disetujui (Lunas)</strong>.
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="window.tutupModalDanReset('modalBayarArisan', 'formBayarArisan')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
@@ -2162,6 +2178,62 @@
         </div>
     </div>
 
+    <!-- Modal Kocok Undian Arisan & Pencairan Pot Otomatis -->
+    <div id="modalKocokArisanAuto" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3">
+            <h3 class="font-bold text-base text-slate-800 dark:text-white">🎲 Konfirmasi Kocok Undian &amp; Pencairan Pot Arisan</h3>
+            <div id="infoRingkasanKocokModal" class="p-3 rounded-xl bg-amber-50 dark:bg-slate-800 border border-amber-200 dark:border-slate-700 text-xs space-y-1"></div>
+            <form id="formKocokArisanAuto" onsubmit="return window.prosesKocokUndianArisanOtomatis(event)" class="space-y-3">
+                <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer text-xs font-semibold">
+                    <input type="checkbox" id="chkHanyaPesertaLunasArisan" class="accent-emerald-600 w-4 h-4">
+                    <span>Hanya undi peserta yang <strong>sudah Lunas</strong> iuran pada putaran ini</span>
+                </label>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Metode Pencairan Pot Pemenang Otomatis</label>
+                    <select id="metodePencairanPotArisan" onchange="window.handleMetodePencairanPotChange(this)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                        <option value="MASUK_SUKARELA">⚡ Otomatis Tambahkan ke Saldo Simpanan Sukarela Pemenang</option>
+                        <option value="TRANSFER_BANK">🏦 Cairkan / Transfer dari Rekening Bank Koperasi</option>
+                    </select>
+                </div>
+                <div id="wrapBankPencairanPotArisan" class="hidden">
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Rekening Bank Sumber Pencairan Pot</label>
+                    <select id="bankSumberPotArisan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="window.tutupModalDanReset('modalKocokArisanAuto', 'formKocokArisanAuto')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs shadow-md">🎲 Kocok &amp; Cairkan Otomatis</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Realisasi / Pencairan Dana Program Keluarga -->
+    <div id="modalCairkanProgram" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3">
+            <h3 id="judulModalCairkanProgram" class="font-bold text-base text-slate-800 dark:text-white">💸 Realisasi / Pencairan Dana Program</h3>
+            <div id="infoSaldoCairkanProgram" class="p-2.5 rounded-xl bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-xs flex justify-between items-center"></div>
+            <form id="formCairkanProgram" onsubmit="return window.simpanPencairanProgramKeluarga(event)" class="space-y-3">
+                <input type="hidden" id="cairkanProgId">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal Dana Dicairkan / Digunakan (Rp)</label>
+                    <input type="number" id="cairkanProgNominal" required min="10000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Sumber Pencairan Dana</label>
+                    <select id="cairkanProgBankSumber" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Keperluan Realisasi Program</label>
+                    <input type="text" id="cairkanProgKeterangan" required placeholder="Contoh: Pembelian Sapi Qurban / DP Bus & Villa" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="window.tutupModalDanReset('modalCairkanProgram', 'formCairkanProgram')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm">💸 Konfirmasi Pencairan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Setor Tabungan Program Keluarga -->
     <div id="modalSetorProgram" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-sm p-5 space-y-3">
@@ -2179,16 +2251,25 @@
                         <option value="POTONG_SUKARELA">Potong Saldo Simpanan Sukarela Saya</option>
                     </select>
                 </div>
-                <div id="wrapProgramBankTujuan">
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Tujuan Setoran Program</label>
-                    <select id="setorProgBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                <div id="wrapProgramBankTujuan" class="space-y-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rekening Bank Tujuan Setoran Program</label>
+                        <select id="setorProgBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Upload Bukti Foto Transfer (Untuk Verifikasi Admin)</label>
+                        <input type="file" id="setorProgBuktiFoto" accept="image/*" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs outline-none file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-50 file:text-emerald-700">
+                    </div>
+                </div>
+                <div id="infoAutoDebetProgModal" class="hidden p-2.5 rounded-xl bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-[11px] text-emerald-800 dark:text-emerald-300">
+                    ⚡ <strong>Otomatis Terverifikasi:</strong> Saldo Simpanan Sukarela Anda akan dipotong otomatis dan tabungan program langsung bertambah.
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Catatan (Opsional)</label>
                     <input type="text" id="setorProgCatatan" placeholder="Contoh: Cicilan Qurban ke-1" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalSetorProgram').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalSetorProgram')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan Setoran</button>
                 </div>
             </form>
@@ -4166,7 +4247,7 @@
                     else el.classList.add('hidden');
                 }
             });
-            const bendaharaBtns = ['btnTambahBeban', 'thAksiBeban', 'btnTambahPendapatanShu', 'thAksiPendapatanShu', 'btnKocokArisan', 'btnTambahProgram', 'btnAturPeriodeArisan'];
+            const bendaharaBtns = ['btnTambahBeban', 'thAksiBeban', 'btnTambahPendapatanShu', 'thAksiPendapatanShu', 'btnKocokArisan', 'btnTambahProgram', 'btnAturPeriodeArisan', 'btnAutoDebetArisan'];
             bendaharaBtns.forEach(btnId => {
                 const el = document.getElementById(btnId);
                 if (el) {
@@ -4750,7 +4831,24 @@
                             </div>
                         </div>
                     `).join('');
-                    const htmlProgArisan = pendingProgArisan.map(item => `
+                    const htmlProgArisan = pendingProgArisan.map(item => {
+                        if (item.jenisItem === 'TRANSAKSI') {
+                            return `
+                            <div class="p-2.5 rounded-xl bg-blue-50/70 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 flex justify-between items-center gap-2">
+                                <div>
+                                    <strong class="text-slate-800 dark:text-white block">${window.escapeHtml(item.namaAnggota)} • <span class="text-emerald-600">+${window.formatRupiah(item.nominal)} (${window.escapeHtml(item.namaProgram)})</span></strong>
+                                    <span class="text-[10px] text-slate-400">${window.escapeHtml(item.periode)}</span>
+                                    ${item.bukti ? `<button onclick="window.lihatFotoBukti('${item.bukti}')" class="block text-blue-600 underline text-[10px] font-bold mt-0.5">🖼️ Lihat Bukti Transfer</button>` : ''}
+                                </div>
+                                <div class="flex gap-1 shrink-0">
+                                    ${isKeuangan ? `
+                                        <button onclick="window.verifikasiTransaksiArisanProgram('${item.targetType}', '${item.progId}', '${item.itemId}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Konfirmasi</button>
+                                        <button onclick="window.verifikasiTransaksiArisanProgram('${item.targetType}', '${item.progId}', '${item.itemId}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                                    ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Bendahara</span>`}
+                                </div>
+                            </div>`;
+                        }
+                        return `
                         <div class="p-2.5 rounded-xl bg-purple-50/70 dark:bg-slate-800 border border-purple-200 dark:border-slate-700 flex justify-between items-center gap-2">
                             <div>
                                 <strong class="text-slate-800 dark:text-white block">${window.escapeHtml(item.namaAnggota)} • <span class="text-purple-600">Ikut ${window.escapeHtml(item.namaProgram)}</span></strong>
@@ -4760,8 +4858,8 @@
                                 <button onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
                                 <button onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
                             </div>
-                        </div>
-                    `).join('');
+                        </div>`;
+                    }).join('');
                     listCalon.innerHTML = htmlCalon + htmlProgArisan;
                 }
             }
@@ -6021,12 +6119,24 @@
             return { kode: 'AKTIF', label: `🟢 Aktif (${sisaHari} hr lagi)`, cls: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' };
         };
 
+        window.recalcDanaProgram = (pr) => {
+            if (!pr) return 0;
+            const masuk = (pr.kontributor || [])
+                .filter(k => (k.status || 'Disetujui') === 'Disetujui')
+                .reduce((acc, k) => acc + (Number(k.nominal) || 0), 0);
+            const keluar = (pr.riwayatPencairan || [])
+                .reduce((acc, c) => acc + (Number(c.nominal) || 0), 0);
+            pr.terkumpul = Math.max(0, masuk - keluar);
+            return pr.terkumpul;
+        };
+
         window.hitungAntreanPesertaProgramArisan = () => {
             const antrean = [];
             const pesertaArisan = appState.arisan?.peserta || [];
             pesertaArisan.forEach(ps => {
                 if (ps.statusKepesertaan === 'Menunggu') {
                     antrean.push({
+                        jenisItem: 'KEPESERTAAN',
                         targetType: 'ARISAN',
                         progId: 'ARISAN_UTAMA',
                         namaProgram: appState.arisan?.namaPeriode || 'Arisan Silaturahmi Bulanan',
@@ -6041,6 +6151,7 @@
                 (pr.pesertaProgram || []).forEach(ps => {
                     if (ps.status === 'Menunggu') {
                         antrean.push({
+                            jenisItem: 'KEPESERTAAN',
                             targetType: 'PROGRAM',
                             progId: pr.id,
                             namaProgram: pr.nama,
@@ -6052,7 +6163,84 @@
                     }
                 });
             });
+            // Tambahkan antrean konfirmasi transaksi setoran Iuran Arisan
+            ((appState.arisan && appState.arisan.riwayatIuran) || []).forEach(item => {
+                if (item.status === 'Menunggu') {
+                    antrean.push({
+                        jenisItem: 'TRANSAKSI',
+                        targetType: 'IURAN_ARISAN',
+                        progId: 'ARISAN_UTAMA',
+                        itemId: item.id,
+                        namaProgram: appState.arisan?.namaPeriode || 'Iuran Arisan Bulanan',
+                        anggotaId: item.anggotaId,
+                        namaAnggota: item.nama,
+                        nominal: item.nominal,
+                        bankTujuan: item.bankTujuan || 'Transfer Bank',
+                        bukti: item.bukti || '',
+                        tglDaftar: item.tanggal || '-',
+                        periode: `Setoran Iuran ${window.formatRupiah(item.nominal)} via ${item.bankTujuan || 'Bank'}`
+                    });
+                }
+            });
+            // Tambahkan antrean konfirmasi transaksi setoran Tabungan Program
+            (appState.programKeluarga || []).forEach(pr => {
+                (pr.kontributor || []).forEach(k => {
+                    if (k.status === 'Menunggu') {
+                        antrean.push({
+                            jenisItem: 'TRANSAKSI',
+                            targetType: 'SETORAN_PROGRAM',
+                            progId: pr.id,
+                            itemId: k.id,
+                            namaProgram: pr.nama,
+                            anggotaId: k.anggotaId,
+                            namaAnggota: k.nama,
+                            nominal: k.nominal,
+                            bankTujuan: k.bankTujuan || 'Transfer Bank',
+                            bukti: k.bukti || '',
+                            tglDaftar: k.tanggal || '-',
+                            periode: `Setoran Program ${window.formatRupiah(k.nominal)} via ${k.bankTujuan || 'Bank'}`
+                        });
+                    }
+                });
+            });
             return antrean;
+        };
+
+        window.verifikasiTransaksiArisanProgram = (targetType, progId, itemId, disetujui) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang berwenang mengonfirmasi transaksi setoran Arisan & Program!', 'error');
+                return;
+            }
+            const statusBaru = disetujui ? 'Disetujui' : 'Ditolak';
+            if (targetType === 'IURAN_ARISAN') {
+                const list = (appState.arisan && appState.arisan.riwayatIuran) || [];
+                const item = list.find(x => x.id === itemId);
+                if (item) {
+                    item.status = statusBaru;
+                    if (disetujui) {
+                        const ps = (appState.arisan.peserta || []).find(p => p.anggotaId === item.anggotaId);
+                        if (ps) {
+                            ps.lunasPutaranIni = true;
+                            ps.bankTujuanTerakhir = item.bankTujuan;
+                        }
+                    }
+                    window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Setoran Iuran Arisan`, `${item.nama} (${window.formatRupiah(item.nominal)}) via ${item.bankTujuan || 'Bank'}`, statusBaru);
+                    window.showToast(disetujui ? `✅ Setoran iuran arisan ${item.nama} (${window.formatRupiah(item.nominal)}) dikonfirmasi & otomatis Lunas!` : `Setoran arisan ${item.nama} ditolak.`, disetujui ? 'success' : 'info');
+                }
+            } else {
+                const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+                if (pr && Array.isArray(pr.kontributor)) {
+                    const k = pr.kontributor.find(x => x.id === itemId);
+                    if (k) {
+                        k.status = statusBaru;
+                        window.recalcDanaProgram(pr);
+                        window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Setoran Program Keluarga`, `${pr.nama}: ${k.nama} (${window.formatRupiah(k.nominal)})`, statusBaru);
+                        window.showToast(disetujui ? `✅ Setoran program ${k.nama} (${window.formatRupiah(k.nominal)}) dikonfirmasi & menambah saldo ${pr.nama}!` : `Setoran program ${k.nama} ditolak.`, disetujui ? 'success' : 'info');
+                    }
+                }
+            }
+            saveStateToCloud();
+            window.renderApp();
         };
 
         window.verifikasiPesertaProgramArisan = (targetType, progId, anggotaId, disetujui) => {
@@ -6168,19 +6356,43 @@
                 if (isPengurus && antreanItems.length > 0) {
                     boxAntrean.classList.remove('hidden');
                     if (badgeAntreanEl) badgeAntreanEl.textContent = `${antreanItems.length} Menunggu`;
-                    listAntreanEl.innerHTML = antreanItems.map(item => `
+                    listAntreanEl.innerHTML = antreanItems.map(item => {
+                        if (item.jenisItem === 'TRANSAKSI') {
+                            return `
+                            <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-800 flex justify-between items-center gap-2">
+                                <div class="overflow-hidden">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="px-1.5 py-0.2 rounded bg-blue-100 text-blue-800 text-[9px] font-extrabold">💰 SETORAN</span>
+                                        <strong class="text-slate-800 dark:text-white truncate">${window.escapeHtml(item.namaAnggota)}</strong>
+                                    </div>
+                                    <span class="text-[10px] text-emerald-600 font-extrabold block truncate">${window.escapeHtml(item.namaProgram)}: +${window.formatRupiah(item.nominal)}</span>
+                                    <span class="text-[9px] text-slate-400 block">${window.escapeHtml(item.periode)} • Tgl: ${window.escapeHtml(item.tglDaftar)}</span>
+                                    ${item.bukti ? `<button type="button" onclick="window.lihatFotoBukti('${item.bukti}')" class="text-blue-600 underline text-[10px] font-bold mt-0.5">🖼️ Lihat Bukti Transfer</button>` : '<span class="text-[9px] text-amber-600 italic">Tanpa foto bukti</span>'}
+                                </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    ${isKeuangan ? `
+                                        <button type="button" onclick="window.verifikasiTransaksiArisanProgram('${item.targetType}', '${item.progId}', '${item.itemId}', true)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px]">✓ Konfirmasi</button>
+                                        <button type="button" onclick="window.verifikasiTransaksiArisanProgram('${item.targetType}', '${item.progId}', '${item.itemId}', false)" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px]">✕ Tolak</button>
+                                    ` : `<span class="text-[9px] text-slate-400 italic">Wewenang Bendahara</span>`}
+                                </div>
+                            </div>`;
+                        }
+                        return `
                         <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-slate-700 flex justify-between items-center gap-2">
                             <div class="overflow-hidden">
-                                <strong class="text-slate-800 dark:text-white block truncate">${window.escapeHtml(item.namaAnggota)}</strong>
-                                <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold block truncate">Ingin Ikut: ${window.escapeHtml(item.namaProgram)}</span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="px-1.5 py-0.2 rounded bg-purple-100 text-purple-800 text-[9px] font-extrabold">✋ DAFTAR</span>
+                                    <strong class="text-slate-800 dark:text-white truncate">${window.escapeHtml(item.namaAnggota)}</strong>
+                                </div>
+                                <span class="text-[10px] text-purple-700 dark:text-purple-300 font-bold block truncate">Ingin Ikut: ${window.escapeHtml(item.namaProgram)}</span>
                                 <span class="text-[9px] text-slate-400 block">📅 Periode: ${window.escapeHtml(item.periode)} • Daftar: ${window.escapeHtml(item.tglDaftar)}</span>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
                                 <button type="button" onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', true)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px]">✓ Setujui</button>
                                 <button type="button" onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', false)" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px]">✕ Tolak</button>
                             </div>
-                        </div>
-                    `).join('');
+                        </div>`;
+                    }).join('');
                 } else {
                     boxAntrean.classList.add('hidden');
                 }
@@ -6279,6 +6491,9 @@
                                 <button type="button" onclick="window.verifikasiPesertaProgramArisan('ARISAN', 'ARISAN_UTAMA', '${ps.anggotaId}', true)" class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[9px] font-bold">✓ Setujui</button>
                                 <button type="button" onclick="window.verifikasiPesertaProgramArisan('ARISAN', 'ARISAN_UTAMA', '${ps.anggotaId}', false)" class="px-2 py-0.5 rounded bg-rose-600 text-white text-[9px] font-bold">✕</button>
                             ` : ''}
+                            ${!isPending && !ps.lunasPutaranIni && isPengurus ? `
+                                <button type="button" onclick="window.kirimPengingatWaArisan('${ps.anggotaId}')" class="px-1.5 py-0.5 rounded bg-green-50 dark:bg-slate-700 text-green-700 dark:text-green-300 text-[9px] font-bold" title="Kirim Pengingat Iuran Arisan via WA">💬 WA</button>
+                            ` : ''}
                             ${!isPending && isKeuangan ? `
                                 <button type="button" onclick="window.toggleLunasIuranArisan('${ps.anggotaId}')" class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 text-[9px] font-bold text-slate-600 dark:text-slate-300" title="Ubah Status Lunas Iuran">${ps.lunasPutaranIni ? 'Batal Lunas' : 'Tandai Lunas'}</button>
                                 <button type="button" onclick="window.toggleMenangPesertaArisan('${ps.anggotaId}')" class="px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-amber-50 text-[9px] font-bold text-amber-600" title="Ubah Status Menang Undian">🔄</button>
@@ -6311,6 +6526,34 @@
                 }
             }
 
+            // Render Riwayat Transaksi Iuran Arisan & Struk
+            const riwayatTrxArisanEl = document.getElementById('listRiwayatTransaksiIuranArisan');
+            if (riwayatTrxArisanEl) {
+                const allIuran = (appState.arisan && appState.arisan.riwayatIuran) || [];
+                const visibleIuran = isKeuangan ? allIuran : allIuran.filter(x => x.anggotaId === currentUserSession.id);
+                if (visibleIuran.length === 0) {
+                    riwayatTrxArisanEl.innerHTML = `<p class="text-[10px] text-slate-400 italic">Belum ada transaksi setoran iuran arisan.</p>`;
+                } else {
+                    riwayatTrxArisanEl.innerHTML = visibleIuran.slice().reverse().map(item => {
+                        const st = item.status || 'Disetujui';
+                        const stCls = st === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : st === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800';
+                        return `
+                        <div class="flex justify-between items-center px-2 py-1 rounded bg-slate-50 dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 gap-1">
+                            <div class="truncate">
+                                <span class="font-bold text-slate-700 dark:text-slate-200">${window.escapeHtml(item.nama)}</span>
+                                <span class="text-slate-400 ml-1">(${window.escapeHtml(item.tanggal)})</span>
+                                ${item.bukti ? `<button type="button" onclick="window.lihatFotoBukti('${item.bukti}')" class="text-blue-600 underline font-bold ml-1">🖼️</button>` : ''}
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <strong class="text-emerald-600">${window.formatRupiah(item.nominal)}</strong>
+                                <span class="px-1.5 py-0.2 rounded text-[8px] font-bold ${stCls}">${st}</span>
+                                <button type="button" onclick="window.bukaStrukArisanProgram('ARISAN', 'ARISAN_UTAMA', '${item.id}')" class="px-1.5 py-0.2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-[9px] font-bold" title="Cetak Struk Iuran">🧾</button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
             if (progs.length === 0) {
                 gridProg.innerHTML = `<p class="text-xs text-slate-400 italic col-span-2 py-4 text-center">Belum ada program tabungan / arisan kolektif keluarga.</p>`;
                 return;
@@ -6325,9 +6568,17 @@
                 const myEntry = pesertaProgList.find(p => p.anggotaId === currentUserSession.id);
                 const stPeriode = window.evaluasiStatusPeriodeTanggal(pr.tglMulai, pr.tglSelesai);
 
+                window.recalcDanaProgram(pr);
                 const myKontribNominal = kontribList
-                    .filter(k => k.anggotaId === currentUserSession.id || k.nama === currentUserSession.nama)
+                    .filter(k => (k.status || 'Disetujui') === 'Disetujui' && (k.anggotaId === currentUserSession.id || k.nama === currentUserSession.nama))
                     .reduce((s, k) => s + (Number(k.nominal) || 0), 0);
+                const jmlPesertaAktif = Math.max(1, pesertaDisetujui.length);
+                const targetPerPeserta = Math.round((Number(pr.target) || 0) / jmlPesertaAktif);
+                const sisaTargetAnda = Math.max(0, targetPerPeserta - myKontribNominal);
+                const sisaMsProg = Date.parse(pr.tglSelesai || '2026-12-31') - Date.now();
+                const sisaBulanProg = !isNaN(sisaMsProg) && sisaMsProg > 0 ? Math.max(1, Math.ceil(sisaMsProg / (1000 * 60 * 60 * 24 * 30))) : 1;
+                const rekomendasiPerBulan = Math.ceil(sisaTargetAnda / sisaBulanProg);
+                const totalDicairkanProg = (pr.riwayatPencairan || []).reduce((acc, c) => acc + (Number(c.nominal) || 0), 0);
 
                 const visibleKontrib = isKeuangan
                     ? kontribList
@@ -6363,10 +6614,17 @@
                                 ` : ''}
                             </div>
 
-                            <!-- Informasi Periode Mulai s/d Selesai Program -->
-                            <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700 flex justify-between items-center text-[10px] text-slate-600 dark:text-slate-300">
-                                <span>📅 Mulai: <strong>${window.escapeHtml(pr.tglMulai || '2026-01-01')}</strong></span>
-                                <span>🏁 Selesai: <strong>${window.escapeHtml(pr.tglSelesai || '2026-12-31')}</strong></span>
+                            <!-- Informasi Periode Mulai s/d Selesai & Kalkulator Target Otomatis -->
+                            <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700 space-y-1 text-[10px] text-slate-600 dark:text-slate-300">
+                                <div class="flex justify-between items-center">
+                                    <span>📅 Mulai: <strong>${window.escapeHtml(pr.tglMulai || '2026-01-01')}</strong></span>
+                                    <span>🏁 Selesai: <strong>${window.escapeHtml(pr.tglSelesai || '2026-12-31')}</strong></span>
+                                </div>
+                                <div class="flex justify-between items-center pt-1 border-t border-slate-100 dark:border-slate-800 text-[9px] text-emerald-700 dark:text-emerald-400 font-semibold">
+                                    <span>🎯 Target/Peserta: <strong>${window.formatRupiah(targetPerPeserta)}</strong></span>
+                                    <span>⚡ Estimasi Cicilan: <strong>${window.formatRupiah(rekomendasiPerBulan)}/bln</strong> (${sisaBulanProg} bln)</span>
+                                </div>
+                                ${totalDicairkanProg > 0 ? `<div class="text-[9px] text-rose-600 font-bold pt-0.5">💸 Sudah Dicairkan/Direalisasikan: ${window.formatRupiah(totalDicairkanProg)}</div>` : ''}
                             </div>
 
                             <div class="flex justify-between text-[11px]">
@@ -6410,11 +6668,23 @@
                                 <div class="pt-1.5 border-t border-slate-200/70 dark:border-slate-700 space-y-1">
                                     <span class="text-[9px] font-bold uppercase text-slate-400 block">${isKeuangan ? `Rincian Setoran Masuk (${visibleKontrib.length}):` : `Riwayat Setoran Anda (${visibleKontrib.length}):`}</span>
                                     <div class="max-h-24 overflow-y-auto space-y-1 pr-1">
-                                        ${visibleKontrib.slice().reverse().map(k => `
+                                        ${visibleKontrib.slice().reverse().map(k => {
+                                            const stK = k.status || 'Disetujui';
+                                            const stKCls = stK === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : stK === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800';
+                                            return `
                                             <div class="flex justify-between items-center text-[10px] bg-white dark:bg-slate-900 px-2 py-1 rounded border border-slate-100 dark:border-slate-800">
-                                                <span class="truncate">${window.escapeHtml(k.tanggal)} • <strong>${window.escapeHtml(k.nama)}</strong> ${k.catatan ? '(' + window.escapeHtml(k.catatan) + ')' : ''}</span>
+                                                <div class="truncate">
+                                                    <span>${window.escapeHtml(k.tanggal)} • <strong>${window.escapeHtml(k.nama)}</strong> ${k.catatan ? '(' + window.escapeHtml(k.catatan) + ')' : ''}</span>
+                                                    ${k.bukti ? `<button type="button" onclick="window.lihatFotoBukti('${k.bukti}')" class="text-blue-600 underline font-bold ml-1">🖼️</button>` : ''}
+                                                </div>
                                                 <div class="flex items-center gap-1 shrink-0 ml-1">
-                                                    <strong class="text-emerald-600">+${window.formatRupiah(k.nominal)}</strong>
+                                                    <strong class="${stK === 'Disetujui' ? 'text-emerald-600' : 'text-amber-600'}">+${window.formatRupiah(k.nominal)}</strong>
+                                                    <span class="px-1.5 py-0.2 rounded text-[8px] font-bold ${stKCls}">${stK}</span>
+                                                    <button type="button" onclick="window.bukaStrukArisanProgram('PROGRAM', '${pr.id}', '${k.id}')" class="px-1 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-[9px] font-bold" title="Cetak Struk">🧾</button>
+                                                    ${stK === 'Menunggu' && isKeuangan ? `
+                                                        <button type="button" onclick="window.verifikasiTransaksiArisanProgram('SETORAN_PROGRAM', '${pr.id}', '${k.id}', true)" class="px-1.5 py-0.2 rounded bg-emerald-600 text-white font-bold text-[9px]" title="Setujui Setoran">✓</button>
+                                                        <button type="button" onclick="window.verifikasiTransaksiArisanProgram('SETORAN_PROGRAM', '${pr.id}', '${k.id}', false)" class="px-1.5 py-0.2 rounded bg-rose-600 text-white font-bold text-[9px]" title="Tolak Setoran">✕</button>
+                                                    ` : ''}
                                                     ${isKeuangan ? `
                                                         <button onclick="window.editKontributorProgram('${pr.id}', '${k.id}')" class="text-emerald-600 hover:underline font-bold" title="Edit Setoran">✏️</button>
                                                     ` : ''}
@@ -6422,16 +6692,19 @@
                                                         <button onclick="window.hapusKontributorProgram('${pr.id}', '${k.id}')" class="text-rose-500 hover:text-rose-700 font-bold" title="Hapus Setoran (Khusus Super Admin)">🗑️</button>
                                                     ` : ''}
                                                 </div>
-                                            </div>
-                                        `).join('')}
+                                            </div>`;
+                                        }).join('')}
                                     </div>
                                 </div>
                             ` : ''}
                         </div>
 
-                        <div class="flex justify-between items-center pt-2 border-t border-slate-200/60 dark:border-slate-700">
-                            <span class="text-[10px] font-bold text-emerald-600">${persen}% Tercapai (Kurang ${window.formatRupiah(Math.max(0, pr.target - pr.terkumpul))})</span>
-                            ${tombolAksiBawah}
+                        <div class="flex flex-wrap justify-between items-center gap-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-700">
+                            <span class="text-[10px] font-bold text-emerald-600">Saldo: ${window.formatRupiah(pr.terkumpul)} (${persen}%)</span>
+                            <div class="flex items-center gap-1">
+                                ${isKeuangan && pr.terkumpul > 0 ? `<button type="button" onclick="window.bukaModalCairkanProgram('${pr.id}')" class="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px] shadow-xs cursor-pointer" title="Realisasi / Cairkan Dana Program">💸 Cairkan</button>` : ''}
+                                ${tombolAksiBawah}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -6477,8 +6750,14 @@
         };
 
         window.handleArisanMetodeChange = (sel) => {
+            const isPotong = sel && sel.value === 'POTONG_SUKARELA';
             const wrapBank = document.getElementById('wrapArisanBankTujuan');
-            if (wrapBank) wrapBank.style.display = (sel && sel.value === 'POTONG_SUKARELA') ? 'none' : 'block';
+            const infoAuto = document.getElementById('infoAutoDebetArisanModal');
+            if (wrapBank) wrapBank.style.display = isPotong ? 'none' : 'block';
+            if (infoAuto) {
+                if (isPotong) infoAuto.classList.remove('hidden');
+                else infoAuto.classList.add('hidden');
+            }
         };
 
         window.handlePilihProgramBayarArisanChange = (sel) => {
@@ -6536,7 +6815,7 @@
             document.getElementById('modalBayarArisan').classList.remove('hidden');
         };
 
-        window.simpanBayarIuranArisan = (e) => {
+        window.simpanBayarIuranArisan = async (e) => {
             if (e && e.preventDefault) e.preventDefault();
             const isKeuangan = window.isBendaharaOrSuper();
             const targetProgramId = document.getElementById('arisanTargetProgramSelect')?.value || 'ARISAN_UTAMA';
@@ -6547,49 +6826,20 @@
             const nominal = parseFloat(document.getElementById('arisanNominalInput').value) || 0;
             const metode = document.getElementById('arisanMetodeBayar').value;
             const bankTujuan = metode === 'TUNAI' ? (document.getElementById('arisanBankTujuan')?.value || '') : 'Potong Simpanan Sukarela';
+            const fileInput = document.getElementById('arisanBuktiFoto');
 
-            // Jika yang dipilih adalah salah satu Program Kolektif di Menu Arisan
-            if (targetProgramId !== 'ARISAN_UTAMA') {
-                const pr = (appState.programKeluarga || []).find(x => x.id === targetProgramId);
-                if (!pr) return false;
-                if (metode === 'POTONG_SUKARELA') {
-                    const r = window.hitungRincianSimpananAnggota(targetId);
-                    if (nominal > r.sukarela) {
-                        window.showToast(`Saldo Simpanan Sukarela ${targetObj.nama} tidak mencukupi (${window.formatRupiah(r.sukarela)})!`, 'error');
-                        return false;
-                    }
-                    appState.transaksi.push({
-                        id: 't_prog_' + Date.now(),
-                        waktu: window.getWaktuLokalSekarang(),
-                        anggotaId: targetObj.id,
-                        nama: targetObj.nama,
-                        tipe: 'Penarikan',
-                        kategori: 'Simpanan Sukarela',
-                        nominal,
-                        status: 'Disetujui',
-                        bukti: '',
-                        bankTujuan: 'Program Keluarga',
-                        keterangan: `Setoran Program: ${pr.nama}`
-                    });
-                }
-                pr.terkumpul = (Number(pr.terkumpul) || 0) + nominal;
-                if (!Array.isArray(pr.kontributor)) pr.kontributor = [];
-                pr.kontributor.push({
-                    id: 'kp_' + Date.now(),
-                    tanggal: window.getTanggalLokalHariIni(),
-                    anggotaId: targetObj.id,
-                    nama: targetObj.nama,
-                    nominal,
-                    sumberDana: metode,
-                    bankTujuan,
-                    catatan: 'Setoran via Menu Arisan'
+            let buktiUrl = '';
+            if (metode === 'TUNAI' && fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                buktiUrl = await new Promise((resolve) => {
+                    reader.onload = (ev) => resolve(ev.target.result);
+                    reader.readAsDataURL(fileInput.files[0]);
                 });
-                window.catatLogAuditSistem('TRANSAKSI', 'Setor Iuran Program Keluarga', `${pr.nama}: +${window.formatRupiah(nominal)} a.n ${targetObj.nama} via ${bankTujuan}`, 'Sukses');
-                saveStateToCloud();
-                document.getElementById('modalBayarArisan').classList.add('hidden');
-                window.renderApp();
-                window.showToast(`Setoran ${window.formatRupiah(nominal)} untuk ${pr.nama} berhasil dicatat!`);
-                return false;
+                const dupInfo = window.cekDuplikasiBuktiFoto(buktiUrl);
+                if (dupInfo) {
+                    window.showToast(`🚨 Bukti foto ditolak! Gambar ini sudah pernah dipakai pada ${dupInfo}.`, 'error');
+                    return false;
+                }
             }
 
             if (metode === 'POTONG_SUKARELA') {
@@ -6598,55 +6848,119 @@
                     window.showToast(`Saldo Simpanan Sukarela ${targetObj.nama} tidak mencukupi (${window.formatRupiah(r.sukarela)})!`, 'error');
                     return false;
                 }
-                appState.transaksi.push({
-                    id: 't_arisan_' + Date.now(),
-                    waktu: window.getWaktuLokalSekarang(),
+            }
+
+            // Status otomatis Disetujui jika Potong Simpanan Sukarela atau diinput oleh Bendahara/Super Admin; selain itu Menunggu konfirmasi
+            const statusTransaksi = (metode === 'POTONG_SUKARELA' || isKeuangan) ? 'Disetujui' : 'Menunggu';
+
+            const eksekusiSimpanArisan = () => {
+                if (targetProgramId !== 'ARISAN_UTAMA') {
+                    const pr = (appState.programKeluarga || []).find(x => x.id === targetProgramId);
+                    if (!pr) return;
+                    if (metode === 'POTONG_SUKARELA') {
+                        appState.transaksi.push({
+                            id: 't_prog_' + Date.now(),
+                            waktu: window.getWaktuLokalSekarang(),
+                            anggotaId: targetObj.id,
+                            nama: targetObj.nama,
+                            tipe: 'Penarikan',
+                            kategori: 'Simpanan Sukarela',
+                            nominal,
+                            status: 'Disetujui',
+                            bukti: '',
+                            bankTujuan: 'Program Keluarga',
+                            keterangan: `Auto-Debet Setoran Program: ${pr.nama}`
+                        });
+                    }
+                    if (!Array.isArray(pr.kontributor)) pr.kontributor = [];
+                    pr.kontributor.push({
+                        id: 'kp_' + Date.now(),
+                        tanggal: window.getTanggalLokalHariIni(),
+                        anggotaId: targetObj.id,
+                        nama: targetObj.nama,
+                        nominal,
+                        sumberDana: metode,
+                        bankTujuan,
+                        bukti: buktiUrl,
+                        status: statusTransaksi,
+                        catatan: metode === 'POTONG_SUKARELA' ? 'Auto-Debet Simpanan Sukarela' : 'Transfer via Menu Arisan'
+                    });
+                    window.recalcDanaProgram(pr);
+                    window.catatLogAuditSistem('TRANSAKSI', 'Setor Iuran Program Keluarga', `${pr.nama}: +${window.formatRupiah(nominal)} a.n ${targetObj.nama} (${statusTransaksi})`, statusTransaksi);
+                    saveStateToCloud();
+                    window.tutupModalDanReset('modalBayarArisan', 'formBayarArisan');
+                    window.renderApp();
+                    window.showToast(statusTransaksi === 'Disetujui' ? `✅ Setoran ${window.formatRupiah(nominal)} ke ${pr.nama} berhasil & langsung terverifikasi!` : `⏳ Setoran ${window.formatRupiah(nominal)} ke ${pr.nama} dikirim & menunggu konfirmasi Bendahara/Admin!`);
+                    return;
+                }
+
+                if (metode === 'POTONG_SUKARELA') {
+                    appState.transaksi.push({
+                        id: 't_arisan_' + Date.now(),
+                        waktu: window.getWaktuLokalSekarang(),
+                        anggotaId: targetObj.id,
+                        nama: targetObj.nama,
+                        tipe: 'Penarikan',
+                        kategori: 'Simpanan Sukarela',
+                        nominal,
+                        status: 'Disetujui',
+                        bukti: '',
+                        bankTujuan: 'Kas Arisan Keluarga',
+                        keterangan: `Auto-Debet Iuran Arisan Putaran Berjalan`
+                    });
+                }
+
+                if (!appState.arisan || !Array.isArray(appState.arisan.peserta)) {
+                    appState.arisan = { peserta: [], riwayatPemenang: [], riwayatIuran: [] };
+                }
+                if (!Array.isArray(appState.arisan.riwayatIuran)) appState.arisan.riwayatIuran = [];
+                appState.arisan.riwayatIuran.push({
+                    id: 'ari_' + Date.now(),
+                    tanggal: window.getTanggalLokalHariIni(),
                     anggotaId: targetObj.id,
                     nama: targetObj.nama,
-                    tipe: 'Penarikan',
-                    kategori: 'Simpanan Sukarela',
                     nominal,
-                    status: 'Disetujui',
-                    bukti: '',
-                    bankTujuan: 'Kas Arisan Keluarga',
-                    keterangan: `Setor Iuran Arisan Putaran Berjalan`
+                    metode,
+                    bankTujuan,
+                    bukti: buktiUrl,
+                    status: statusTransaksi
                 });
-            }
 
-            if (!appState.arisan || !Array.isArray(appState.arisan.peserta)) {
-                appState.arisan = { peserta: [], riwayatPemenang: [], riwayatIuran: [] };
-            }
-            if (!Array.isArray(appState.arisan.riwayatIuran)) appState.arisan.riwayatIuran = [];
-            appState.arisan.riwayatIuran.push({
-                id: 'ari_' + Date.now(),
-                tanggal: window.getTanggalLokalHariIni(),
-                anggotaId: targetObj.id,
-                nama: targetObj.nama,
-                nominal,
-                metode,
-                bankTujuan,
-                status: 'Disetujui'
-            });
-            const ps = appState.arisan.peserta.find(p => p.anggotaId === targetId);
-            if (ps) {
-                ps.lunasPutaranIni = true;
-                ps.bankTujuanTerakhir = bankTujuan;
-            } else {
-                appState.arisan.peserta.push({
-                    anggotaId: targetObj.id,
-                    nama: targetObj.nama,
-                    sudahMenang: false,
-                    tanggalMenang: '-',
-                    lunasPutaranIni: true,
-                    bankTujuanTerakhir: bankTujuan
-                });
-            }
+                const ps = appState.arisan.peserta.find(p => p.anggotaId === targetId);
+                if (statusTransaksi === 'Disetujui') {
+                    if (ps) {
+                        ps.lunasPutaranIni = true;
+                        ps.bankTujuanTerakhir = bankTujuan;
+                    } else {
+                        appState.arisan.peserta.push({
+                            anggotaId: targetObj.id,
+                            nama: targetObj.nama,
+                            statusKepesertaan: 'Disetujui',
+                            tglDaftar: window.getTanggalLokalHariIni(),
+                            sudahMenang: false,
+                            tanggalMenang: '-',
+                            lunasPutaranIni: true,
+                            bankTujuanTerakhir: bankTujuan
+                        });
+                    }
+                }
 
-            window.catatLogAuditSistem('TRANSAKSI', 'Setor Iuran Arisan Keluarga', `Peserta: ${targetObj.nama} (${window.formatRupiah(nominal)}) via ${bankTujuan}`, 'Sukses');
-            saveStateToCloud();
-            document.getElementById('modalBayarArisan').classList.add('hidden');
-            window.renderApp();
-            window.showToast(`Iuran arisan ${targetObj.nama} (${window.formatRupiah(nominal)}) berhasil dicatat Lunas!`);
+                window.catatLogAuditSistem('TRANSAKSI', 'Setor Iuran Arisan Keluarga', `Peserta: ${targetObj.nama} (${window.formatRupiah(nominal)}) via ${bankTujuan} [${statusTransaksi}]`, statusTransaksi);
+                saveStateToCloud();
+                window.tutupModalDanReset('modalBayarArisan', 'formBayarArisan');
+                window.renderApp();
+                window.showToast(statusTransaksi === 'Disetujui' ? `✅ Iuran arisan ${targetObj.nama} (${window.formatRupiah(nominal)}) otomatis tercatat Lunas!` : `⏳ Setoran iuran arisan dikirim & menunggu konfirmasi Bendahara/Admin!`);
+            };
+
+            const namaTargetLabel = targetProgramId === 'ARISAN_UTAMA'
+                ? (appState.arisan?.namaPeriode || 'Arisan Silaturahmi Bulanan')
+                : ((appState.programKeluarga || []).find(x => x.id === targetProgramId)?.nama || 'Program Keluarga');
+
+            window.showConfirmModal(
+                'Konfirmasi Transaksi Setoran Arisan / Program',
+                `Anda akan mencatat setoran sebesar ${window.formatRupiah(nominal)} untuk "${namaTargetLabel}" a.n ${targetObj.nama} melalui metode ${metode === 'POTONG_SUKARELA' ? 'Potong Otomatis Simpanan Sukarela (Langsung Lunas)' : 'Transfer Bank ' + bankTujuan + (statusTransaksi === 'Menunggu' ? ' (Menunggu Verifikasi Admin)' : ' (Langsung Disetujui)')}. Lanjutkan?`,
+                eksekusiSimpanArisan
+            );
             return false;
         };
 
@@ -6702,8 +7016,14 @@
         };
 
         window.handleProgramSumberChange = (sel) => {
+            const isPotong = sel && sel.value === 'POTONG_SUKARELA';
             const wrapBank = document.getElementById('wrapProgramBankTujuan');
-            if (wrapBank) wrapBank.style.display = (sel && sel.value === 'POTONG_SUKARELA') ? 'none' : 'block';
+            const infoAuto = document.getElementById('infoAutoDebetProgModal');
+            if (wrapBank) wrapBank.style.display = isPotong ? 'none' : 'block';
+            if (infoAuto) {
+                if (isPotong) infoAuto.classList.remove('hidden');
+                else infoAuto.classList.add('hidden');
+            }
         };
 
         window.setorKeProgramKeluarga = (progId) => {
@@ -6733,16 +7053,32 @@
             document.getElementById('modalSetorProgram').classList.remove('hidden');
         };
 
-        window.simpanSetorProgramKeluarga = (e) => {
+        window.simpanSetorProgramKeluarga = async (e) => {
             if (e && e.preventDefault) e.preventDefault();
+            const isKeuangan = window.isBendaharaOrSuper();
             const progId = document.getElementById('setorProgId').value;
             const nominal = parseFloat(document.getElementById('setorProgNominal').value) || 0;
             const sumberDana = document.getElementById('setorProgSumberDana')?.value || 'TUNAI';
             const bankTujuan = sumberDana === 'TUNAI' ? (document.getElementById('setorProgBankTujuan')?.value || '') : 'Potong Simpanan Sukarela';
             const catatan = document.getElementById('setorProgCatatan')?.value.trim() || '';
+            const fileInput = document.getElementById('setorProgBuktiFoto');
 
             const pr = (appState.programKeluarga || []).find(x => x.id === progId);
             if (!pr || nominal <= 0) return false;
+
+            let buktiUrl = '';
+            if (sumberDana === 'TUNAI' && fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                buktiUrl = await new Promise((resolve) => {
+                    reader.onload = (ev) => resolve(ev.target.result);
+                    reader.readAsDataURL(fileInput.files[0]);
+                });
+                const dupInfo = window.cekDuplikasiBuktiFoto(buktiUrl);
+                if (dupInfo) {
+                    window.showToast(`🚨 Bukti foto ditolak! Gambar ini sudah pernah dipakai pada ${dupInfo}.`, 'error');
+                    return false;
+                }
+            }
 
             if (sumberDana === 'POTONG_SUKARELA') {
                 const r = window.hitungRincianSimpananAnggota(currentUserSession.id);
@@ -6750,39 +7086,52 @@
                     window.showToast(`Saldo Simpanan Sukarela Anda tidak mencukupi (${window.formatRupiah(r.sukarela)})!`, 'error');
                     return false;
                 }
-                appState.transaksi.push({
-                    id: 't_prog_' + Date.now(),
-                    waktu: window.getWaktuLokalSekarang(),
-                    anggotaId: currentUserSession.id,
-                    nama: currentUserSession.nama,
-                    tipe: 'Penarikan',
-                    kategori: 'Simpanan Sukarela',
-                    nominal,
-                    status: 'Disetujui',
-                    bukti: '',
-                    bankTujuan: 'Program Keluarga',
-                    keterangan: `Tabungan Program: ${pr.nama} ${catatan ? '(' + catatan + ')' : ''}`
-                });
             }
 
-            pr.terkumpul = (Number(pr.terkumpul) || 0) + nominal;
-            if (!Array.isArray(pr.kontributor)) pr.kontributor = [];
-            pr.kontributor.push({
-                id: 'kp_' + Date.now(),
-                tanggal: window.getTanggalLokalHariIni(),
-                anggotaId: currentUserSession.id,
-                nama: currentUserSession.nama,
-                nominal,
-                sumberDana,
-                bankTujuan,
-                catatan
-            });
+            const statusSetoran = (sumberDana === 'POTONG_SUKARELA' || isKeuangan) ? 'Disetujui' : 'Menunggu';
 
-            window.catatLogAuditSistem('TRANSAKSI', 'Setor Tabungan Program Keluarga', `${pr.nama}: +${window.formatRupiah(nominal)} oleh ${currentUserSession.nama} via ${bankTujuan}`, 'Sukses');
-            saveStateToCloud();
-            document.getElementById('modalSetorProgram').classList.add('hidden');
-            window.renderApp();
-            window.showToast(`Setoran ${window.formatRupiah(nominal)} berhasil ditambahkan ke ${pr.nama}!`);
+            window.showConfirmModal(
+                'Konfirmasi Setoran Tabungan Program',
+                `Setor tabungan sebesar ${window.formatRupiah(nominal)} ke program "${pr.nama}" melalui ${sumberDana === 'POTONG_SUKARELA' ? 'Potong Otomatis Simpanan Sukarela (Langsung Disetujui)' : 'Transfer Bank ' + bankTujuan + (statusSetoran === 'Menunggu' ? ' (Menunggu Konfirmasi Bendahara/Admin)' : ' (Langsung Disetujui)')}?`,
+                () => {
+                    if (sumberDana === 'POTONG_SUKARELA') {
+                        appState.transaksi.push({
+                            id: 't_prog_' + Date.now(),
+                            waktu: window.getWaktuLokalSekarang(),
+                            anggotaId: currentUserSession.id,
+                            nama: currentUserSession.nama,
+                            tipe: 'Penarikan',
+                            kategori: 'Simpanan Sukarela',
+                            nominal,
+                            status: 'Disetujui',
+                            bukti: '',
+                            bankTujuan: 'Program Keluarga',
+                            keterangan: `Auto-Debet Tabungan Program: ${pr.nama} ${catatan ? '(' + catatan + ')' : ''}`
+                        });
+                    }
+
+                    if (!Array.isArray(pr.kontributor)) pr.kontributor = [];
+                    pr.kontributor.push({
+                        id: 'kp_' + Date.now(),
+                        tanggal: window.getTanggalLokalHariIni(),
+                        anggotaId: currentUserSession.id,
+                        nama: currentUserSession.nama,
+                        nominal,
+                        sumberDana,
+                        bankTujuan,
+                        bukti: buktiUrl,
+                        status: statusSetoran,
+                        catatan
+                    });
+                    window.recalcDanaProgram(pr);
+
+                    window.catatLogAuditSistem('TRANSAKSI', 'Setor Tabungan Program Keluarga', `${pr.nama}: +${window.formatRupiah(nominal)} oleh ${currentUserSession.nama} via ${bankTujuan} [${statusSetoran}]`, statusSetoran);
+                    saveStateToCloud();
+                    window.tutupModalDanReset('modalSetorProgram');
+                    window.renderApp();
+                    window.showToast(statusSetoran === 'Disetujui' ? `✅ Setoran ${window.formatRupiah(nominal)} berhasil masuk ke ${pr.nama}!` : `⏳ Setoran ${window.formatRupiah(nominal)} dikirim & menunggu konfirmasi Bendahara/Admin!`);
+                }
+            );
             return false;
         };
 
@@ -8552,6 +8901,280 @@
                     window.showToast(`Cicilan pinjaman ${statusBaru.toLowerCase()}!`);
                 }
             }
+        };
+
+        window.kirimPengingatWaArisan = (anggotaId) => {
+            const a = (appState.anggota || []).find(x => x.id === anggotaId);
+            if (!a) return;
+            let phone = String(a.kontak || '').replace(/[^0-9]/g, '');
+            if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+            const iuranNom = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+            const namaPeriode = appState.arisan?.namaPeriode || 'Arisan Silaturahmi Keluarga';
+            const pesan = `Assalamu'alaikum Wr. Wb. Bapak/Ibu *${a.nama}*,
+
+Mengingatkan dengan hormat untuk setoran iuran *${namaPeriode}* putaran berjalan sebesar *${window.formatRupiah(iuranNom)}*.
+Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong Otomatis Simpanan Sukarela* di aplikasi Koperasi Keluarga.
+
+Terima kasih atas kebersamaan dan keberkahan silaturahmi kita.`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(pesan)}`, '_blank', 'noopener,noreferrer');
+        };
+
+        window.bukaStrukArisanProgram = (tipe, progId, itemId) => {
+            let item = null;
+            let judulProgram = '';
+            if (tipe === 'ARISAN') {
+                item = ((appState.arisan && appState.arisan.riwayatIuran) || []).find(x => x.id === itemId);
+                judulProgram = appState.arisan?.namaPeriode || 'Arisan Silaturahmi Bulanan';
+            } else {
+                const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+                if (pr) {
+                    item = (pr.kontributor || []).find(x => x.id === itemId);
+                    judulProgram = pr.nama;
+                }
+            }
+            if (!item) return;
+            const st = item.status || 'Disetujui';
+            const metodeLabel = (item.metode || item.sumberDana) === 'POTONG_SUKARELA' ? 'Auto-Debet Simpanan Sukarela' : `Transfer Bank (${item.bankTujuan || '-'})`;
+            document.getElementById('kwitansiIdWaktu').textContent = `No. Ref: ${item.id.toUpperCase()} • ${item.tanggal}`;
+            document.getElementById('kwitansiBodyContent').innerHTML = `
+                <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+                    <span class="text-slate-400">Nama Peserta:</span>
+                    <strong class="text-slate-800 dark:text-white">${window.escapeHtml(item.nama)}</strong>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+                    <span class="text-slate-400">Program / Arisan:</span>
+                    <strong class="text-emerald-600 text-right">${window.escapeHtml(judulProgram)}</strong>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+                    <span class="text-slate-400">Metode Setoran:</span>
+                    <span class="font-semibold">${window.escapeHtml(metodeLabel)}</span>
+                </div>
+                <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800 text-sm">
+                    <span class="font-bold text-slate-600 dark:text-slate-300">Nominal Setoran:</span>
+                    <strong class="font-black text-emerald-600">+${window.formatRupiah(item.nominal)}</strong>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+                    <span class="text-slate-400">Status Konfirmasi:</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${st === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${st}</span>
+                </div>
+                <div class="mt-1.5 pt-1.5 border-t border-dashed border-slate-200 dark:border-slate-700 flex justify-between items-center text-[9px] font-mono text-slate-400">
+                    <span>🔒 ANTI-COPY RECEIPT</span>
+                    <span>${window.buatKodeHashBukti(item.id + '_' + item.tanggal + '_' + item.nominal)}</span>
+                </div>
+            `;
+            document.getElementById('modalKwitansiTransaksi').classList.remove('hidden');
+        };
+
+        window.autoDebetIuranArisanMassal = () => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang dapat menjalankan Auto-Debet Massal!', 'error');
+                return;
+            }
+            const pesertaAktif = (appState.arisan?.peserta || []).filter(p => (p.statusKepesertaan || 'Disetujui') === 'Disetujui' && !p.lunasPutaranIni);
+            if (pesertaAktif.length === 0) {
+                window.showToast('Seluruh peserta aktif Arisan sudah berstatus Lunas pada putaran ini!', 'info');
+                return;
+            }
+            const iuranNom = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+            const layakDebet = pesertaAktif.filter(p => window.hitungRincianSimpananAnggota(p.anggotaId).sukarela >= iuranNom);
+            if (layakDebet.length === 0) {
+                window.showToast(`Tidak ada peserta belum lunas yang memiliki Saldo Simpanan Sukarela >= ${window.formatRupiah(iuranNom)}.`, 'error');
+                return;
+            }
+            window.showConfirmModal(
+                '⚡ Konfirmasi Auto-Debet Massal Iuran Arisan',
+                `Ditemukan ${layakDebet.length} dari ${pesertaAktif.length} peserta belum lunas yang memiliki Saldo Simpanan Sukarela mencukupi (${window.formatRupiah(iuranNom)}/org). Potong otomatis Saldo Simpanan Sukarela mereka sekarang dan tandai Lunas?`,
+                () => {
+                    const tgl = window.getTanggalLokalHariIni();
+                    const waktu = window.getWaktuLokalSekarang();
+                    if (!Array.isArray(appState.arisan.riwayatIuran)) appState.arisan.riwayatIuran = [];
+                    layakDebet.forEach((ps, idx) => {
+                        appState.transaksi.push({
+                            id: 't_autodebet_ari_' + Date.now() + '_' + idx,
+                            waktu,
+                            anggotaId: ps.anggotaId,
+                            nama: ps.nama,
+                            tipe: 'Penarikan',
+                            kategori: 'Simpanan Sukarela',
+                            nominal: iuranNom,
+                            status: 'Disetujui',
+                            bukti: '',
+                            bankTujuan: 'Kas Arisan Keluarga',
+                            keterangan: 'Auto-Debet Massal Iuran Arisan Putaran Berjalan'
+                        });
+                        appState.arisan.riwayatIuran.push({
+                            id: 'ari_auto_' + Date.now() + '_' + idx,
+                            tanggal: tgl,
+                            anggotaId: ps.anggotaId,
+                            nama: ps.nama,
+                            nominal: iuranNom,
+                            metode: 'POTONG_SUKARELA',
+                            bankTujuan: 'Potong Simpanan Sukarela',
+                            status: 'Disetujui'
+                        });
+                        ps.lunasPutaranIni = true;
+                    });
+                    window.catatLogAuditSistem('TRANSAKSI', 'Auto-Debet Massal Iuran Arisan', `${layakDebet.length} peserta otomatis didebet @ ${window.formatRupiah(iuranNom)} dari Simpanan Sukarela`, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast(`⚡ Berhasil menjalankan Auto-Debet untuk ${layakDebet.length} peserta arisan!`);
+                }
+            );
+        };
+
+        window.handleMetodePencairanPotChange = (sel) => {
+            const wrapBank = document.getElementById('wrapBankPencairanPotArisan');
+            if (wrapBank) {
+                if (sel && sel.value === 'TRANSFER_BANK') wrapBank.classList.remove('hidden');
+                else wrapBank.classList.add('hidden');
+            }
+        };
+
+        window.bukaModalKocokArisanAuto = () => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang dapat mengocok undian arisan!', 'error');
+                return;
+            }
+            const pesertaAktif = (appState.arisan?.peserta || []).filter(p => (p.statusKepesertaan || 'Disetujui') === 'Disetujui');
+            const kandidat = pesertaAktif.filter(p => !p.sudahMenang);
+            if (kandidat.length === 0) {
+                window.kocokUndianArisan();
+                return;
+            }
+            const belumLunasCount = pesertaAktif.filter(p => !p.lunasPutaranIni).length;
+            const iuranPerOrang = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+            const nominalPot = pesertaAktif.length * iuranPerOrang;
+            const infoBox = document.getElementById('infoRingkasanKocokModal');
+            if (infoBox) {
+                infoBox.innerHTML = `
+                    <div class="flex justify-between"><span>Total Peserta Aktif:</span><strong>${pesertaAktif.length} Orang</strong></div>
+                    <div class="flex justify-between"><span>Kandidat Belum Menang:</span><strong>${kandidat.length} Orang</strong></div>
+                    <div class="flex justify-between"><span>Total Pot Undian Putaran Ini:</span><strong class="text-emerald-600 font-black">${window.formatRupiah(nominalPot)}</strong></div>
+                    ${belumLunasCount > 0 ? `<div class="pt-1 text-rose-600 font-bold">⚠️ Perhatian: Masih ada ${belumLunasCount} peserta aktif yang belum lunas iuran putaran ini.</div>` : `<div class="pt-1 text-emerald-600 font-bold">✓ Seluruh peserta aktif sudah lunas iuran putaran ini.</div>`}
+                `;
+            }
+            window.populateDropdownBankAktif('bankSumberPotArisan');
+            const metSel = document.getElementById('metodePencairanPotArisan');
+            if (metSel) {
+                metSel.value = 'MASUK_SUKARELA';
+                window.handleMetodePencairanPotChange(metSel);
+            }
+            document.getElementById('modalKocokArisanAuto').classList.remove('hidden');
+        };
+
+        window.prosesKocokUndianArisanOtomatis = (e) => {
+            if (e && e.preventDefault) e.preventDefault();
+            const hanyaLunas = Boolean(document.getElementById('chkHanyaPesertaLunasArisan')?.checked);
+            const metodeCair = document.getElementById('metodePencairanPotArisan')?.value || 'MASUK_SUKARELA';
+            const bankSumber = document.getElementById('bankSumberPotArisan')?.value || '';
+
+            const pesertaAktif = (appState.arisan?.peserta || []).filter(p => (p.statusKepesertaan || 'Disetujui') === 'Disetujui');
+            let kandidat = pesertaAktif.filter(p => !p.sudahMenang);
+            if (hanyaLunas) {
+                kandidat = kandidat.filter(p => p.lunasPutaranIni);
+            }
+            if (kandidat.length === 0) {
+                window.showToast('Tidak ada kandidat yang memenuhi syarat undian (pastikan peserta sudah lunas)!', 'error');
+                return false;
+            }
+            const pemenang = kandidat[Math.floor(Math.random() * kandidat.length)];
+            const tglMenang = window.getTanggalLokalHariIni();
+            pemenang.sudahMenang = true;
+            pemenang.tanggalMenang = tglMenang;
+
+            const iuranPerOrang = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+            const nominalPot = pesertaAktif.length * iuranPerOrang;
+            if (!Array.isArray(appState.arisan.riwayatPemenang)) appState.arisan.riwayatPemenang = [];
+            const putaranKe = appState.arisan.riwayatPemenang.length + 1;
+            appState.arisan.riwayatPemenang.unshift({
+                id: 'win_' + Date.now(),
+                putaranKe,
+                tanggal: tglMenang,
+                anggotaId: pemenang.anggotaId,
+                nama: pemenang.nama,
+                nominalPot,
+                metodeCair,
+                bankSumber: metodeCair === 'TRANSFER_BANK' ? bankSumber : 'Simpanan Sukarela'
+            });
+
+            if (metodeCair === 'MASUK_SUKARELA' && nominalPot > 0) {
+                appState.transaksi.push({
+                    id: 't_win_arisan_' + Date.now(),
+                    waktu: window.getWaktuLokalSekarang(),
+                    anggotaId: pemenang.anggotaId,
+                    nama: pemenang.nama,
+                    tipe: 'Setoran',
+                    kategori: 'Simpanan Sukarela',
+                    nominal: nominalPot,
+                    status: 'Disetujui',
+                    bukti: '',
+                    bankTujuan: 'Pencairan Pot Arisan',
+                    keterangan: `Pencairan Otomatis Pemenang Arisan Putaran #${putaranKe}`
+                });
+            }
+
+            // Reset status lunas iuran untuk putaran bulan berikutnya
+            pesertaAktif.forEach(p => { p.lunasPutaranIni = false; });
+            window.catatLogAuditSistem('TRANSAKSI', 'Kocok & Cairkan Pot Arisan Otomatis', `Pemenang #${putaranKe}: ${pemenang.nama} (${window.formatRupiah(nominalPot)}) via ${metodeCair === 'MASUK_SUKARELA' ? 'Saldo Simpanan Sukarela' : 'Bank ' + bankSumber}`, 'Sukses');
+            saveStateToCloud();
+            document.getElementById('modalKocokArisanAuto').classList.add('hidden');
+            window.renderApp();
+            window.showToast(`🎉 Selamat! Pemenang undian adalah ${pemenang.nama} dan Pot ${window.formatRupiah(nominalPot)} telah dicairkan otomatis!`);
+            return false;
+        };
+
+        window.bukaModalCairkanProgram = (progId) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Bendahara atau Super Admin yang dapat mencairkan dana program!', 'error');
+                return;
+            }
+            const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+            if (!pr) return;
+            window.recalcDanaProgram(pr);
+            document.getElementById('cairkanProgId').value = pr.id;
+            document.getElementById('judulModalCairkanProgram').textContent = `💸 Cairkan Dana: ${pr.nama}`;
+            document.getElementById('infoSaldoCairkanProgram').innerHTML = `<span>Saldo Tersedia Saat Ini:</span><strong class="text-emerald-600 font-black">${window.formatRupiah(pr.terkumpul)}</strong>`;
+            document.getElementById('cairkanProgNominal').value = pr.terkumpul;
+            document.getElementById('cairkanProgKeterangan').value = '';
+            window.populateDropdownBankAktif('cairkanProgBankSumber');
+            document.getElementById('modalCairkanProgram').classList.remove('hidden');
+        };
+
+        window.simpanPencairanProgramKeluarga = (e) => {
+            if (e && e.preventDefault) e.preventDefault();
+            const progId = document.getElementById('cairkanProgId').value;
+            const nominal = parseFloat(document.getElementById('cairkanProgNominal').value) || 0;
+            const bankSumber = document.getElementById('cairkanProgBankSumber')?.value || '';
+            const keterangan = document.getElementById('cairkanProgKeterangan').value.trim();
+            const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+            if (!pr || nominal <= 0) return false;
+            window.recalcDanaProgram(pr);
+            if (nominal > pr.terkumpul) {
+                window.showToast(`Nominal pencairan melebihi saldo tersedia program (${window.formatRupiah(pr.terkumpul)})!`, 'error');
+                return false;
+            }
+            window.showConfirmModal(
+                'Konfirmasi Pencairan Dana Program',
+                `Cairkan dana program "${pr.nama}" sebesar ${window.formatRupiah(nominal)} dari Rekening ${bankSumber || 'Kas'} untuk keperluan "${keterangan}"? Saldo program dan saldo rekening bank akan otomatis dikurangi.`,
+                () => {
+                    if (!Array.isArray(pr.riwayatPencairan)) pr.riwayatPencairan = [];
+                    pr.riwayatPencairan.push({
+                        id: 'cair_prog_' + Date.now(),
+                        tanggal: window.getTanggalLokalHariIni(),
+                        nominal,
+                        bankSumber,
+                        keterangan,
+                        oleh: currentUserSession.nama
+                    });
+                    window.recalcDanaProgram(pr);
+                    window.catatLogAuditSistem('TRANSAKSI', 'Pencairan / Realisasi Dana Program', `${pr.nama}: -${window.formatRupiah(nominal)} dari ${bankSumber} (${keterangan})`, 'Sukses');
+                    saveStateToCloud();
+                    window.tutupModalDanReset('modalCairkanProgram', 'formCairkanProgram');
+                    window.renderApp();
+                    window.showToast(`💸 Dana program ${pr.nama} sebesar ${window.formatRupiah(nominal)} berhasil dicairkan!`);
+                }
+            );
+            return false;
         };
 
         window.kocokUndianArisan = () => {
@@ -10375,14 +10998,28 @@
                 }
             });
 
-            // 4. Mutasi Tabungan Program Keluarga (Qurban / Wisata via Transfer)
+            // 4. Mutasi Tabungan Program Keluarga (Qurban / Wisata via Transfer yang Sudah Disetujui) & Pencairan Arisan/Program
             var masukProgram = 0;
             var countProgram = 0;
+            var keluarArisanProgram = 0;
+            var countKeluarArisanProgram = 0;
+            ((appState.arisan && appState.arisan.riwayatPemenang) || []).forEach(function(w) {
+                if (w.metodeCair === 'TRANSFER_BANK' && w.bankSumber === namaBank) {
+                    keluarArisanProgram += (Number(w.nominalPot) || 0);
+                    countKeluarArisanProgram++;
+                }
+            });
             (appState.programKeluarga || []).forEach(function(pr) {
                 (pr.kontributor || []).forEach(function(k) {
-                    if ((k.sumberDana || 'TUNAI') === 'TUNAI' && k.bankTujuan === namaBank) {
+                    if ((k.status || 'Disetujui') === 'Disetujui' && (k.sumberDana || 'TUNAI') === 'TUNAI' && k.bankTujuan === namaBank) {
                         masukProgram += (Number(k.nominal) || 0);
                         countProgram++;
+                    }
+                });
+                (pr.riwayatPencairan || []).forEach(function(c) {
+                    if (c.bankSumber === namaBank) {
+                        keluarArisanProgram += (Number(c.nominal) || 0);
+                        countKeluarArisanProgram++;
                     }
                 });
             });
@@ -10433,10 +11070,10 @@
             });
 
             var totalMasuk = masukSimpanan + masukCicilan + masukArisan + masukProgram + masukZis + masukPendapatanShu;
-            var totalKeluar = keluarSimpanan + keluarPinjaman + keluarZis + keluarBeban;
+            var totalKeluar = keluarSimpanan + keluarPinjaman + keluarZis + keluarBeban + keluarArisanProgram;
             var saldoAkhir = saldoAwal + totalMasuk - totalKeluar;
             var totalCountMasuk = setoranList.length + countCicilan + countArisan + countProgram + countZisMasuk + countPendapatanShu;
-            var totalCountKeluar = penarikanList.length + countPinjamanKeluar + countZisKeluar + countBebanKeluar;
+            var totalCountKeluar = penarikanList.length + countPinjamanKeluar + countZisKeluar + countBebanKeluar + countKeluarArisanProgram;
 
             return {
                 countMasuk: totalCountMasuk,
@@ -10537,16 +11174,40 @@
                     });
                 }
             });
+            ((appState.arisan && appState.arisan.riwayatPemenang) || []).forEach(function(w) {
+                if (w.metodeCair === 'TRANSFER_BANK' && w.bankSumber === namaBank) {
+                    items.push({
+                        waktu: w.tanggal || '-',
+                        modul: 'ARISAN_PROGRAM',
+                        labelModul: '🏆 Pencairan Pot Arisan #' + (w.putaranKe || 1),
+                        keterangan: 'Pemenang: ' + w.nama,
+                        masuk: 0,
+                        keluar: Number(w.nominalPot) || 0
+                    });
+                }
+            });
             (appState.programKeluarga || []).forEach(function(pr) {
                 (pr.kontributor || []).forEach(function(k) {
-                    if ((k.sumberDana || 'TUNAI') === 'TUNAI' && k.bankTujuan === namaBank) {
+                    if ((k.status || 'Disetujui') === 'Disetujui' && (k.sumberDana || 'TUNAI') === 'TUNAI' && k.bankTujuan === namaBank) {
                         items.push({
                             waktu: k.tanggal || '-',
                             modul: 'ARISAN_PROGRAM',
-                            labelModul: '🐑 Program: ' + pr.nama,
+                            labelModul: '🐑 Setoran Program: ' + pr.nama,
                             keterangan: k.nama + (k.catatan ? ' — ' + k.catatan : ''),
                             masuk: Number(k.nominal) || 0,
                             keluar: 0
+                        });
+                    }
+                });
+                (pr.riwayatPencairan || []).forEach(function(c) {
+                    if (c.bankSumber === namaBank) {
+                        items.push({
+                            waktu: c.tanggal || '-',
+                            modul: 'ARISAN_PROGRAM',
+                            labelModul: '💸 Realisasi Program: ' + pr.nama,
+                            keterangan: c.keterangan || '-',
+                            masuk: 0,
+                            keluar: Number(c.nominal) || 0
                         });
                     }
                 });
