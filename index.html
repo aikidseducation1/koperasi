@@ -565,6 +565,7 @@
                                 <tbody id="tabelTransaksiBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs"></tbody>
                             </table>
                         </div>
+                        <div id="simpananPaginationBar" class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs no-print"></div>
                     </div>
 
                     <!-- Buku Besar Ringkasan Saldo Simpanan per Anggota -->
@@ -726,11 +727,25 @@
                             <p class="text-[11px] text-slate-500 dark:text-slate-400">Kelola iuran & undian arisan bulanan, tabungan Qurban keluarga, serta dana rekreasi bersama.</p>
                         </div>
                         <div class="flex flex-wrap gap-1.5">
-                            <button onclick="window.bukaModalBayarArisan()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">💰 Setor Iuran Arisan</button>
-                            <button id="btnKocokArisan" onclick="window.kocokUndianArisan()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">🎲 Kocok Undian</button>
-                            <button id="btnResetPutaranArisan" onclick="window.resetPutaranArisanManual()" class="hidden bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-lg text-xs transition shrink-0">🔄 Reset Putaran</button>
-                            <button id="btnTambahProgram" onclick="window.bukaModalProgramKeluarga()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">+ Buat Program</button>
+                            <button type="button" onclick="window.bukaModalDaftarProgramArisan()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">✋ Pilih &amp; Daftar Program</button>
+                            <button type="button" onclick="window.bukaModalBayarArisan()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">💰 Setor Iuran Arisan</button>
+                            <button type="button" id="btnAturPeriodeArisan" onclick="window.bukaModalAturPeriodeArisan()" class="hidden bg-teal-600 hover:bg-teal-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">📅 Periode Arisan</button>
+                            <button type="button" id="btnKocokArisan" onclick="window.kocokUndianArisan()" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-xs transition shrink-0">🎲 Kocok Undian</button>
+                            <button type="button" id="btnResetPutaranArisan" onclick="window.resetPutaranArisanManual()" class="hidden bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-lg text-xs transition shrink-0">🔄 Reset Putaran</button>
+                            <button type="button" id="btnTambahProgram" onclick="window.bukaModalProgramKeluarga()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow-xs transition shrink-0">+ Buat Program</button>
                         </div>
+                    </div>
+
+                    <!-- Panel Antrean Persetujuan Pendaftaran Program & Arisan (Khusus Pengurus/Admin) -->
+                    <div id="boxAntreanPesertaProgramArisan" class="hidden bg-amber-50/90 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800 rounded-xl p-3.5 space-y-2.5 shadow-xs">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">🔔 Pengajuan Anggota Ingin Mengikuti Program / Arisan (Menunggu Persetujuan Admin)</h3>
+                                <p class="text-[10px] text-amber-700 dark:text-amber-300">Setujui pendaftaran di bawah ini agar anggota resmi terdaftar di program yang dipilih dan dapat mulai menyetor iuran.</p>
+                            </div>
+                            <span id="badgeCountPendingProgramArisan" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-200 text-amber-900">0 Menunggu</span>
+                        </div>
+                        <div id="listAntreanPesertaProgramArisan" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs"></div>
                     </div>
 
                     <!-- 4 Kartu Ringkasan Eksekutif Arisan & Program -->
@@ -762,11 +777,13 @@
                             <div class="space-y-2.5">
                                 <div class="flex justify-between items-center">
                                     <div>
-                                        <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">🎯 Daftar Peserta & Iuran Arisan</h3>
-                                        <p class="text-[10px] text-slate-500">Status giliran menang & kelunasan putaran berjalan.</p>
+                                        <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">🎯 Daftar Peserta &amp; Iuran Arisan</h3>
+                                        <p class="text-[10px] text-slate-500">Hanya anggota yang mendaftar &amp; disetujui Admin.</p>
                                     </div>
                                     <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" id="badgePutaranArisan">Aktif</span>
                                 </div>
+                                <div id="infoPeriodeArisanBox" class="p-2.5 rounded-xl bg-blue-50/70 dark:bg-slate-800/90 border border-blue-200/80 dark:border-slate-700 text-[10px] space-y-1"></div>
+                                <div id="boxActionDaftarArisanUtama" class="pt-0.5"></div>
                                 <div id="listPesertaArisan" class="space-y-1.5 text-xs max-h-80 overflow-y-auto pr-1"></div>
                             </div>
 
@@ -1143,6 +1160,7 @@
                     </div>
 
                     <div id="gridAnggota" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+                    <div id="anggotaPaginationBar" class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs no-print"></div>
                 </div>
 
                 <!-- TAB: REKENING BANK (UPGRADED v34.3 PRO) -->
@@ -1318,6 +1336,29 @@
                                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">Simpan Kebijakan Keamanan</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+
+                    <!-- Panel Optimasi Kuota Cloud & Pembersih Foto Bukti Lama (Skala Member Banyak) -->
+                    <div class="bg-gradient-to-r from-purple-50/80 via-white to-emerald-50/80 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/80 rounded-2xl shadow-sm border border-purple-200 dark:border-slate-800 p-4 sm:p-5 space-y-3 no-print">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">🧹 Optimasi Skala Member Banyak &amp; Pembersih Foto Bukti Lama (Anti-Limit 1 MB Cloud)</h3>
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">⚡ Hemat Memori Cloud</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Arsipkan &amp; hapus gambar Base64 pada transaksi yang sudah <strong>Disetujui</strong> agar ukuran database Cloud Firestore tetap ringan untuk ratusan anggota (data nominal &amp; kode hash struk tetap tersimpan permanen).</p>
+                                <p id="infoStatistikBuktiFoto" class="text-[11px] font-bold text-purple-700 dark:text-purple-300 mt-1">Menghitung kapasitas foto bukti...</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">
+                                <select id="opsiHariBersihkanBukti" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold outline-none">
+                                    <option value="30">Transaksi Disetujui &gt; 30 Hari Lalu</option>
+                                    <option value="90">Transaksi Disetujui &gt; 90 Hari Lalu</option>
+                                    <option value="0">Semua Transaksi yang Sudah Disetujui</option>
+                                </select>
+                                <button type="button" onclick="window.bersihkanBuktiFotoLama()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer">🧹 Bersihkan Foto Bukti</button>
+                                <button type="button" onclick="window.resetTransaksiDemoKeNol()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer" title="Hapus transaksi contoh bawaan agar buku kas mulai dari Rp 0">🔄 Reset Data Transaksi Demo</button>
+                            </div>
                         </div>
                     </div>
 
@@ -1668,7 +1709,8 @@
             <p class="text-[11px] text-slate-500">Kirim saldo tabungan sukarela Anda secara instan ke anggota keluarga lain tanpa biaya admin.</p>
             <form id="formTransferP2P" class="space-y-3" onsubmit="return window.prosesTransferP2P(event)">
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Penerima Keluarga</label>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Penerima Keluarga (Dikelompokkan per KK)</label>
+                    <input type="text" id="searchSelectP2pPenerima" oninput="window.filterDropdownAnggotaModal('p2pPenerimaId', this.value, true)" placeholder="🔍 Ketik cari nama / KK / WA penerima..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none mb-1.5">
                     <select id="p2pPenerimaId" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
@@ -1680,7 +1722,7 @@
                     <input type="text" id="p2pCatatan" required placeholder="Contoh: Patungan acara keluarga" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalTransferP2P').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalTransferP2P', 'formTransferP2P')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs">Kirim Saldo Sekarang</button>
                 </div>
             </form>
@@ -1717,7 +1759,7 @@
                     <input type="text" id="cicilanKeteranganInput" placeholder="Contoh: Angsuran bulan berjalan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalBayarCicilan').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalBayarCicilan', 'formBayarCicilan')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs">Simpan Angsuran</button>
                 </div>
             </form>
@@ -1739,23 +1781,102 @@
         </div>
     </div>
 
-    <!-- Modal Tambah / Edit Program Keluarga (Qurban/Wisata) -->
+    <!-- Modal Tambah / Edit Program Keluarga (Arisan / Qurban / Wisata dengan Tanggal Mulai s/d Selesai) -->
     <div id="modalProgramKeluarga" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3">
-            <h3 id="modalProgramKeluargaTitle" class="font-bold text-base text-slate-800 dark:text-white">Buat Program Kolektif Keluarga</h3>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3 max-h-[92vh] overflow-y-auto">
+            <h3 id="modalProgramKeluargaTitle" class="font-bold text-base text-slate-800 dark:text-white">Buat Program Arisan / Kolektif Keluarga</h3>
             <form id="formProgramKeluarga" class="space-y-3" onsubmit="return window.simpanProgramKeluarga(event)">
                 <input type="hidden" id="editProgId">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Program</label>
-                    <input type="text" id="progNama" required placeholder="Contoh: Tabungan Qurban Sapi Keluarga 2026" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div class="sm:col-span-2">
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Program</label>
+                        <input type="text" id="progNama" required placeholder="Contoh: Arisan Lebaran / Tabungan Qurban 2026" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Kategori</label>
+                        <select id="progKategori" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-semibold">
+                            <option value="Arisan Keluarga">🎲 Arisan Keluarga</option>
+                            <option value="Tabungan Qurban">🐑 Tabungan Qurban</option>
+                            <option value="Wisata & Silaturahmi">🚌 Wisata &amp; Rekreasi</option>
+                            <option value="Program Khusus">🌟 Program Khusus</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Target Dana Terkumpul (Rp)</label>
-                    <input type="number" id="progTarget" required placeholder="21000000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-emerald-600 mb-1">📅 Tanggal Mulai Program</label>
+                        <input type="date" id="progTglMulai" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-rose-600 mb-1">🏁 Tanggal Selesai Program</label>
+                        <input type="date" id="progTglSelesai" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Target Total Dana (Rp)</label>
+                        <input type="number" id="progTarget" required min="50000" placeholder="21000000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Iuran Standar / Peserta (Rp)</label>
+                        <input type="number" id="progIuranStandar" value="250000" min="10000" step="10000" placeholder="250000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
+                    </div>
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalProgramKeluarga').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalProgramKeluarga', 'formProgramKeluarga')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan Program</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Pilih & Daftar Program / Arisan (Dengan Persetujuan Admin) -->
+    <div id="modalDaftarProgramArisan" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3">
+            <h3 class="font-bold text-base text-slate-800 dark:text-white">✋ Pilih Program / Arisan yang Ingin Diikuti</h3>
+            <p class="text-[11px] text-slate-500">Pilih program arisan atau tabungan kolektif keluarga. Pendaftaran anggota akan diverifikasi terlebih dahulu oleh Pengurus / Admin.</p>
+            <form id="formDaftarProgramArisan" onsubmit="return window.simpanPengajuanIkutProgram(event)" class="space-y-3">
+                <div id="wrapDaftarProgPilihAnggota" class="hidden">
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Anggota Pendaftar (Mode Pengurus)</label>
+                    <input type="text" id="searchSelectDaftarProgAnggota" oninput="window.filterDropdownAnggotaModal('daftarProgAnggotaId', this.value, false, 'updatePreviewProgramDaftarModal')" placeholder="🔍 Ketik cari nama / KK anggota..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none mb-1.5">
+                    <select id="daftarProgAnggotaId" onchange="window.updatePreviewProgramDaftarModal()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Program di Menu Arisan</label>
+                    <select id="pilihProgramDaftarSelect" onchange="window.updatePreviewProgramDaftarModal()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none"></select>
+                </div>
+                <div id="infoDetailProgramDipilih" class="p-3 rounded-xl bg-emerald-50/70 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-xs space-y-1"></div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="window.tutupModalDanReset('modalDaftarProgramArisan', 'formDaftarProgramArisan')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-sm">✋ Ajukan Ikut Program</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Atur Periode Mulai s/d Selesai Putaran Arisan -->
+    <div id="modalAturPeriodeArisan" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-sm p-5 space-y-3">
+            <h3 class="font-bold text-base text-slate-800 dark:text-white">📅 Atur Periode Putaran Arisan</h3>
+            <p class="text-[11px] text-slate-500">Tentukan nama gelombang/putaran arisan beserta tanggal mulai sampai dengan tanggal selesainya.</p>
+            <form id="formAturPeriodeArisan" onsubmit="return window.simpanPeriodeArisan(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Periode / Gelombang Arisan</label>
+                    <input type="text" id="arisanNamaPeriodeInput" required placeholder="Contoh: Putaran Silaturahmi 2026" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-emerald-600 mb-1">📅 Tanggal Mulai</label>
+                        <input type="date" id="arisanTglMulaiInput" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-rose-600 mb-1">🏁 Tanggal Selesai</label>
+                        <input type="date" id="arisanTglSelesaiInput" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="window.tutupModalDanReset('modalAturPeriodeArisan', 'formAturPeriodeArisan')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs">Simpan Periode</button>
                 </div>
             </form>
         </div>
@@ -1766,8 +1887,13 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-sm p-5 space-y-3">
             <h3 class="font-bold text-base text-slate-800 dark:text-white">💰 Setor Iuran Arisan Keluarga</h3>
             <form id="formBayarArisan" onsubmit="return window.simpanBayarIuranArisan(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-600 mb-1">Pilih Program Arisan / Kolektif yang Diikuti</label>
+                    <select id="arisanTargetProgramSelect" onchange="window.handlePilihProgramBayarArisanChange(this)" class="w-full bg-emerald-50/60 dark:bg-slate-800 border border-emerald-300 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold outline-none"></select>
+                </div>
                 <div id="wrapArisanPilihAnggota" class="hidden">
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Peserta Arisan (Mode Admin)</label>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Peserta Arisan (Mode Pengurus)</label>
+                    <input type="text" id="searchSelectArisanPeserta" oninput="window.filterDropdownAnggotaModal('arisanPesertaSelect', this.value, false)" placeholder="🔍 Ketik cari nama / KK peserta..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none mb-1.5">
                     <select id="arisanPesertaSelect" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
@@ -1786,7 +1912,7 @@
                     <select id="arisanBankTujuan" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalBayarArisan').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalBayarArisan', 'formBayarArisan')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs">Simpan Iuran</button>
                 </div>
             </form>
@@ -1980,7 +2106,8 @@
             <form id="formPinjaman" class="space-y-3" onsubmit="return window.simpanPinjamanBaru(event)">
                 <input type="hidden" id="editPinjamanId">
                 <div id="wrapperPilihAnggotaPinjaman" class="hidden">
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pemohon Pembiayaan (Mode Admin)</label>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pemohon Pembiayaan (Mode Pengurus)</label>
+                    <input type="text" id="searchSelectPinjamanAnggota" oninput="window.filterDropdownAnggotaModal('pinjamanAnggotaId', this.value, false, 'updatePlafonPemohonModal')" placeholder="🔍 Ketik cari nama / KK pemohon..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none mb-1.5">
                     <select id="pinjamanAnggotaId" onchange="window.updatePlafonPemohonModal()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div class="p-2.5 rounded-xl bg-blue-50 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-[11px] flex justify-between items-center">
@@ -2028,7 +2155,7 @@
                     <input type="text" id="pinjamanKeperluan" required placeholder="Contoh: Biaya rumah sakit / Pembelian laptop kerja / Modal warung" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalPinjaman').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalPinjaman', 'formPinjaman')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Ajukan Akad</button>
                 </div>
             </form>
@@ -2075,7 +2202,8 @@
             <form id="formTransaksi" class="space-y-3" onsubmit="return window.simpanTransaksiBaru(event)">
                 <input type="hidden" id="editTransaksiId">
                 <div id="wrapperPilihAnggota">
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Anggota</label>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Anggota (Dikelompokkan per KK)</label>
+                    <input type="text" id="searchSelectTransaksiAnggota" oninput="window.filterDropdownAnggotaModal('transaksiAnggotaId', this.value, false, 'updateInfoSaldoModalTransaksi')" placeholder="🔍 Ketik cari nama / KK / WA anggota..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none mb-1.5">
                     <select id="transaksiAnggotaId" onchange="window.updateInfoSaldoModalTransaksi()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div class="p-2.5 rounded-xl bg-emerald-50 dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-[11px] flex justify-between items-center">
@@ -2102,9 +2230,15 @@
                     <select id="transaksiBankTujuan" onchange="window.updateHelperBankTujuanTrx()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                     <div id="helperCopyBankTrx" class="mt-1.5 p-2 rounded-xl bg-blue-50/80 dark:bg-slate-800/90 border border-blue-200 dark:border-slate-700 flex items-center justify-between gap-2 text-[11px]"></div>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal (Rp)</label>
-                    <input type="number" id="transaksiNominal" required placeholder="100000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal (Rp)</label>
+                        <input type="number" id="transaksiNominal" required min="1000" placeholder="100000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-emerald-600 mb-1">📅 Tanggal &amp; Jam Transaksi</label>
+                        <input type="text" id="transaksiWaktuInput" required placeholder="YYYY-MM-DD HH:mm" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono font-bold outline-none">
+                    </div>
                 </div>
                 <div id="groupBuktiTransfer">
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Upload Bukti Foto Transfer</label>
@@ -2115,7 +2249,7 @@
                     <input type="text" id="transaksiKeterangan" placeholder="Iuran bulan ini..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalTransaksi').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalTransaksi', 'formTransaksi')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan</button>
                 </div>
             </form>
@@ -2195,7 +2329,7 @@
                     <input type="text" id="zisKeterangan" placeholder="Semoga berkah untuk keluarga besar..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalZis').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
+                    <button type="button" onclick="window.tutupModalDanReset('modalZis', 'formZis')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Simpan</button>
                 </div>
             </form>
@@ -2278,7 +2412,7 @@
                     <span class="text-[9px] font-extrabold uppercase text-emerald-700 dark:text-emerald-400 block">⚡ Otomatisasi Pendaftaran Anggota Baru:</span>
                     <div class="flex items-center justify-between gap-2">
                         <label class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 cursor-pointer">
-                            <input type="checkbox" id="chkSetorPokokAwal" checked class="accent-emerald-600 w-3.5 h-3.5">
+                            <input type="checkbox" id="chkSetorPokokAwal" class="accent-emerald-600 w-3.5 h-3.5">
                             <span>Catat Setoran Simpanan Pokok (Rp)</span>
                         </label>
                         <input type="number" id="inputNominalPokokAwal" value="500000" min="0" step="50000" class="w-28 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 outline-none">
@@ -2583,6 +2717,7 @@
             <form onsubmit="return window.simpanPoinBonusAnggota(event)" class="space-y-3">
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Anggota</label>
+                    <input type="text" id="searchSelectBonusAnggota" oninput="window.filterDropdownAnggotaModal('bonusAnggotaId', this.value, false, 'loadCurrentBonusAnggota')" placeholder="🔍 Ketik cari nama / KK anggota..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none mb-1.5">
                     <select id="bonusAnggotaId" onchange="window.loadCurrentBonusAnggota()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
                 <div>
@@ -2710,6 +2845,28 @@
         const SESSION_STORAGE_KEY = 'KOPERASI_ACTIVE_SESSION_V34_4';
         const CUSTOM_FIREBASE_KEY = 'KOPERASI_CUSTOM_FIREBASE_CONFIG';
 
+                window.getTanggalLokalHariIni = (dateObj = null) => {
+            const d = dateObj instanceof Date ? dateObj : new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        };
+
+        window.getWaktuLokalSekarang = (dateObj = null) => {
+            const d = dateObj instanceof Date ? dateObj : new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        };
+
+        window.tutupModalDanReset = (modalId, formId = '') => {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+            if (formId) {
+                const form = document.getElementById(formId);
+                if (form) form.reset();
+            }
+            window._explicitSubmitAllowed = false;
+        };
+
         window.escapeHtml = function(str) {
             if (str === null || str === undefined) return '';
             return String(str)
@@ -2782,42 +2939,117 @@
         let lastSyncTimestamp = null;
         let cloudSyncState = 'Memeriksa...';
 
+        const DEMO_BLACKLIST_IDS = {
+            'a2': true, 't1': true, 't1b': true, 't2': true,
+            'pend1': true, 'beb1': true, 'v1': true, 'not1': true,
+            'prog1': true, 'prog2': true, 'b1': true, 'b2': true,
+            'kp1': true, 'kp2': true, 'kp3': true, 'kp4': true,
+            'log_init_1': true
+        };
+
+        window.purifikasiDataDemoProduksi = function(st) {
+            if (!st || typeof st !== 'object') return false;
+            let changed = false;
+
+            if (Array.isArray(st.anggota)) {
+                const beforeLen = st.anggota.length;
+                st.anggota = st.anggota.filter(a => a && a.id !== 'a2' && a.kontak !== '081234567890');
+                if (st.anggota.length !== beforeLen) changed = true;
+                st.anggota.forEach(a => {
+                    if (a.id === 'a1' && (a.simpananPokok === 500000 || a.simpananWajib === 1000000)) {
+                        a.simpananPokok = 0;
+                        a.simpananWajib = 0;
+                        a.simpananSukarela = 0;
+                        a.saldo = 0;
+                        changed = true;
+                    }
+                });
+            }
+
+            if (Array.isArray(st.transaksi)) {
+                const beforeLen = st.transaksi.length;
+                st.transaksi = st.transaksi.filter(t => t && !DEMO_BLACKLIST_IDS[t.id] && t.anggotaId !== 'a2');
+                if (st.transaksi.length !== beforeLen) changed = true;
+            }
+
+            if (Array.isArray(st.rekeningBank)) {
+                const beforeLen = st.rekeningBank.length;
+                st.rekeningBank = st.rekeningBank.filter(b => b && !(DEMO_BLACKLIST_IDS[b.id] && (b.nomor === '1234567890' || b.nomor === '0987654321')));
+                if (st.rekeningBank.length !== beforeLen) changed = true;
+            }
+
+            if (Array.isArray(st.pendapatanShuList)) {
+                const beforeLen = st.pendapatanShuList.length;
+                st.pendapatanShuList = st.pendapatanShuList.filter(p => p && !DEMO_BLACKLIST_IDS[p.id]);
+                if (st.pendapatanShuList.length !== beforeLen) changed = true;
+            }
+
+            if (Array.isArray(st.bebanOperasional)) {
+                const beforeLen = st.bebanOperasional.length;
+                st.bebanOperasional = st.bebanOperasional.filter(b => b && !DEMO_BLACKLIST_IDS[b.id]);
+                if (st.bebanOperasional.length !== beforeLen) changed = true;
+            }
+
+            if (st.totalShu === 2500000) {
+                st.totalShu = 0;
+                changed = true;
+            }
+
+            if (Array.isArray(st.votings)) {
+                const beforeLen = st.votings.length;
+                st.votings = st.votings.filter(v => v && !DEMO_BLACKLIST_IDS[v.id]);
+                if (st.votings.length !== beforeLen) changed = true;
+            }
+
+            if (Array.isArray(st.programKeluarga)) {
+                const beforeLen = st.programKeluarga.length;
+                st.programKeluarga = st.programKeluarga.filter(pr => pr && !DEMO_BLACKLIST_IDS[pr.id]);
+                if (st.programKeluarga.length !== beforeLen) changed = true;
+            }
+
+            if (Array.isArray(st.notulensiRapat)) {
+                const beforeLen = st.notulensiRapat.length;
+                st.notulensiRapat = st.notulensiRapat.filter(n => n && !DEMO_BLACKLIST_IDS[n.id]);
+                if (st.notulensiRapat.length !== beforeLen) changed = true;
+            }
+
+            if (Array.isArray(st.adArtSignedBy) && st.adArtSignedBy.includes('a2')) {
+                st.adArtSignedBy = st.adArtSignedBy.filter(id => id !== 'a2');
+                changed = true;
+            }
+
+            if (st.arisan) {
+                if (Array.isArray(st.arisan.peserta)) {
+                    const beforeLen = st.arisan.peserta.length;
+                    st.arisan.peserta = st.arisan.peserta.filter(p => p && p.anggotaId !== 'a2' && !(p.anggotaId === 'a1' && p.tanggalMenang === '2026-02-01'));
+                    if (st.arisan.peserta.length !== beforeLen) changed = true;
+                }
+                if (Array.isArray(st.arisan.riwayatPemenang)) {
+                    const beforeLen = st.arisan.riwayatPemenang.length;
+                    st.arisan.riwayatPemenang = st.arisan.riwayatPemenang.filter(w => !(w && w.tanggal === '2026-02-01' && w.nominalPot === 200000));
+                    if (st.arisan.riwayatPemenang.length !== beforeLen) changed = true;
+                }
+            }
+
+            return changed;
+        };
+
         const defaultState = {
             currentUser: null,
             currentRole: 'member',
             activeTab: 'dashboard',
-            totalShu: 2500000,
-            pengumuman: "Selamat datang di Koperasi Keluarga v34.9 Pro! Hak Akses Pengurus Kini Terpisah: Super Admin (Sistem) vs Bendahara (Catat Kas) vs Sekretaris (Catat Administrasi).",
-            rekeningBank: [
-                { id: 'b1', nama: 'BCA', nomor: '1234567890', pemilik: 'Koperasi Keluarga aufah' },
-                { id: 'b2', nama: 'Mandiri', nomor: '0987654321', pemilik: 'Koperasi Keluarga aufah' }
-            ],
-            pendapatanShuList: [
-                { id: 'pend1', tanggal: '2026-01-15', keterangan: 'Bagi Hasil Usaha Kolektif Keluarga', nominal: 500000, bankTujuan: 'BCA' }
-            ],
-            bebanOperasional: [
-                { id: 'beb1', tanggal: '2026-01-10', keterangan: 'Biaya Administrasi Bank', nominal: 50000, bankTujuan: 'BCA' }
-            ],
+            totalShu: 0,
+            pengumuman: "Selamat datang di Koperasi Keluarga Syariah (Versi Produksi Resmi). Silakan gunakan menu navigasi sesuai hak akses Anda.",
+            rekeningBank: [],
+            pendapatanShuList: [],
+            bebanOperasional: [],
             lastShuDistribusiInfo: '',
             riwayatDistribusiShu: [],
-            votings: [
-                {
-                    id: 'v1',
-                    pertanyaan: 'Mau adakan acara silaturahmi keluarga di mana tahun ini?',
-                    opsi: ['Puncak Bogor', 'Pantai Anyer', 'Villa Lembang Bandung'],
-                    suara: { '082298688189': 0 },
-                    pembuat: 'Super Admin (082298688189)'
-                }
-            ],
+            votings: [],
             anggota: [
-                { id: 'a1', namaKeluarga: 'Keluarga Besar Aufah', nama: 'Super Admin', hubungan: 'Kepala Keluarga', tglGabung: '2026-01-01', fotoProfil: '', kontak: '082298688189', email: 'admin@aufah.tech', pin: '1234', role: 'admin', saldo: 0, simpananPokok: 500000, simpananWajib: 1000000, simpananSukarela: 0 },
-                { id: 'a2', namaKeluarga: 'Keluarga Budi Santoso', nama: 'Budi Santoso', hubungan: 'Kepala Keluarga', tglGabung: '2026-02-01', fotoProfil: '', kontak: '081234567890', email: 'budi@gmail.com', pin: '5678', role: 'member', saldo: 0, simpananPokok: 250000, simpananWajib: 500000, simpananSukarela: 0 }
+                { id: 'a1', namaKeluarga: 'Keluarga Besar Aufah', nama: 'Super Admin', hubungan: 'Kepala Keluarga', tglGabung: window.getTanggalLokalHariIni(), fotoProfil: '', kontak: '082298688189', email: 'admin@aufah.tech', pin: '1234', role: 'admin', saldo: 0, simpananPokok: 0, simpananWajib: 0, simpananSukarela: 0 }
             ],
-            transaksi: [
-                { id: 't1', waktu: '2026-03-01 10:00', anggotaId: 'a1', nama: 'Super Admin', tipe: 'Setoran', kategori: 'Simpanan Pokok', nominal: 500000, status: 'Disetujui', bukti: '', bankTujuan: 'BCA', keterangan: 'Setoran awal pokok' },
-                { id: 't1b', waktu: '2026-03-01 10:05', anggotaId: 'a1', nama: 'Super Admin', tipe: 'Setoran', kategori: 'Simpanan Wajib', nominal: 1000000, status: 'Disetujui', bukti: '', bankTujuan: 'BCA', keterangan: 'Setoran wajib tahunan' },
-                { id: 't2', waktu: '2026-03-02 11:30', anggotaId: 'a2', nama: 'Budi Santoso', tipe: 'Setoran', kategori: 'Simpanan Wajib', nominal: 750000, status: 'Disetujui', bukti: '', bankTujuan: 'Mandiri', keterangan: 'Iuran wajib keluarga' }
-            ],
+            transaksi: [],
             pinjaman: [],
             zis: [],
             shuSetting: { alokasiModal: 40, alokasiUsaha: 20, alokasiCadangan: 25, alokasiSosial: 15, metodePerhitungan: 'TERTIMBANG' },
@@ -2826,55 +3058,20 @@
             parameterStandar: { simpananPokok: 500000, simpananWajib: 100000, iuranArisan: 100000 },
             securitySetting: { idleTimeoutMenit: 30, maxFailedLogin: 5, lockoutDurationMenit: 5, warnWeakPin: true },
             systemAuditLogs: [
-                { id: 'log_init_1', waktu: '2026-11-14 08:00:00', aktor: 'Sistem Otomatis', role: 'SYSTEM', kategori: 'PENGATURAN', aktivitas: 'Inisialisasi Sistem v34.5 Pro', detail: '8-Audit Neraca, Rekonsiliasi Bank 5 Modul & Proteksi Brute-Force Aktif', status: 'Sukses' }
+                { id: 'log_prod_1', waktu: window.getWaktuLokalSekarang() + ':00', aktor: 'Sistem Produksi', role: 'SYSTEM', kategori: 'PENGATURAN', aktivitas: 'Inisialisasi Versi Produksi Bersih', detail: 'Seluruh data demo dihapus; buku kas, simpanan, pembiayaan, arisan & SHU mulai dari Rp 0', status: 'Sukses' }
             ],
             arisan: {
-                peserta: [
-                    { anggotaId: 'a1', nama: 'Super Admin', sudahMenang: true, tanggalMenang: '2026-02-01', lunasPutaranIni: true },
-                    { anggotaId: 'a2', nama: 'Budi Santoso', sudahMenang: false, tanggalMenang: '-', lunasPutaranIni: true }
-                ],
-                riwayatPemenang: [
-                    { putaranKe: 1, tanggal: '2026-02-01', nama: 'Super Admin', nominalPot: 200000 }
-                ],
+                namaPeriode: 'Putaran Arisan Silaturahmi',
+                tglMulai: window.getTanggalLokalHariIni(),
+                tglSelesai: '2026-12-31',
+                peserta: [],
+                riwayatPemenang: [],
                 riwayatIuran: []
             },
-            programKeluarga: [
-                {
-                    id: 'prog1',
-                    nama: 'Tabungan Qurban Sapi Keluarga 2026',
-                    target: 21000000,
-                    terkumpul: 6500000,
-                    kontributor: [
-                        { id: 'kp1', tanggal: '2026-02-10', anggotaId: 'a1', nama: 'Super Admin', nominal: 3500000, catatan: 'Setoran awal Qurban' },
-                        { id: 'kp2', tanggal: '2026-02-12', anggotaId: 'a2', nama: 'Budi Santoso', nominal: 3000000, catatan: 'Patungan Qurban keluarga' }
-                    ]
-                },
-                {
-                    id: 'prog2',
-                    nama: 'Dana Silaturahmi & Rekreasi Tahunan',
-                    target: 10000000,
-                    terkumpul: 4000000,
-                    kontributor: [
-                        { id: 'kp3', tanggal: '2026-02-15', anggotaId: 'a1', nama: 'Super Admin', nominal: 2500000, catatan: 'Booking villa keluarga' },
-                        { id: 'kp4', tanggal: '2026-02-18', anggotaId: 'a2', nama: 'Budi Santoso', nominal: 1500000, catatan: 'Iuran rekreasi' }
-                    ]
-                }
-            ],
+            programKeluarga: [],
             adArtTeks: "PASAL 1: NAMA, PRINSIP & LANDASAN SYARIAH\nKoperasi ini bernama Koperasi Keluarga Besar Aufah Syariah (Baitul Maal wat Tamwil Keluarga) yang beroperasi berdasarkan prinsip Syariah Islam, bebas dari praktik Riba (bunga), Gharar, dan Maysir, serta mengedepankan asas Ta'awun (tolong-menolong) dan Ukhuwah.\n\nPASAL 2: AKAD SIMPANAN ANGGOTA\n1. Simpanan Pokok & Wajib menggunakan akad Musyarakah (penyertaan modal syirkah keluarga).\n2. Simpanan Sukarela menggunakan akad Wadiah Yad Dhamanah / Mudharabah Mutlaqah yang dapat disetor dan ditarik sewaktu-waktu.\n\nPASAL 3: AKAD PEMBIAYAAN SYARIAH & BAGI HASIL (SHU)\n1. Akad Qardhul Hasan (Pinjaman Kebajikan): Khusus kebutuhan darurat (kesehatan/pendidikan/musibah) dengan margin 0% (wajib kembali pokok saja, dianjurkan infaq sukarela tanpa paksaan).\n2. Akad Murabahah (Jual Beli) & Mudharabah (Modal Usaha): Menggunakan margin/nisbah bagi hasil yang disepakati di awal akad dan 100% kembali menjadi SHU keluarga.\n\nPASAL 4: ALOKASI SISA HASIL USAHA (SHU) & ZISWAF\nSHU Bersih tahunan dibagi secara adil sesuai kesepakatan RAT: 40% Nisbah Modal Simpanan, 20% Nisbah Kontribusi Pembiayaan, 25% Dana Cadangan Penguatan Modal, dan 15% Dana ZISWAF & Santunan Sosial Keluarga.\n\nPASAL 5: PERLINDUNGAN AHLI WARIS & PENYELESAIAN AMANAH\nApabila anggota wafat, seluruh saldo Simpanan Pokok, Wajib, Sukarela, beserta hak SHU diserahkan sepenuhnya kepada Ahli Waris sah yang tercatat di sistem koperasi.\n\nPASAL 6: MUSYAWARAH KELUARGA & RAPAT ANGGOTA TAHUNAN (RAT)\nKeputusan tertinggi berada pada Musyawarah Keluarga (RAT) yang dilaksanakan minimal 1 kali dalam setahun secara mufakat dan transparan.",
-            adArtSignedBy: ['a1', 'a2'],
-            notulensiRapat: [
-                {
-                    id: 'not1',
-                    tanggal: '2026-01-05',
-                    kategori: 'RAT Tahunan',
-                    judul: 'Musyawarah Awal Tahun & Penerapan Akad Syariah',
-                    pimpinan: 'Super Admin',
-                    jumlahHadir: 12,
-                    status: 'Disahkan',
-                    isi: 'Disepakati transformasi penuh ke Koperasi Syariah: pinjaman darurat memakai akad Qardhul Hasan (0% tanpa riba), pembiayaan barang/usaha memakai akad Murabahah/Mudharabah, serta alokasi ZISWAF 15% dari SHU bersih.',
-                    diketahuiOleh: ['a1', 'a2']
-                }
-            ],
+            adArtSignedBy: ['a1'],
+            notulensiRapat: [],
             badgesList: [
                 { id: 'bg1', title: 'Perintis Koperasi', desc: 'Memiliki Simpanan Pokok & Wajib minimal Rp 500.000.', icon: '🏆', metric: 'SIMPANAN', target: 500000, color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
                 { id: 'bg2', title: 'Dermawan Utama', desc: 'Mencapai akumulasi tabungan keluarga Rp 1.500.000.', icon: '👑', metric: 'SIMPANAN', target: 1500000, color: 'bg-amber-100 text-amber-800 border-amber-300' },
@@ -2892,6 +3089,7 @@
             if (savedLocal) {
                 const parsed = JSON.parse(savedLocal);
                 if (parsed && Array.isArray(parsed.anggota)) {
+                    window.purifikasiDataDemoProduksi(parsed);
                     appState = { ...defaultState, ...parsed };
                 }
             }
@@ -3069,17 +3267,105 @@
         };
         window.handleLogin = window._doLoginProcess;
 
-        window.hitungRincianSimpananAnggota = (anggotaId) => {
-            const approved = (appState.transaksi || []).filter(t => t.status === 'Disetujui' && t.anggotaId === anggotaId);
-            let pokok = 0, wajib = 0, sukarela = 0;
-            approved.forEach(t => {
+        window._saldoCacheMap = null;
+        window._saldoCacheKey = '';
+
+        window.computeSaldoCacheKey = () => {
+            const trxList = appState.transaksi || [];
+            const len = trxList.length;
+            if (len === 0) return '0';
+            const first = trxList[0];
+            const last = trxList[len - 1];
+            let approvedSum = 0;
+            for (let i = 0; i < len; i++) {
+                const t = trxList[i];
+                if (t.status === 'Disetujui') {
+                    approvedSum += (t.tipe === 'Setoran' ? (Number(t.nominal) || 0) : -(Number(t.nominal) || 0));
+                }
+            }
+            return `${len}_${first.id}_${last.id}_${last.status}_${approvedSum}`;
+        };
+
+        window.rebuildSaldoCache = (force = false) => {
+            const currentKey = window.computeSaldoCacheKey();
+            if (!force && window._saldoCacheMap && window._saldoCacheKey === currentKey) {
+                return window._saldoCacheMap;
+            }
+            const map = {};
+            (appState.anggota || []).forEach(a => {
+                map[a.id] = { pokok: 0, wajib: 0, sukarela: 0, total: 0, rawNet: 0 };
+            });
+            const trxList = appState.transaksi || [];
+            for (let i = 0; i < trxList.length; i++) {
+                const t = trxList[i];
+                if (t.status !== 'Disetujui') continue;
+                if (!map[t.anggotaId]) {
+                    map[t.anggotaId] = { pokok: 0, wajib: 0, sukarela: 0, total: 0, rawNet: 0 };
+                }
                 const nom = Number(t.nominal) || 0;
                 const delta = t.tipe === 'Setoran' ? nom : -nom;
-                if (t.kategori === 'Simpanan Pokok') pokok += delta;
-                else if (t.kategori === 'Simpanan Wajib') wajib += delta;
-                else sukarela += delta;
+                map[t.anggotaId].rawNet += delta;
+                if (t.kategori === 'Simpanan Pokok') map[t.anggotaId].pokok += delta;
+                else if (t.kategori === 'Simpanan Wajib') map[t.anggotaId].wajib += delta;
+                else map[t.anggotaId].sukarela += delta;
+            }
+            Object.keys(map).forEach(id => {
+                const entry = map[id];
+                entry.pokok = Math.max(0, entry.pokok);
+                entry.wajib = Math.max(0, entry.wajib);
+                entry.sukarela = Math.max(0, entry.sukarela);
+                entry.total = Math.max(0, entry.pokok + entry.wajib + entry.sukarela);
             });
-            return { pokok: Math.max(0, pokok), wajib: Math.max(0, wajib), sukarela: Math.max(0, sukarela), total: Math.max(0, pokok + wajib + sukarela) };
+            window._saldoCacheMap = map;
+            window._saldoCacheKey = currentKey;
+            return map;
+        };
+
+        window.hitungRincianSimpananAnggota = (anggotaId) => {
+            const map = window.rebuildSaldoCache(false);
+            return map[anggotaId] || { pokok: 0, wajib: 0, sukarela: 0, total: 0, rawNet: 0 };
+        };
+
+        window.renderGroupedMemberOptions = (selectId, queryStr = '', excludeSelf = false, selectedValue = '') => {
+            const sel = document.getElementById(selectId);
+            if (!sel) return;
+            const prevVal = selectedValue || sel.value || (currentUserSession ? currentUserSession.id : '');
+            const q = String(queryStr || '').toLowerCase().trim();
+            const candidates = (appState.anggota || []).filter(a => {
+                if (excludeSelf && currentUserSession && a.id === currentUserSession.id) return false;
+                if (!q) return true;
+                return (a.nama || '').toLowerCase().includes(q) ||
+                       (a.namaKeluarga || '').toLowerCase().includes(q) ||
+                       (a.kontak || '').toLowerCase().includes(q);
+            });
+            if (candidates.length === 0) {
+                sel.innerHTML = `<option value="">-- Tidak ditemukan anggota "${window.escapeHtml(queryStr)}" --</option>`;
+                return;
+            }
+            const kkGroups = {};
+            candidates.forEach(a => {
+                const kk = a.namaKeluarga || 'Keluarga Lainnya';
+                if (!kkGroups[kk]) kkGroups[kk] = [];
+                kkGroups[kk].push(a);
+            });
+            sel.innerHTML = Object.keys(kkGroups).sort().map(kk => {
+                const opts = kkGroups[kk].map(a =>
+                    `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.kontak || '-')})</option>`
+                ).join('');
+                return `<optgroup label="🏠 ${window.escapeHtml(kk)} (${kkGroups[kk].length})">${opts}</optgroup>`;
+            }).join('');
+            if (prevVal && candidates.some(a => a.id === prevVal)) {
+                sel.value = prevVal;
+            } else if (candidates[0]) {
+                sel.value = candidates[0].id;
+            }
+        };
+
+        window.filterDropdownAnggotaModal = (selectId, queryStr, excludeSelf = false, callbackName = '') => {
+            window.renderGroupedMemberOptions(selectId, queryStr, excludeSelf);
+            if (callbackName && typeof window[callbackName] === 'function') {
+                window[callbackName]();
+            }
         };
 
         window.hitungJasaPinjamanAnggota = (anggotaId) => {
@@ -3293,8 +3579,8 @@
         };
 
         window.hitungSaldoAnggota = (anggotaId) => {
-            const approved = (appState.transaksi || []).filter(t => t.status === 'Disetujui' && t.anggotaId === anggotaId);
-            return approved.reduce((acc, t) => t.tipe === 'Setoran' ? acc + (Number(t.nominal) || 0) : acc - (Number(t.nominal) || 0), 0);
+            const map = window.rebuildSaldoCache(false);
+            return map[anggotaId] ? map[anggotaId].rawNet : 0;
         };
 
         window.formatRupiah = (angka) => {
@@ -3381,15 +3667,22 @@
                     if (docSnap.exists()) {
                         const cloudData = docSnap.data();
                         if (cloudData && cloudData.anggota) {
+                            const hadDemoInCloud = window.purifikasiDataDemoProduksi(cloudData);
                             appState = {
                                 ...appState,
                                 ...cloudData,
-                                votings: cloudData.votings || appState.votings || [],
-                                rekeningBank: cloudData.rekeningBank || appState.rekeningBank || [],
-                                bebanOperasional: cloudData.bebanOperasional || appState.bebanOperasional || [],
+                                votings: cloudData.votings || [],
+                                rekeningBank: cloudData.rekeningBank || [],
+                                pendapatanShuList: cloudData.pendapatanShuList || [],
+                                bebanOperasional: cloudData.bebanOperasional || [],
+                                programKeluarga: cloudData.programKeluarga || [],
+                                notulensiRapat: cloudData.notulensiRapat || [],
                                 pinjaman: cloudData.pinjaman || [],
                                 zis: cloudData.zis || []
                             };
+                            if (hadDemoInCloud && fbSetDoc) {
+                                fbSetDoc(docRef, appState).catch(() => {});
+                            }
                             try { localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(appState)); } catch (e) {}
                             document.getElementById('firebaseStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0';
                             document.getElementById('firebaseStatusText').textContent = `Cloud Synced (${lastSyncTimestamp})`;
@@ -3461,14 +3754,50 @@
             return '👤 Anggota';
         };
 
+        window.mergeArrayById = (localArr, cloudArr, deletedIdsMap = {}) => {
+            if (!Array.isArray(cloudArr)) return localArr || [];
+            if (!Array.isArray(localArr)) return cloudArr;
+            const localMap = new Map();
+            localArr.forEach(item => { if (item && item.id) localMap.set(item.id, item); });
+            const merged = [...localArr];
+            cloudArr.forEach(cItem => {
+                if (cItem && cItem.id && !localMap.has(cItem.id) && !deletedIdsMap[cItem.id]) {
+                    merged.push(cItem);
+                }
+            });
+            return merged;
+        };
+
+        window._recentlyDeletedIds = { ...DEMO_BLACKLIST_IDS };
+        window.markDeletedItemId = (id) => {
+            if (id) window._recentlyDeletedIds[id] = Date.now();
+        };
+
         async function saveStateToCloud() {
+            window.rebuildSaldoCache(true);
             lastSyncTimestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             try {
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(appState));
             } catch (e) {}
             if (db && fbDoc && fbSetDoc) {
                 try {
-                    await fbSetDoc(fbDoc(db, 'artifacts', appId, 'public', 'data', 'koperasiState', 'main'), appState);
+                    const docRef = fbDoc(db, 'artifacts', appId, 'public', 'data', 'koperasiState', 'main');
+                    if (fbGetDoc) {
+                        try {
+                            const snap = await fbGetDoc(docRef);
+                            if (snap.exists()) {
+                                const cloudData = snap.data();
+                                if (cloudData) {
+                                    appState.transaksi = window.mergeArrayById(appState.transaksi, cloudData.transaksi, window._recentlyDeletedIds);
+                                    appState.pinjaman = window.mergeArrayById(appState.pinjaman, cloudData.pinjaman, window._recentlyDeletedIds);
+                                    appState.zis = window.mergeArrayById(appState.zis, cloudData.zis, window._recentlyDeletedIds);
+                                    appState.calonAnggota = window.mergeArrayById(appState.calonAnggota, cloudData.calonAnggota, window._recentlyDeletedIds);
+                                    appState.anggota = window.mergeArrayById(appState.anggota, cloudData.anggota, window._recentlyDeletedIds);
+                                }
+                            }
+                        } catch (mergeErr) {}
+                    }
+                    await fbSetDoc(docRef, appState);
                     document.getElementById('firebaseStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0';
                     document.getElementById('firebaseStatusText').textContent = `Cloud Synced (${lastSyncTimestamp})`;
                     const sideSync = document.getElementById('sidebarLastSyncTime');
@@ -3530,13 +3859,13 @@
         };
 
         window.downloadBackupJson = () => {
-            appState.lastBackupTime = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            appState.lastBackupTime = window.getWaktuLokalSekarang();
             window.catatLogAuditSistem('BACKUP', 'Unduh Backup Database JSON', `Backup penuh diunduh (${(appState.anggota || []).length} anggota, ${(appState.transaksi || []).length} transaksi)`, 'Sukses');
             saveStateToCloud();
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const dlAnchor = document.createElement('a');
             dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `Backup_Koperasi_Keluarga_${new Date().toISOString().slice(0,10)}.json`);
+            dlAnchor.setAttribute("download", `Backup_Koperasi_Keluarga_${window.getTanggalLokalHariIni()}.json`);
             document.body.appendChild(dlAnchor);
             dlAnchor.click();
             dlAnchor.remove();
@@ -3729,6 +4058,7 @@
 
         window.renderApp = () => {
             if (!currentUserSession) return;
+            window.rebuildSaldoCache(true);
 
             const isSuperAdmin = currentUserSession.kontak === '082298688189';
             const role = window.getEffectiveRole();
@@ -3791,7 +4121,8 @@
             });
             const pendingZisCount = (appState.zis || []).filter(z => z.status === 'Menunggu').length;
             const pendingRegLen = (appState.calonAnggota || []).length;
-            const totalAllPending = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisCount + pendingRegLen;
+            const pendingArisanProgCount = typeof window.hitungAntreanPesertaProgramArisan === 'function' ? window.hitungAntreanPesertaProgramArisan().length : 0;
+            const totalAllPending = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisCount + pendingRegLen + pendingArisanProgCount;
 
             const navContainer = document.getElementById('sidebarNavContainer');
             let navs = [
@@ -3799,7 +4130,7 @@
                 { id: 'simpanan', label: 'Buku Simpanan & Kas', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
                 { id: 'pinjaman', label: 'Pembiayaan Syariah', badge: window.isBendaharaOrSuper() ? (pendingLoans.length + pendingCicilanCount) : 0, icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
                 { id: 'shu', label: 'Bagi Hasil (SHU) Syariah', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-                { id: 'arisan', label: 'Arisan & Program', icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' },
+                { id: 'arisan', label: 'Arisan & Program', badge: window.isPengurusAny() ? pendingArisanProgCount : 0, icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' },
                 { id: 'zis', label: 'ZIS & Dana Sosial', badge: window.isBendaharaOrSuper() ? pendingZisCount : 0, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
                 { id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
                 { id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' },
@@ -3835,7 +4166,7 @@
                     else el.classList.add('hidden');
                 }
             });
-            const bendaharaBtns = ['btnTambahBeban', 'thAksiBeban', 'btnTambahPendapatanShu', 'thAksiPendapatanShu', 'btnKocokArisan', 'btnTambahProgram'];
+            const bendaharaBtns = ['btnTambahBeban', 'thAksiBeban', 'btnTambahPendapatanShu', 'thAksiPendapatanShu', 'btnKocokArisan', 'btnTambahProgram', 'btnAturPeriodeArisan'];
             bendaharaBtns.forEach(btnId => {
                 const el = document.getElementById(btnId);
                 if (el) {
@@ -3930,23 +4261,39 @@
 
             document.getElementById('badgePendingCount').textContent = `${totalAllPending} Menunggu`;
 
-            renderPengingatKewajiban(rincianUser, userLoans);
-            renderDashboardArisanProgram();
-            renderDashboardVoting();
-            renderRecentTransactions();
-            renderPersetujuanTab();
-            renderSimpananTab();
-            renderPinjamanTab();
-            renderArisanTab();
-            renderAdArtTab();
-            renderZisTab();
-            renderGamifikasiTab();
-            renderAnggotaTab();
-            renderBankTab();
-            renderPengaturanAuditTab();
-            renderShuTab();
-            populateProfilMandiri();
-            renderCharts(approvedTrx);
+            // Lazy Tab Rendering: Hanya merender DOM pada tab yang sedang dibuka agar ringan untuk ratusan anggota
+            const activeTab = appState.activeTab || 'dashboard';
+            if (activeTab === 'dashboard') {
+                renderPengingatKewajiban(rincianUser, userLoans);
+                renderDashboardArisanProgram();
+                renderDashboardVoting();
+                renderRecentTransactions();
+                renderCharts(approvedTrx);
+            } else if (activeTab === 'persetujuan') {
+                renderPersetujuanTab();
+            } else if (activeTab === 'simpanan') {
+                renderSimpananTab();
+            } else if (activeTab === 'pinjaman') {
+                renderPinjamanTab();
+            } else if (activeTab === 'arisan') {
+                renderArisanTab();
+            } else if (activeTab === 'ad-art') {
+                renderAdArtTab();
+            } else if (activeTab === 'zis') {
+                renderZisTab();
+            } else if (activeTab === 'gamifikasi') {
+                renderGamifikasiTab();
+            } else if (activeTab === 'anggota') {
+                renderAnggotaTab();
+            } else if (activeTab === 'bank') {
+                renderBankTab();
+            } else if (activeTab === 'pengaturan') {
+                renderPengaturanAuditTab();
+            } else if (activeTab === 'shu') {
+                renderShuTab();
+            } else if (activeTab === 'profil-saya') {
+                populateProfilMandiri();
+            }
         };
 
         function renderDashboardArisanProgram() {
@@ -4380,13 +4727,16 @@
                 }
             }
 
-            // Render antrean pendaftaran calon anggota
+            // Render antrean pendaftaran calon anggota & pendaftaran peserta program/arisan
             const listCalon = document.getElementById('listPersetujuanCalonAnggota');
+            const pendingProgArisan = typeof window.hitungAntreanPesertaProgramArisan === 'function' ? window.hitungAntreanPesertaProgramArisan() : [];
+            setTxt('countPendingCalon', `${calons.length + pendingProgArisan.length} Antrean`);
+            setTxt('badgeSubCalon', calons.length + pendingProgArisan.length);
             if (listCalon) {
-                if (calons.length === 0) {
-                    listCalon.innerHTML = `<p class="text-slate-400 italic py-2">Tidak ada pendaftaran calon anggota baru.</p>`;
+                if (calons.length === 0 && pendingProgArisan.length === 0) {
+                    listCalon.innerHTML = `<p class="text-slate-400 italic py-2">Tidak ada pendaftaran calon anggota atau peserta program baru.</p>`;
                 } else {
-                    listCalon.innerHTML = calons.map(c => `
+                    const htmlCalon = calons.map(c => `
                         <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
                             <div>
                                 <strong class="text-slate-800 dark:text-white block">${c.nama} (${c.namaKeluarga})</strong>
@@ -4400,6 +4750,19 @@
                             </div>
                         </div>
                     `).join('');
+                    const htmlProgArisan = pendingProgArisan.map(item => `
+                        <div class="p-2.5 rounded-xl bg-purple-50/70 dark:bg-slate-800 border border-purple-200 dark:border-slate-700 flex justify-between items-center gap-2">
+                            <div>
+                                <strong class="text-slate-800 dark:text-white block">${window.escapeHtml(item.namaAnggota)} • <span class="text-purple-600">Ikut ${window.escapeHtml(item.namaProgram)}</span></strong>
+                                <span class="text-[10px] text-slate-400">📅 Periode: ${window.escapeHtml(item.periode)}</span>
+                            </div>
+                            <div class="flex gap-1 shrink-0">
+                                <button onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
+                                <button onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
+                            </div>
+                        </div>
+                    `).join('');
+                    listCalon.innerHTML = htmlCalon + htmlProgArisan;
                 }
             }
 
@@ -4587,14 +4950,24 @@
             const role = window.getEffectiveRole();
 
             const isKeuangan = window.isBendaharaOrSuper();
-            // Privasi dropdown filter anggota: Bendahara & Super Admin dapat memilih semua anggota
+            // Privasi dropdown filter anggota: Bendahara & Super Admin dapat memilih semua anggota (Dikelompokkan per KK)
             const filterAnggotaEl = document.getElementById('filterAnggotaSimpanan');
             if (filterAnggotaEl) {
                 if (isKeuangan) {
                     filterAnggotaEl.disabled = false;
                     const currentSelectedAnggota = filterAnggotaEl.value || 'ALL';
-                    filterAnggotaEl.innerHTML = `<option value="ALL">Semua Anggota (${appState.anggota.length})</option>` +
-                        appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)}</option>`).join('');
+                    const kkGroups = {};
+                    (appState.anggota || []).forEach(a => {
+                        const kk = a.namaKeluarga || 'Keluarga Lainnya';
+                        if (!kkGroups[kk]) kkGroups[kk] = [];
+                        kkGroups[kk].push(a);
+                    });
+                    const groupedHtml = Object.keys(kkGroups).sort().map(kk =>
+                        `<optgroup label="🏠 ${window.escapeHtml(kk)} (${kkGroups[kk].length})">` +
+                        kkGroups[kk].map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)}</option>`).join('') +
+                        `</optgroup>`
+                    ).join('');
+                    filterAnggotaEl.innerHTML = `<option value="ALL">Semua Anggota (${appState.anggota.length})</option>` + groupedHtml;
                     if ([...filterAnggotaEl.options].some(o => o.value === currentSelectedAnggota)) {
                         filterAnggotaEl.value = currentSelectedAnggota;
                     }
@@ -4663,10 +5036,21 @@
             setCard('simpananCardNetFilter', window.formatRupiah(netFilter));
             setCard('simpananCardMutasiSub', `+${window.formatRupiah(sumSetoranFilter)} • -${window.formatRupiah(sumPenarikanFilter)}`);
 
+            const pagBar = document.getElementById('simpananPaginationBar');
+            if (typeof window.simpananPage !== 'number' || window.simpananPage < 1) window.simpananPage = 1;
+            if (typeof window.simpananPageSize !== 'number') window.simpananPageSize = 25;
+
             if (filtered.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="10" class="py-6 text-center text-slate-400 italic">Tidak ada data transaksi simpanan yang sesuai filter pencarian.</td></tr>`;
+                if (pagBar) pagBar.innerHTML = '';
             } else {
-                const rowsHtml = filtered.map(t => `
+                const pageSize = window.simpananPageSize > 0 ? window.simpananPageSize : filtered.length;
+                const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+                if (window.simpananPage > totalPages) window.simpananPage = totalPages;
+                const startIdx = (window.simpananPage - 1) * pageSize;
+                const pagedItems = window.simpananPageSize > 0 ? filtered.slice(startIdx, startIdx + pageSize) : filtered;
+
+                const rowsHtml = pagedItems.map(t => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                         <td class="py-3 px-3 font-mono text-[11px] text-slate-500">${window.escapeHtml(t.waktu)}</td>
                         <td class="py-3 px-3 font-bold">${window.escapeHtml(t.nama)}</td>
@@ -4678,7 +5062,7 @@
                         <td class="py-3 px-3 font-extrabold ${t.tipe === 'Setoran' ? 'text-emerald-600' : 'text-rose-600'}">${t.tipe === 'Setoran' ? '+' : '-'}${window.formatRupiah(t.nominal)}</td>
                         <td class="py-3 px-3 font-bold text-slate-700 dark:text-slate-300">${t.status === 'Disetujui' ? window.formatRupiah(t.saldoSetelah) : '<span class="text-[10px] text-slate-400 italic">Menunggu</span>'}</td>
                         <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${t.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-800' : t.status === 'Menunggu' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">${window.escapeHtml(t.status)}</span></td>
-                        <td class="py-3 px-3">${t.bukti ? `<button onclick="window.lihatFotoBukti('${t.bukti}')" class="text-blue-600 underline text-[11px] font-bold">🖼️ Lihat</button>` : '-'}</td>
+                        <td class="py-3 px-3">${t.bukti ? `<button onclick="window.lihatFotoBukti('${t.bukti}')" class="text-blue-600 underline text-[11px] font-bold">🖼️ Lihat</button>` : (t.buktiArchivedHash ? `<span class="text-[10px] font-mono text-emerald-600 font-bold" title="Foto bukti telah diarsipkan untuk hemat memori Cloud">✓ ${window.escapeHtml(t.buktiArchivedHash)}</span>` : '-')}</td>
                         <td class="py-3 px-3 text-slate-500">${window.escapeHtml(t.keterangan || '-')}</td>
                         <td class="py-3 px-3 text-center no-print space-x-1 whitespace-nowrap">
                             <button onclick="window.bukaKwitansiTransaksi('${t.id}')" class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 font-bold text-[10px]" title="Cetak Struk / Kwitansi">🧾 Struk</button>
@@ -4696,6 +5080,25 @@
                     </tr>
                 `;
                 tbody.innerHTML = rowsHtml + footerHtml;
+
+                if (pagBar) {
+                    pagBar.innerHTML = `
+                        <div class="flex items-center gap-2 text-[11px] text-slate-500">
+                            <span>Menampilkan <strong>${startIdx + 1}–${Math.min(startIdx + pagedItems.length, filtered.length)}</strong> dari <strong>${filtered.length}</strong> transaksi</span>
+                            <select onchange="window.ubahUkuranHalamanSimpanan(this.value)" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold outline-none">
+                                <option value="25" ${window.simpananPageSize === 25 ? 'selected' : ''}>25 / Hal</option>
+                                <option value="50" ${window.simpananPageSize === 50 ? 'selected' : ''}>50 / Hal</option>
+                                <option value="100" ${window.simpananPageSize === 100 ? 'selected' : ''}>100 / Hal</option>
+                                <option value="0" ${window.simpananPageSize === 0 ? 'selected' : ''}>Semua</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="window.ubahHalamanSimpanan(${window.simpananPage - 1})" ${window.simpananPage <= 1 ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 font-bold text-[11px] ${window.simpananPage <= 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}">◀ Sebelumnya</button>
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-extrabold text-[11px]">Hal ${window.simpananPage} / ${totalPages}</span>
+                            <button type="button" onclick="window.ubahHalamanSimpanan(${window.simpananPage + 1})" ${window.simpananPage >= totalPages ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 font-bold text-[11px] ${window.simpananPage >= totalPages ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}">Berikutnya ▶</button>
+                        </div>
+                    `;
+                }
             }
 
             // Render Tabel Rekapitulasi Saldo Simpanan (Privasi: Member hanya melihat baris miliknya sendiri)
@@ -4747,22 +5150,13 @@
                 const adaRiwayat = ((appState.arisan && appState.arisan.riwayatIuran) || []).some(item =>
                     item.anggotaId === anggota.id && String(item.tanggal || '').startsWith(ymPrefix) && (item.status || 'Disetujui') === 'Disetujui'
                 );
-                if (adaRiwayat) return 'LUNAS';
-                const ps = ((appState.arisan && appState.arisan.peserta) || []).find(p => p.anggotaId === anggota.id);
-                const curMonth = new Date().getMonth() + 1;
-                if (ps && ps.lunasPutaranIni && bulanIdx <= curMonth && tahun === 2026) return 'LUNAS';
-                return 'BELUM';
+                return adaRiwayat ? 'LUNAS' : 'BELUM';
             } else {
-                // Simpanan Wajib: cek apakah ada transaksi di bulan tsb ATAU tercukupi dari akumulasi Simpanan Wajib sejak bulan bergabung
+                // Simpanan Wajib: Hanya LUNAS jika benar-benar ada transaksi Setoran Simpanan Wajib yang disubmit & Disetujui pada bulan (YYYY-MM) tersebut
                 const adaTrxBulanIni = (appState.transaksi || []).some(t =>
                     t.status === 'Disetujui' && t.anggotaId === anggota.id && t.tipe === 'Setoran' && t.kategori === 'Simpanan Wajib' && String(t.waktu || '').startsWith(ymPrefix)
                 );
-                if (adaTrxBulanIni) return 'LUNAS';
-                const stdWajib = Math.max(10000, Number(appState.parameterStandar?.simpananWajib ?? 100000));
-                const rincian = window.hitungRincianSimpananAnggota(anggota.id);
-                const jumlahBulanTercover = Math.floor(rincian.wajib / stdWajib);
-                const urutanBulanSejakGabung = ((tahun - joinYear) * 12) + (bulanIdx - joinMonth) + 1;
-                return (urutanBulanSejakGabung >= 1 && urutanBulanSejakGabung <= jumlahBulanTercover) ? 'LUNAS' : 'BELUM';
+                return adaTrxBulanIni ? 'LUNAS' : 'BELUM';
             }
         };
 
@@ -4862,6 +5256,28 @@
             window.showToast('📥 Matriks Kartu Kendali Iuran 12 Bulan berhasil diekspor ke CSV/Excel!');
         };
 
+        window.ubahHalamanSimpanan = (newPage) => {
+            window.simpananPage = Math.max(1, parseInt(newPage) || 1);
+            renderSimpananTab();
+        };
+
+        window.ubahUkuranHalamanSimpanan = (newSize) => {
+            window.simpananPageSize = parseInt(newSize) || 0;
+            window.simpananPage = 1;
+            renderSimpananTab();
+        };
+
+        window.ubahHalamanAnggota = (newPage) => {
+            window.anggotaPage = Math.max(1, parseInt(newPage) || 1);
+            renderAnggotaTab();
+        };
+
+        window.ubahUkuranHalamanAnggota = (newSize) => {
+            window.anggotaPageSize = parseInt(newSize) || 0;
+            window.anggotaPage = 1;
+            renderAnggotaTab();
+        };
+
         window.filterSimpananByAnggota = (anggotaId) => {
             const sel = document.getElementById('filterAnggotaSimpanan');
             if (sel) {
@@ -4924,13 +5340,10 @@
         };
 
         window.bukaModalTransferP2P = () => {
-            const sel = document.getElementById('p2pPenerimaId');
-            if (!sel) return;
-            const others = appState.anggota.filter(a => a.id !== currentUserSession.id);
-            sel.innerHTML = others.length > 0
-                ? others.map(a => `<option value="${a.id}">${a.nama} (${a.namaKeluarga})</option>`).join('')
-                : `<option value="">Belum ada anggota lain</option>`;
             document.getElementById('formTransferP2P').reset();
+            const searchP2p = document.getElementById('searchSelectP2pPenerima');
+            if (searchP2p) searchP2p.value = '';
+            window.renderGroupedMemberOptions('p2pPenerimaId', '', true);
             document.getElementById('modalTransferP2P').classList.remove('hidden');
         };
 
@@ -4956,7 +5369,7 @@
             const penerimaObj = appState.anggota.find(a => a.id === penerimaId);
             if (!penerimaObj) return false;
 
-            const waktuStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            const waktuStr = window.getWaktuLokalSekarang();
             appState.transaksi.push({
                 id: 't_p2p_out_' + Date.now(),
                 waktu: waktuStr,
@@ -5006,7 +5419,7 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `Buku_Simpanan_${role === 'admin' ? 'Koperasi' : currentUserSession.nama}_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute('download', `Buku_Simpanan_${role === 'admin' ? 'Koperasi' : currentUserSession.nama}_${window.getTanggalLokalHariIni()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -5023,6 +5436,7 @@
                 return;
             }
             window.showConfirmModal('Hapus Transaksi', 'Yakin ingin menghapus catatan transaksi ini secara permanen?', () => {
+                window.markDeletedItemId(id);
                 appState.transaksi = appState.transaksi.filter(t => t.id !== id);
                 saveStateToCloud();
                 window.renderApp();
@@ -5046,11 +5460,15 @@
 
         window.bukaModalTransaksi = () => {
             if (typeof window.upgradeDOMBankModalDanTab === 'function') window.upgradeDOMBankModalDanTab();
-            const select = document.getElementById('transaksiAnggotaId');
-            select.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
-
             document.getElementById('formTransaksi').reset();
+            const searchTrxAnggota = document.getElementById('searchSelectTransaksiAnggota');
+            if (searchTrxAnggota) searchTrxAnggota.value = '';
+            window.renderGroupedMemberOptions('transaksiAnggotaId', '', false, currentUserSession.id);
+            const select = document.getElementById('transaksiAnggotaId');
+
             document.getElementById('editTransaksiId').value = '';
+            const waktuInputEl = document.getElementById('transaksiWaktuInput');
+            if (waktuInputEl) waktuInputEl.value = window.getWaktuLokalSekarang();
             document.getElementById('modalTransaksiTitle').textContent = 'Catat Setoran / Penarikan Simpanan';
             window.populateDropdownBankAktif('transaksiBankTujuan');
 
@@ -5080,11 +5498,15 @@
             const t = (appState.transaksi || []).find(x => x.id === id);
             if (!t) return;
             if (typeof window.upgradeDOMBankModalDanTab === 'function') window.upgradeDOMBankModalDanTab();
+            const searchTrxAnggota = document.getElementById('searchSelectTransaksiAnggota');
+            if (searchTrxAnggota) searchTrxAnggota.value = '';
+            window.renderGroupedMemberOptions('transaksiAnggotaId', '', false, t.anggotaId);
             const select = document.getElementById('transaksiAnggotaId');
-            select.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
             window.populateDropdownBankAktif('transaksiBankTujuan', t.bankTujuan || '');
 
             document.getElementById('editTransaksiId').value = t.id;
+            const waktuInputEl = document.getElementById('transaksiWaktuInput');
+            if (waktuInputEl) waktuInputEl.value = t.waktu || window.getWaktuLokalSekarang();
             document.getElementById('modalTransaksiTitle').textContent = 'Edit Catatan Transaksi Simpanan';
             document.getElementById('wrapperPilihAnggota').style.display = 'block';
             select.value = t.anggotaId;
@@ -5155,8 +5577,10 @@
                             return false;
                         }
                     }
+                    const waktuManual = (document.getElementById('transaksiWaktuInput')?.value || '').trim();
                     trx.anggotaId = anggotaId;
                     trx.nama = anggotaObj ? anggotaObj.nama : trx.nama;
+                    if (waktuManual) trx.waktu = waktuManual;
                     trx.tipe = tipe;
                     trx.kategori = kategori;
                     trx.nominal = nominal;
@@ -5181,7 +5605,8 @@
             }
 
             const now = new Date();
-            const waktuStr = now.toISOString().slice(0, 16).replace('T', ' ');
+            const waktuManual = (document.getElementById('transaksiWaktuInput')?.value || '').trim();
+            const waktuStr = waktuManual || window.getWaktuLokalSekarang(now);
 
             const newTrx = {
                 id: 't_' + Date.now(),
@@ -5489,7 +5914,7 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `Laporan_Pinjaman_${role === 'admin' ? 'Koperasi' : currentUserSession.nama}_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute('download', `Laporan_Pinjaman_${role === 'admin' ? 'Koperasi' : currentUserSession.nama}_${window.getTanggalLokalHariIni()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -5502,6 +5927,7 @@
                 return;
             }
             window.showConfirmModal('Hapus Data Pinjaman', 'Yakin ingin menghapus catatan pinjaman ini?', () => {
+                window.markDeletedItemId(id);
                 appState.pinjaman = (appState.pinjaman || []).filter(p => p.id !== id);
                 saveStateToCloud();
                 window.renderApp();
@@ -5580,6 +6006,119 @@
                 }
             });
         };
+        window.evaluasiStatusPeriodeTanggal = (tglMulai, tglSelesai) => {
+            const today = window.getTanggalLokalHariIni();
+            const mulai = tglMulai || '2026-01-01';
+            const selesai = tglSelesai || '2026-12-31';
+            if (today < mulai) {
+                return { kode: 'BELUM_MULAI', label: '⏳ Belum Mulai', cls: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' };
+            }
+            if (today > selesai) {
+                return { kode: 'SELESAI', label: '🏁 Periode Selesai', cls: 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300' };
+            }
+            const sisaMs = Date.parse(selesai) - Date.parse(today);
+            const sisaHari = !isNaN(sisaMs) ? Math.max(0, Math.ceil(sisaMs / (1000 * 60 * 60 * 24))) : 0;
+            return { kode: 'AKTIF', label: `🟢 Aktif (${sisaHari} hr lagi)`, cls: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' };
+        };
+
+        window.hitungAntreanPesertaProgramArisan = () => {
+            const antrean = [];
+            const pesertaArisan = appState.arisan?.peserta || [];
+            pesertaArisan.forEach(ps => {
+                if (ps.statusKepesertaan === 'Menunggu') {
+                    antrean.push({
+                        targetType: 'ARISAN',
+                        progId: 'ARISAN_UTAMA',
+                        namaProgram: appState.arisan?.namaPeriode || 'Arisan Silaturahmi Bulanan',
+                        anggotaId: ps.anggotaId,
+                        namaAnggota: ps.nama,
+                        tglDaftar: ps.tglDaftar || '-',
+                        periode: `${appState.arisan?.tglMulai || '2026-01-01'} s/d ${appState.arisan?.tglSelesai || '2026-12-31'}`
+                    });
+                }
+            });
+            (appState.programKeluarga || []).forEach(pr => {
+                (pr.pesertaProgram || []).forEach(ps => {
+                    if (ps.status === 'Menunggu') {
+                        antrean.push({
+                            targetType: 'PROGRAM',
+                            progId: pr.id,
+                            namaProgram: pr.nama,
+                            anggotaId: ps.anggotaId,
+                            namaAnggota: ps.nama,
+                            tglDaftar: ps.tglDaftar || '-',
+                            periode: `${pr.tglMulai || '2026-01-01'} s/d ${pr.tglSelesai || '2026-12-31'}`
+                        });
+                    }
+                });
+            });
+            return antrean;
+        };
+
+        window.verifikasiPesertaProgramArisan = (targetType, progId, anggotaId, disetujui) => {
+            if (!window.isPengurusAny()) {
+                window.showToast('🔒 Hanya Admin / Pengurus yang dapat menyetujui pendaftaran program!', 'error');
+                return;
+            }
+            if (targetType === 'ARISAN') {
+                const list = appState.arisan?.peserta || [];
+                const idx = list.findIndex(p => p.anggotaId === anggotaId);
+                if (idx !== -1) {
+                    const namaA = list[idx].nama;
+                    if (disetujui) {
+                        list[idx].statusKepesertaan = 'Disetujui';
+                        window.catatLogAuditSistem('PENGATURAN', 'Setujui Peserta Arisan', `${namaA} disetujui mengikuti Arisan Silaturahmi`, 'Disetujui');
+                        window.showToast(`✅ ${namaA} resmi disetujui menjadi peserta Arisan!`);
+                    } else {
+                        list.splice(idx, 1);
+                        window.catatLogAuditSistem('PENGATURAN', 'Tolak Peserta Arisan', `Pengajuan ${namaA} mengikuti Arisan ditolak`, 'Ditolak');
+                        window.showToast(`Pengajuan arisan ${namaA} ditolak.`, 'info');
+                    }
+                }
+            } else {
+                const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+                if (pr && Array.isArray(pr.pesertaProgram)) {
+                    const idx = pr.pesertaProgram.findIndex(p => p.anggotaId === anggotaId);
+                    if (idx !== -1) {
+                        const namaA = pr.pesertaProgram[idx].nama;
+                        if (disetujui) {
+                            pr.pesertaProgram[idx].status = 'Disetujui';
+                            window.catatLogAuditSistem('PENGATURAN', 'Setujui Peserta Program Keluarga', `${namaA} disetujui mengikuti ${pr.nama}`, 'Disetujui');
+                            window.showToast(`✅ ${namaA} resmi disetujui mengikuti program ${pr.nama}!`);
+                        } else {
+                            pr.pesertaProgram.splice(idx, 1);
+                            window.catatLogAuditSistem('PENGATURAN', 'Tolak Peserta Program Keluarga', `Pengajuan ${namaA} di program ${pr.nama} ditolak`, 'Ditolak');
+                            window.showToast(`Pengajuan program ${namaA} ditolak.`, 'info');
+                        }
+                    }
+                }
+            }
+            saveStateToCloud();
+            window.renderApp();
+        };
+
+        window.hapusPesertaDariProgramArisan = (targetType, progId, anggotaId) => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Admin / Bendahara yang dapat mengeluarkan peserta dari program!', 'error');
+                return;
+            }
+            window.showConfirmModal('Keluarkan Peserta dari Program', 'Yakin ingin menghapus anggota ini dari daftar kepesertaan program/arisan?', () => {
+                if (targetType === 'ARISAN') {
+                    if (appState.arisan && Array.isArray(appState.arisan.peserta)) {
+                        appState.arisan.peserta = appState.arisan.peserta.filter(p => p.anggotaId !== anggotaId);
+                    }
+                } else {
+                    const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+                    if (pr && Array.isArray(pr.pesertaProgram)) {
+                        pr.pesertaProgram = pr.pesertaProgram.filter(p => p.anggotaId !== anggotaId);
+                    }
+                }
+                saveStateToCloud();
+                window.renderApp();
+                window.showToast('Peserta berhasil dikeluarkan dari program.');
+            });
+        };
+
         function renderArisanTab() {
             const listEl = document.getElementById('listPesertaArisan');
             const gridProg = document.getElementById('gridProgramKeluarga');
@@ -5587,31 +6126,81 @@
 
             const role = window.getEffectiveRole();
             const isKeuangan = window.isBendaharaOrSuper();
+            const isPengurus = window.isPengurusAny();
 
-            // Sinkronkan peserta arisan dengan daftar anggota terbaru
             if (!appState.arisan || !Array.isArray(appState.arisan.peserta)) {
-                appState.arisan = { peserta: [], riwayatPemenang: [] };
+                appState.arisan = { namaPeriode: 'Putaran Arisan Silaturahmi 2026', tglMulai: '2026-01-01', tglSelesai: '2026-12-31', peserta: [], riwayatPemenang: [], riwayatIuran: [] };
             }
+            if (!appState.arisan.tglMulai) appState.arisan.tglMulai = '2026-01-01';
+            if (!appState.arisan.tglSelesai) appState.arisan.tglSelesai = '2026-12-31';
+            if (!appState.arisan.namaPeriode) appState.arisan.namaPeriode = 'Putaran Arisan Silaturahmi 2026';
             if (!Array.isArray(appState.arisan.riwayatPemenang)) {
                 appState.arisan.riwayatPemenang = [];
             }
-            appState.anggota.forEach(a => {
-                if (!appState.arisan.peserta.some(p => p.anggotaId === a.id)) {
-                    appState.arisan.peserta.push({ anggotaId: a.id, nama: a.nama, sudahMenang: false, tanggalMenang: '-', lunasPutaranIni: false });
+
+            // Pastikan data lama memiliki statusKepesertaan = 'Disetujui'
+            appState.arisan.peserta.forEach(p => {
+                if (!p.statusKepesertaan) p.statusKepesertaan = 'Disetujui';
+            });
+
+            // Pastikan setiap programKeluarga memiliki tglMulai, tglSelesai, dan pesertaProgram (sinkron dari kontributor lama jika belum ada)
+            const progs = appState.programKeluarga || [];
+            progs.forEach(pr => {
+                if (!pr.tglMulai) pr.tglMulai = '2026-01-01';
+                if (!pr.tglSelesai) pr.tglSelesai = '2026-12-31';
+                if (!pr.kategori) pr.kategori = 'Tabungan Qurban';
+                if (!Array.isArray(pr.pesertaProgram)) {
+                    pr.pesertaProgram = [];
+                    (pr.kontributor || []).forEach(k => {
+                        if (k.anggotaId && !pr.pesertaProgram.some(x => x.anggotaId === k.anggotaId)) {
+                            pr.pesertaProgram.push({ anggotaId: k.anggotaId, nama: k.nama, status: 'Disetujui', tglDaftar: k.tanggal || '2026-01-01' });
+                        }
+                    });
                 }
             });
 
-            const pesertaList = appState.arisan.peserta;
-            const iuranPerOrang = Number(appState.parameterStandar?.iuranArisan ?? 100000);
-            const totalPotArisan = pesertaList.length * iuranPerOrang;
-            const sudahDapatCount = pesertaList.filter(p => p.sudahMenang).length;
-            const lunasCount = pesertaList.filter(p => p.lunasPutaranIni).length;
+            // Render Antrean Persetujuan Pendaftaran Program & Arisan untuk Pengurus/Admin
+            const boxAntrean = document.getElementById('boxAntreanPesertaProgramArisan');
+            const listAntreanEl = document.getElementById('listAntreanPesertaProgramArisan');
+            const badgeAntreanEl = document.getElementById('badgeCountPendingProgramArisan');
+            const antreanItems = window.hitungAntreanPesertaProgramArisan();
+            if (boxAntrean && listAntreanEl) {
+                if (isPengurus && antreanItems.length > 0) {
+                    boxAntrean.classList.remove('hidden');
+                    if (badgeAntreanEl) badgeAntreanEl.textContent = `${antreanItems.length} Menunggu`;
+                    listAntreanEl.innerHTML = antreanItems.map(item => `
+                        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-slate-700 flex justify-between items-center gap-2">
+                            <div class="overflow-hidden">
+                                <strong class="text-slate-800 dark:text-white block truncate">${window.escapeHtml(item.namaAnggota)}</strong>
+                                <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold block truncate">Ingin Ikut: ${window.escapeHtml(item.namaProgram)}</span>
+                                <span class="text-[9px] text-slate-400 block">📅 Periode: ${window.escapeHtml(item.periode)} • Daftar: ${window.escapeHtml(item.tglDaftar)}</span>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button type="button" onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', true)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px]">✓ Setujui</button>
+                                <button type="button" onclick="window.verifikasiPesertaProgramArisan('${item.targetType}', '${item.progId}', '${item.anggotaId}', false)" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px]">✕ Tolak</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    boxAntrean.classList.add('hidden');
+                }
+            }
 
-            const progs = appState.programKeluarga || [];
+            const allPesertaArisan = appState.arisan.peserta;
+            const pesertaAktifList = allPesertaArisan.filter(p => (p.statusKepesertaan || 'Disetujui') === 'Disetujui');
+            const iuranPerOrang = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+            const totalPotArisan = pesertaAktifList.length * iuranPerOrang;
+            const sudahDapatCount = pesertaAktifList.filter(p => p.sudahMenang).length;
+            const lunasCount = pesertaAktifList.filter(p => p.lunasPutaranIni).length;
+
             const totalKasProgram = progs.reduce((acc, pr) => acc + (Number(pr.terkumpul) || 0), 0);
 
             let kontribusiAndaTotal = 0;
+            let countProgramDiikutiAnda = 0;
             progs.forEach(pr => {
+                if ((pr.pesertaProgram || []).some(p => p.anggotaId === currentUserSession.id && p.status === 'Disetujui')) {
+                    countProgramDiikutiAnda++;
+                }
                 (pr.kontributor || []).forEach(k => {
                     if (k.anggotaId === currentUserSession.id || k.nama === currentUserSession.nama) {
                         kontribusiAndaTotal += (Number(k.nominal) || 0);
@@ -5619,44 +6208,87 @@
                 });
             });
 
-            const statusArisanAnda = pesertaList.find(p => p.anggotaId === currentUserSession.id);
+            const statusArisanAnda = allPesertaArisan.find(p => p.anggotaId === currentUserSession.id);
+            const stPeriodeArisan = window.evaluasiStatusPeriodeTanggal(appState.arisan.tglMulai, appState.arisan.tglSelesai);
 
             const setArisanCard = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
             setArisanCard('arisanCardTotalPot', window.formatRupiah(totalPotArisan));
-            setArisanCard('arisanCardIuranSub', `Iuran: ${window.formatRupiah(iuranPerOrang)} / peserta`);
-            setArisanCard('arisanCardProgresPutaran', `${sudahDapatCount} / ${pesertaList.length} Dapat`);
-            setArisanCard('arisanCardLunasSub', `Iuran Putaran Ini: ${lunasCount}/${pesertaList.length} Lunas`);
+            setArisanCard('arisanCardIuranSub', `Iuran: ${window.formatRupiah(iuranPerOrang)} × ${pesertaAktifList.length} peserta aktif`);
+            setArisanCard('arisanCardProgresPutaran', `${sudahDapatCount} / ${pesertaAktifList.length} Dapat`);
+            setArisanCard('arisanCardLunasSub', `Mulai: ${appState.arisan.tglMulai} s/d ${appState.arisan.tglSelesai}`);
             setArisanCard('arisanCardTotalProgram', window.formatRupiah(totalKasProgram));
-            setArisanCard('arisanCardCountProgram', `${progs.length} Program Aktif`);
+            setArisanCard('arisanCardCountProgram', `${progs.length} Program (${countProgramDiikutiAnda} Anda Ikuti)`);
             setArisanCard('arisanCardKontribusiAnda', window.formatRupiah(kontribusiAndaTotal));
-            setArisanCard('arisanCardStatusAnda', `Arisan Anda: ${statusArisanAnda?.sudahMenang ? '🏆 Sudah Dapat' : '⏳ Menunggu Giliran'} (${statusArisanAnda?.lunasPutaranIni ? '✓ Iuran Lunas' : 'Belum Setor'})`);
+            const labelStatusArisanSaya = !statusArisanAnda
+                ? 'Belum Terdaftar'
+                : statusArisanAnda.statusKepesertaan === 'Menunggu'
+                    ? '⏳ Menunggu Persetujuan Admin'
+                    : (statusArisanAnda.sudahMenang ? '🏆 Sudah Dapat' : '✅ Peserta Aktif');
+            setArisanCard('arisanCardStatusAnda', `Arisan: ${labelStatusArisanSaya}`);
 
             const badgePutaran = document.getElementById('badgePutaranArisan');
             if (badgePutaran) {
-                badgePutaran.textContent = `${pesertaList.length - sudahDapatCount} Menunggu Kocokan`;
+                badgePutaran.textContent = stPeriodeArisan.label;
+                badgePutaran.className = `text-[9px] font-bold px-2 py-0.5 rounded-full ${stPeriodeArisan.cls}`;
             }
 
-            // Privasi: Member melihat status daftar giliran arisan, Admin memiliki tombol Toggle Lunas Iuran
-            listEl.innerHTML = pesertaList.map(ps => {
-                const isMe = ps.anggotaId === currentUserSession.id;
-                return `
-                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border ${isMe ? 'border-emerald-300 dark:border-emerald-800' : 'border-slate-200 dark:border-slate-700'} flex justify-between items-center gap-2">
-                    <div class="overflow-hidden">
-                        <strong class="text-slate-800 dark:text-white block truncate">${ps.nama} ${isMe ? '<span class="text-[9px] text-emerald-600 font-bold">(Anda)</span>' : ''}</strong>
-                        <div class="flex items-center gap-1.5 mt-0.5">
-                            <span class="text-[9px] font-semibold px-1.5 py-0.2 rounded ${ps.lunasPutaranIni ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300'}">${ps.lunasPutaranIni ? '✓ Iuran Lunas' : '⏳ Belum Setor'}</span>
-                            <span class="text-[9px] text-slate-400">Menang: ${ps.tanggalMenang || '-'}</span>
+            const infoPeriodeBox = document.getElementById('infoPeriodeArisanBox');
+            if (infoPeriodeBox) {
+                infoPeriodeBox.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <strong class="text-blue-900 dark:text-blue-300 truncate">${window.escapeHtml(appState.arisan.namaPeriode)}</strong>
+                        ${isKeuangan ? `<button type="button" onclick="window.bukaModalAturPeriodeArisan()" class="text-blue-600 dark:text-blue-400 hover:underline font-bold">✏️ Ubah Tanggal</button>` : ''}
+                    </div>
+                    <div class="flex justify-between items-center text-slate-600 dark:text-slate-300">
+                        <span>📅 Mulai: <strong>${window.escapeHtml(appState.arisan.tglMulai)}</strong></span>
+                        <span>🏁 Selesai: <strong>${window.escapeHtml(appState.arisan.tglSelesai)}</strong></span>
+                    </div>
+                `;
+            }
+
+            const boxActionArisan = document.getElementById('boxActionDaftarArisanUtama');
+            if (boxActionArisan) {
+                if (!statusArisanAnda) {
+                    boxActionArisan.innerHTML = `<button type="button" onclick="window.ajukanIkutProgramTertentu('ARISAN_UTAMA')" class="w-full py-1.5 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] shadow-xs transition cursor-pointer">✋ Daftar Ikut Arisan Silaturahmi Ini (Perlu Persetujuan Admin)</button>`;
+                } else if (statusArisanAnda.statusKepesertaan === 'Menunggu') {
+                    boxActionArisan.innerHTML = `<div class="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-[10px] font-bold text-center">⏳ Pendaftaran Arisan Anda sedang menunggu persetujuan Admin/Pengurus</div>`;
+                } else {
+                    boxActionArisan.innerHTML = '';
+                }
+            }
+
+            if (allPesertaArisan.length === 0) {
+                listEl.innerHTML = `<p class="text-[11px] text-slate-400 italic py-4 text-center">Belum ada peserta terdaftar di periode arisan ini. Klik tombol <strong>Pilih &amp; Daftar Program</strong> untuk mendaftar.</p>`;
+            } else {
+                listEl.innerHTML = allPesertaArisan.map(ps => {
+                    const isMe = ps.anggotaId === currentUserSession.id;
+                    const isPending = ps.statusKepesertaan === 'Menunggu';
+                    return `
+                    <div class="p-2.5 rounded-xl ${isPending ? 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-300 dark:border-amber-800' : 'bg-slate-50 dark:bg-slate-800'} border ${isMe ? 'border-emerald-400 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-700'} flex justify-between items-center gap-2">
+                        <div class="overflow-hidden">
+                            <strong class="text-slate-800 dark:text-white block truncate">${window.escapeHtml(ps.nama)} ${isMe ? '<span class="text-[9px] text-emerald-600 font-bold">(Anda)</span>' : ''}</strong>
+                            <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                ${isPending ? `<span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-amber-200 text-amber-900">⏳ Menunggu Persetujuan Admin</span>` : `
+                                    <span class="text-[9px] font-semibold px-1.5 py-0.2 rounded ${ps.lunasPutaranIni ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300'}">${ps.lunasPutaranIni ? '✓ Iuran Lunas' : '⏳ Belum Setor'}</span>
+                                    <span class="text-[9px] text-slate-400">Menang: ${window.escapeHtml(ps.tanggalMenang || '-')}</span>
+                                `}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            ${isPending && isPengurus ? `
+                                <button type="button" onclick="window.verifikasiPesertaProgramArisan('ARISAN', 'ARISAN_UTAMA', '${ps.anggotaId}', true)" class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[9px] font-bold">✓ Setujui</button>
+                                <button type="button" onclick="window.verifikasiPesertaProgramArisan('ARISAN', 'ARISAN_UTAMA', '${ps.anggotaId}', false)" class="px-2 py-0.5 rounded bg-rose-600 text-white text-[9px] font-bold">✕</button>
+                            ` : ''}
+                            ${!isPending && isKeuangan ? `
+                                <button type="button" onclick="window.toggleLunasIuranArisan('${ps.anggotaId}')" class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 text-[9px] font-bold text-slate-600 dark:text-slate-300" title="Ubah Status Lunas Iuran">${ps.lunasPutaranIni ? 'Batal Lunas' : 'Tandai Lunas'}</button>
+                                <button type="button" onclick="window.toggleMenangPesertaArisan('${ps.anggotaId}')" class="px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-amber-50 text-[9px] font-bold text-amber-600" title="Ubah Status Menang Undian">🔄</button>
+                                <button type="button" onclick="window.hapusPesertaDariProgramArisan('ARISAN', 'ARISAN_UTAMA', '${ps.anggotaId}')" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold px-1" title="Keluarkan Peserta">✕</button>
+                            ` : ''}
+                            ${!isPending ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${ps.sudahMenang ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${ps.sudahMenang ? '🏆 Dapat' : '⏳ Antre'}</span>` : ''}
                         </div>
                     </div>
-                    <div class="flex items-center gap-1 shrink-0">
-                        ${isKeuangan ? `
-                            <button onclick="window.toggleLunasIuranArisan('${ps.anggotaId}')" class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 text-[9px] font-bold text-slate-600 dark:text-slate-300" title="Ubah Status Lunas Iuran">${ps.lunasPutaranIni ? 'Batal Lunas' : 'Tandai Lunas'}</button>
-                            <button onclick="window.toggleMenangPesertaArisan('${ps.anggotaId}')" class="px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:bg-amber-50 text-[9px] font-bold text-amber-600" title="Ubah Status Menang Undian">🔄</button>
-                        ` : ''}
-                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${ps.sudahMenang ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${ps.sudahMenang ? '🏆 Dapat' : '⏳ Antre'}</span>
-                    </div>
-                </div>
-            `}).join('');
+                `}).join('');
+            }
 
             // Render Riwayat Pemenang Arisan
             const riwayatEl = document.getElementById('listRiwayatPemenangArisan');
@@ -5667,9 +6299,9 @@
                 } else {
                     riwayatEl.innerHTML = hist.map((h, i) => `
                         <div class="flex justify-between items-center px-2 py-1 rounded bg-amber-50/70 dark:bg-slate-800/70 border border-amber-200/60 dark:border-slate-700">
-                            <span class="font-semibold text-slate-700 dark:text-slate-200">#${h.putaranKe || (i + 1)} • ${h.nama}</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-200">#${h.putaranKe || (i + 1)} • ${window.escapeHtml(h.nama)}</span>
                             <div class="flex items-center gap-1.5">
-                                <span class="font-mono text-[10px] text-emerald-600 font-bold">${window.formatRupiah(h.nominalPot || totalPotArisan)} (${h.tanggal})</span>
+                                <span class="font-mono text-[10px] text-emerald-600 font-bold">${window.formatRupiah(h.nominalPot || totalPotArisan)} (${window.escapeHtml(h.tanggal)})</span>
                                 ${role === 'admin' ? `
                                     <button onclick="window.hapusRiwayatPemenangArisan(${i})" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold" title="Hapus Riwayat Pemenang (Khusus Super Admin)">🗑️</button>
                                 ` : ''}
@@ -5680,29 +6312,48 @@
             }
 
             if (progs.length === 0) {
-                gridProg.innerHTML = `<p class="text-xs text-slate-400 italic col-span-2 py-4 text-center">Belum ada program tabungan kolektif keluarga.</p>`;
+                gridProg.innerHTML = `<p class="text-xs text-slate-400 italic col-span-2 py-4 text-center">Belum ada program tabungan / arisan kolektif keluarga.</p>`;
                 return;
             }
 
             gridProg.innerHTML = progs.map(pr => {
                 const persen = pr.target > 0 ? Math.min(100, Math.round((pr.terkumpul / pr.target) * 100)) : 0;
                 const kontribList = pr.kontributor || [];
+                const pesertaProgList = pr.pesertaProgram || [];
+                const pesertaDisetujui = pesertaProgList.filter(p => p.status === 'Disetujui');
+                const pesertaMenunggu = pesertaProgList.filter(p => p.status === 'Menunggu');
+                const myEntry = pesertaProgList.find(p => p.anggotaId === currentUserSession.id);
+                const stPeriode = window.evaluasiStatusPeriodeTanggal(pr.tglMulai, pr.tglSelesai);
+
                 const myKontribNominal = kontribList
                     .filter(k => k.anggotaId === currentUserSession.id || k.nama === currentUserSession.nama)
                     .reduce((s, k) => s + (Number(k.nominal) || 0), 0);
 
-                // Privasi: Bendahara & Super Admin melihat seluruh rincian kontributor, Member hanya melihat riwayat setoran miliknya sendiri
                 const visibleKontrib = isKeuangan
                     ? kontribList
                     : kontribList.filter(k => k.anggotaId === currentUserSession.id || k.nama === currentUserSession.nama);
 
+                let tombolAksiBawah = '';
+                if (!myEntry) {
+                    tombolAksiBawah = `<button type="button" onclick="window.ajukanIkutProgramTertentu('${pr.id}')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-bold text-[10px] shadow-xs cursor-pointer">✋ Daftar Ikut Program</button>`;
+                } else if (myEntry.status === 'Menunggu') {
+                    tombolAksiBawah = `<span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 font-bold text-[10px]">⏳ Menunggu Persetujuan Admin</span>`;
+                } else {
+                    tombolAksiBawah = `<button type="button" onclick="window.setorKeProgramKeluarga('${pr.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px] shadow-xs cursor-pointer">+ Setor Tabungan</button>`;
+                }
+
                 return `
-                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2.5 flex flex-col justify-between">
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border ${myEntry?.status === 'Disetujui' ? 'border-emerald-300 dark:border-emerald-800' : 'border-slate-200 dark:border-slate-700'} space-y-2.5 flex flex-col justify-between">
                         <div class="space-y-2">
                             <div class="flex justify-between items-start gap-2">
                                 <div>
-                                    <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm">${pr.nama}</h4>
-                                    <span class="text-[10px] text-emerald-600 font-semibold">Tabungan Anda di Program Ini: <strong>${window.formatRupiah(myKontribNominal)}</strong></span>
+                                    <div class="flex flex-wrap items-center gap-1 mb-0.5">
+                                        <span class="px-2 py-0.2 rounded-full text-[9px] font-extrabold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">${window.escapeHtml(pr.kategori || 'Program Keluarga')}</span>
+                                        <span class="px-2 py-0.2 rounded-full text-[9px] font-bold ${stPeriode.cls}">${stPeriode.label}</span>
+                                        ${myEntry?.status === 'Disetujui' ? `<span class="px-2 py-0.2 rounded-full text-[9px] font-extrabold bg-emerald-100 text-emerald-800">✓ Anda Peserta</span>` : ''}
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm">${window.escapeHtml(pr.nama)}</h4>
+                                    <span class="text-[10px] text-emerald-600 font-semibold block">Tabungan Anda: <strong>${window.formatRupiah(myKontribNominal)}</strong> ${pr.iuranStandar ? `• Iuran: ${window.formatRupiah(pr.iuranStandar)}` : ''}</span>
                                 </div>
                                 ${isKeuangan ? `
                                     <div class="flex items-center gap-1 shrink-0">
@@ -5711,6 +6362,13 @@
                                     </div>
                                 ` : ''}
                             </div>
+
+                            <!-- Informasi Periode Mulai s/d Selesai Program -->
+                            <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700 flex justify-between items-center text-[10px] text-slate-600 dark:text-slate-300">
+                                <span>📅 Mulai: <strong>${window.escapeHtml(pr.tglMulai || '2026-01-01')}</strong></span>
+                                <span>🏁 Selesai: <strong>${window.escapeHtml(pr.tglSelesai || '2026-12-31')}</strong></span>
+                            </div>
+
                             <div class="flex justify-between text-[11px]">
                                 <span class="text-slate-500">Terkumpul: <strong class="text-emerald-600">${window.formatRupiah(pr.terkumpul)}</strong></span>
                                 <span class="text-slate-400">Target: ${window.formatRupiah(pr.target)}</span>
@@ -5719,13 +6377,42 @@
                                 <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width:${persen}%"></div>
                             </div>
 
+                            <!-- Daftar Peserta Terdaftar & Antrean Persetujuan di Program Ini -->
+                            <div class="pt-1.5 border-t border-slate-200/70 dark:border-slate-700 space-y-1">
+                                <div class="flex justify-between items-center text-[9px] font-bold uppercase text-slate-400">
+                                    <span>👥 Peserta Terdaftar (${pesertaDisetujui.length} Anggota)</span>
+                                    ${pesertaMenunggu.length > 0 ? `<span class="text-amber-600">${pesertaMenunggu.length} Menunggu Persetujuan</span>` : ''}
+                                </div>
+                                <div class="flex flex-wrap gap-1">
+                                    ${pesertaDisetujui.length > 0 ? pesertaDisetujui.map(ps => `
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+                                            ✓ ${window.escapeHtml(ps.nama)}
+                                            ${isKeuangan ? `<button type="button" onclick="window.hapusPesertaDariProgramArisan('PROGRAM', '${pr.id}', '${ps.anggotaId}')" class="text-rose-500 hover:text-rose-700 font-bold ml-0.5" title="Hapus dari peserta">×</button>` : ''}
+                                        </span>
+                                    `).join('') : `<span class="text-[10px] text-slate-400 italic">Belum ada peserta terdaftar.</span>`}
+                                </div>
+                                ${isPengurus && pesertaMenunggu.length > 0 ? `
+                                    <div class="space-y-1 pt-1">
+                                        ${pesertaMenunggu.map(pm => `
+                                            <div class="flex justify-between items-center px-2 py-1 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-[10px]">
+                                                <span class="font-bold text-amber-900 dark:text-amber-200">⏳ ${window.escapeHtml(pm.nama)} ingin ikut</span>
+                                                <div class="flex gap-1">
+                                                    <button type="button" onclick="window.verifikasiPesertaProgramArisan('PROGRAM', '${pr.id}', '${pm.anggotaId}', true)" class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[9px]">✓ Setujui</button>
+                                                    <button type="button" onclick="window.verifikasiPesertaProgramArisan('PROGRAM', '${pr.id}', '${pm.anggotaId}', false)" class="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-[9px]">✕ Tolak</button>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+
                             ${visibleKontrib.length > 0 ? `
                                 <div class="pt-1.5 border-t border-slate-200/70 dark:border-slate-700 space-y-1">
-                                    <span class="text-[9px] font-bold uppercase text-slate-400 block">${isKeuangan ? `Rincian Kontributor (${visibleKontrib.length} Setoran):` : `Riwayat Setoran Anda (${visibleKontrib.length}):`}</span>
+                                    <span class="text-[9px] font-bold uppercase text-slate-400 block">${isKeuangan ? `Rincian Setoran Masuk (${visibleKontrib.length}):` : `Riwayat Setoran Anda (${visibleKontrib.length}):`}</span>
                                     <div class="max-h-24 overflow-y-auto space-y-1 pr-1">
                                         ${visibleKontrib.slice().reverse().map(k => `
                                             <div class="flex justify-between items-center text-[10px] bg-white dark:bg-slate-900 px-2 py-1 rounded border border-slate-100 dark:border-slate-800">
-                                                <span class="truncate">${k.tanggal} • <strong>${k.nama}</strong> ${k.catatan ? '(' + k.catatan + ')' : ''}</span>
+                                                <span class="truncate">${window.escapeHtml(k.tanggal)} • <strong>${window.escapeHtml(k.nama)}</strong> ${k.catatan ? '(' + window.escapeHtml(k.catatan) + ')' : ''}</span>
                                                 <div class="flex items-center gap-1 shrink-0 ml-1">
                                                     <strong class="text-emerald-600">+${window.formatRupiah(k.nominal)}</strong>
                                                     ${isKeuangan ? `
@@ -5744,7 +6431,7 @@
 
                         <div class="flex justify-between items-center pt-2 border-t border-slate-200/60 dark:border-slate-700">
                             <span class="text-[10px] font-bold text-emerald-600">${persen}% Tercapai (Kurang ${window.formatRupiah(Math.max(0, pr.target - pr.terkumpul))})</span>
-                            <button onclick="window.setorKeProgramKeluarga('${pr.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px] shadow-xs">+ Ikut Menabung</button>
+                            ${tombolAksiBawah}
                         </div>
                     </div>
                 `;
@@ -5767,7 +6454,7 @@
             const ps = (appState.arisan?.peserta || []).find(p => p.anggotaId === anggotaId);
             if (ps) {
                 ps.sudahMenang = !ps.sudahMenang;
-                ps.tanggalMenang = ps.sudahMenang ? new Date().toISOString().slice(0, 10) : '-';
+                ps.tanggalMenang = ps.sudahMenang ? window.getTanggalLokalHariIni() : '-';
                 saveStateToCloud();
                 window.renderApp();
                 window.showToast(`Status menang arisan ${ps.nama} diubah menjadi: ${ps.sudahMenang ? 'Sudah Dapat' : 'Menunggu Giliran'}`);
@@ -5794,19 +6481,55 @@
             if (wrapBank) wrapBank.style.display = (sel && sel.value === 'POTONG_SUKARELA') ? 'none' : 'block';
         };
 
+        window.handlePilihProgramBayarArisanChange = (sel) => {
+            const val = sel ? sel.value : 'ARISAN_UTAMA';
+            const nomInput = document.getElementById('arisanNominalInput');
+            if (!nomInput) return;
+            if (val === 'ARISAN_UTAMA') {
+                nomInput.value = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+            } else {
+                const pr = (appState.programKeluarga || []).find(x => x.id === val);
+                if (pr) nomInput.value = Number(pr.iuranStandar || 250000);
+            }
+        };
+
         window.bukaModalBayarArisan = () => {
             const isKeuangan = window.isBendaharaOrSuper();
             const wrapEl = document.getElementById('wrapArisanPilihAnggota');
             const selEl = document.getElementById('arisanPesertaSelect');
+            const searchArisan = document.getElementById('searchSelectArisanPeserta');
+            if (searchArisan) searchArisan.value = '';
             if (selEl && wrapEl) {
-                selEl.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
+                window.renderGroupedMemberOptions('arisanPesertaSelect', '', false, currentUserSession.id);
                 selEl.value = currentUserSession.id;
                 if (isKeuangan) wrapEl.classList.remove('hidden');
                 else wrapEl.classList.add('hidden');
             }
+            const progSelect = document.getElementById('arisanTargetProgramSelect');
+            if (progSelect) {
+                const options = [];
+                const isJoinedArisan = isKeuangan || (appState.arisan?.peserta || []).some(p => p.anggotaId === currentUserSession.id && (p.statusKepesertaan || 'Disetujui') === 'Disetujui');
+                if (isJoinedArisan) {
+                    options.push(`<option value="ARISAN_UTAMA">🎯 ${window.escapeHtml(appState.arisan?.namaPeriode || 'Arisan Silaturahmi Bulanan')} (${window.escapeHtml(appState.arisan?.tglMulai || '2026-01-01')} s/d ${window.escapeHtml(appState.arisan?.tglSelesai || '2026-12-31')})</option>`);
+                }
+                (appState.programKeluarga || []).forEach(pr => {
+                    const isJoinedProg = isKeuangan || (pr.pesertaProgram || []).some(p => p.anggotaId === currentUserSession.id && p.status === 'Disetujui');
+                    if (isJoinedProg) {
+                        options.push(`<option value="${pr.id}">🐑 ${window.escapeHtml(pr.nama)} (${window.escapeHtml(pr.tglMulai || '2026-01-01')} s/d ${window.escapeHtml(pr.tglSelesai || '2026-12-31')})</option>`);
+                    }
+                });
+                if (options.length === 0) {
+                    window.showToast('Anda belum terdaftar sebagai peserta aktif. Silakan klik "✋ Pilih & Daftar Program" terlebih dahulu!', 'info');
+                    window.bukaModalDaftarProgramArisan();
+                    return;
+                }
+                progSelect.innerHTML = options.join('');
+                window.handlePilihProgramBayarArisanChange(progSelect);
+            } else {
+                const iuranStd = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+                document.getElementById('arisanNominalInput').value = iuranStd;
+            }
             window.populateDropdownBankAktif('arisanBankTujuan');
-            const iuranStd = Number(appState.parameterStandar?.iuranArisan ?? 100000);
-            document.getElementById('arisanNominalInput').value = iuranStd;
             const metodeEl = document.getElementById('arisanMetodeBayar');
             metodeEl.value = 'TUNAI';
             window.handleArisanMetodeChange(metodeEl);
@@ -5816,6 +6539,7 @@
         window.simpanBayarIuranArisan = (e) => {
             if (e && e.preventDefault) e.preventDefault();
             const isKeuangan = window.isBendaharaOrSuper();
+            const targetProgramId = document.getElementById('arisanTargetProgramSelect')?.value || 'ARISAN_UTAMA';
             const targetId = (isKeuangan && document.getElementById('arisanPesertaSelect')?.value)
                 ? document.getElementById('arisanPesertaSelect').value
                 : currentUserSession.id;
@@ -5823,6 +6547,50 @@
             const nominal = parseFloat(document.getElementById('arisanNominalInput').value) || 0;
             const metode = document.getElementById('arisanMetodeBayar').value;
             const bankTujuan = metode === 'TUNAI' ? (document.getElementById('arisanBankTujuan')?.value || '') : 'Potong Simpanan Sukarela';
+
+            // Jika yang dipilih adalah salah satu Program Kolektif di Menu Arisan
+            if (targetProgramId !== 'ARISAN_UTAMA') {
+                const pr = (appState.programKeluarga || []).find(x => x.id === targetProgramId);
+                if (!pr) return false;
+                if (metode === 'POTONG_SUKARELA') {
+                    const r = window.hitungRincianSimpananAnggota(targetId);
+                    if (nominal > r.sukarela) {
+                        window.showToast(`Saldo Simpanan Sukarela ${targetObj.nama} tidak mencukupi (${window.formatRupiah(r.sukarela)})!`, 'error');
+                        return false;
+                    }
+                    appState.transaksi.push({
+                        id: 't_prog_' + Date.now(),
+                        waktu: window.getWaktuLokalSekarang(),
+                        anggotaId: targetObj.id,
+                        nama: targetObj.nama,
+                        tipe: 'Penarikan',
+                        kategori: 'Simpanan Sukarela',
+                        nominal,
+                        status: 'Disetujui',
+                        bukti: '',
+                        bankTujuan: 'Program Keluarga',
+                        keterangan: `Setoran Program: ${pr.nama}`
+                    });
+                }
+                pr.terkumpul = (Number(pr.terkumpul) || 0) + nominal;
+                if (!Array.isArray(pr.kontributor)) pr.kontributor = [];
+                pr.kontributor.push({
+                    id: 'kp_' + Date.now(),
+                    tanggal: window.getTanggalLokalHariIni(),
+                    anggotaId: targetObj.id,
+                    nama: targetObj.nama,
+                    nominal,
+                    sumberDana: metode,
+                    bankTujuan,
+                    catatan: 'Setoran via Menu Arisan'
+                });
+                window.catatLogAuditSistem('TRANSAKSI', 'Setor Iuran Program Keluarga', `${pr.nama}: +${window.formatRupiah(nominal)} a.n ${targetObj.nama} via ${bankTujuan}`, 'Sukses');
+                saveStateToCloud();
+                document.getElementById('modalBayarArisan').classList.add('hidden');
+                window.renderApp();
+                window.showToast(`Setoran ${window.formatRupiah(nominal)} untuk ${pr.nama} berhasil dicatat!`);
+                return false;
+            }
 
             if (metode === 'POTONG_SUKARELA') {
                 const r = window.hitungRincianSimpananAnggota(targetId);
@@ -5832,7 +6600,7 @@
                 }
                 appState.transaksi.push({
                     id: 't_arisan_' + Date.now(),
-                    waktu: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                    waktu: window.getWaktuLokalSekarang(),
                     anggotaId: targetObj.id,
                     nama: targetObj.nama,
                     tipe: 'Penarikan',
@@ -5851,7 +6619,7 @@
             if (!Array.isArray(appState.arisan.riwayatIuran)) appState.arisan.riwayatIuran = [];
             appState.arisan.riwayatIuran.push({
                 id: 'ari_' + Date.now(),
-                tanggal: new Date().toISOString().slice(0, 10),
+                tanggal: window.getTanggalLokalHariIni(),
                 anggotaId: targetObj.id,
                 nama: targetObj.nama,
                 nominal,
@@ -5941,6 +6709,16 @@
         window.setorKeProgramKeluarga = (progId) => {
             const pr = (appState.programKeluarga || []).find(x => x.id === progId);
             if (!pr) return;
+            const isKeuangan = window.isBendaharaOrSuper();
+            const myEntry = (pr.pesertaProgram || []).find(p => p.anggotaId === currentUserSession.id);
+            if (!isKeuangan && (!myEntry || myEntry.status !== 'Disetujui')) {
+                if (myEntry && myEntry.status === 'Menunggu') {
+                    window.showToast('⏳ Pendaftaran Anda di program ini masih menunggu persetujuan Admin.', 'info');
+                } else {
+                    window.ajukanIkutProgramTertentu(progId);
+                }
+                return;
+            }
             document.getElementById('setorProgId').value = progId;
             document.getElementById('judulModalSetorProgram').textContent = `Menabung: ${pr.nama}`;
             document.getElementById('setorProgNominal').value = 250000;
@@ -5974,7 +6752,7 @@
                 }
                 appState.transaksi.push({
                     id: 't_prog_' + Date.now(),
-                    waktu: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                    waktu: window.getWaktuLokalSekarang(),
                     anggotaId: currentUserSession.id,
                     nama: currentUserSession.nama,
                     tipe: 'Penarikan',
@@ -5991,7 +6769,7 @@
             if (!Array.isArray(pr.kontributor)) pr.kontributor = [];
             pr.kontributor.push({
                 id: 'kp_' + Date.now(),
-                tanggal: new Date().toISOString().slice(0, 10),
+                tanggal: window.getTanggalLokalHariIni(),
                 anggotaId: currentUserSession.id,
                 nama: currentUserSession.nama,
                 nominal,
@@ -6262,8 +7040,10 @@
 
             const selAnggota = document.getElementById('pinjamanAnggotaId');
             const wrapAnggota = document.getElementById('wrapperPilihAnggotaPinjaman');
+            const searchPinj = document.getElementById('searchSelectPinjamanAnggota');
+            if (searchPinj) searchPinj.value = '';
             if (selAnggota && wrapAnggota) {
-                selAnggota.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${window.escapeHtml(a.nama)} (${window.escapeHtml(a.namaKeluarga)})</option>`).join('');
+                window.renderGroupedMemberOptions('pinjamanAnggotaId', '', false, currentUserSession.id);
                 selAnggota.value = currentUserSession.id;
                 if (isKeuangan) wrapAnggota.classList.remove('hidden');
                 else wrapAnggota.classList.add('hidden');
@@ -6400,7 +7180,7 @@
 
             const newPinjaman = {
                 id: 'p_' + Date.now(),
-                tanggalPengajuan: new Date().toISOString().slice(0, 10),
+                tanggalPengajuan: window.getTanggalLokalHariIni(),
                 anggotaId: pemohonObj.id,
                 nama: pemohonObj.nama,
                 jenisAkad,
@@ -6693,7 +7473,7 @@
                 }
                 appState.transaksi.push({
                     id: 't_zis_' + Date.now(),
-                    waktu: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                    waktu: window.getWaktuLokalSekarang(),
                     anggotaId: currentUserSession.id,
                     nama: currentUserSession.nama,
                     tipe: 'Penarikan',
@@ -6708,7 +7488,7 @@
 
             const newZis = {
                 id: 'z_' + Date.now(),
-                tanggal: new Date().toISOString().slice(0, 10),
+                tanggal: window.getTanggalLokalHariIni(),
                 anggotaId: currentUserSession.id,
                 nama: currentUserSession.nama,
                 tipeMutasi,
@@ -6774,7 +7554,7 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `Laporan_ZISWAF_Keluarga_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute('download', `Laporan_ZISWAF_Keluarga_${window.getTanggalLokalHariIni()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -6802,6 +7582,7 @@
                 return;
             }
             window.showConfirmModal('Hapus Catatan ZIS', 'Yakin ingin menghapus riwayat mutasi ZIS ini?', () => {
+                window.markDeletedItemId(id);
                 appState.zis = (appState.zis || []).filter(z => z.id !== id);
                 saveStateToCloud();
                 window.renderApp();
@@ -7007,7 +7788,9 @@
         window.bukaModalPoinBonus = () => {
             const sel = document.getElementById('bonusAnggotaId');
             if (!sel) return;
-            sel.innerHTML = appState.anggota.map(a => `<option value="${a.id}">${a.nama} (${a.namaKeluarga})</option>`).join('');
+            const searchBonus = document.getElementById('searchSelectBonusAnggota');
+            if (searchBonus) searchBonus.value = '';
+            window.renderGroupedMemberOptions('bonusAnggotaId', '', false, currentUserSession.id);
             window.loadCurrentBonusAnggota();
             document.getElementById('modalPoinBonus').classList.remove('hidden');
         };
@@ -7129,7 +7912,7 @@
                         Atas keaktifan, komitmen bermuamalah syariah, partisipasi musyawarah, serta kontribusi amal ZISWAF dalam membangun kesejahteraan keluarga bersama.
                     </p>
                     <div class="pt-3 border-t border-dashed border-slate-200 dark:border-slate-700 flex justify-between text-[10px] text-slate-400">
-                        <span>Tanggal Terbit: ${new Date().toISOString().slice(0, 10)}</span>
+                        <span>Tanggal Terbit: ${window.getTanggalLokalHariIni()}</span>
                         <span>Dewan Pengurus Koperasi Syariah</span>
                     </div>
                 </div>
@@ -7196,14 +7979,44 @@
                 return matchKK && matchRole && matchQ;
             });
 
+            const pagBarAnggota = document.getElementById('anggotaPaginationBar');
+            if (typeof window.anggotaPage !== 'number' || window.anggotaPage < 1) window.anggotaPage = 1;
+            if (typeof window.anggotaPageSize !== 'number') window.anggotaPageSize = 18;
+
             if (filtered.length === 0) {
                 container.innerHTML = `<div class="col-span-3 p-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200/70 dark:border-slate-800 text-center text-slate-400 italic">Tidak ditemukan data anggota keluarga yang sesuai pencarian.</div>`;
+                if (pagBarAnggota) pagBarAnggota.innerHTML = '';
                 return;
+            }
+
+            const pageSizeA = window.anggotaPageSize > 0 ? window.anggotaPageSize : filtered.length;
+            const totalPagesA = Math.max(1, Math.ceil(filtered.length / pageSizeA));
+            if (window.anggotaPage > totalPagesA) window.anggotaPage = totalPagesA;
+            const startIdxA = (window.anggotaPage - 1) * pageSizeA;
+            const pagedAnggota = window.anggotaPageSize > 0 ? filtered.slice(startIdxA, startIdxA + pageSizeA) : filtered;
+
+            if (pagBarAnggota) {
+                pagBarAnggota.innerHTML = `
+                    <div class="flex items-center gap-2 text-[11px] text-slate-500">
+                        <span>Menampilkan <strong>${startIdxA + 1}–${Math.min(startIdxA + pagedAnggota.length, filtered.length)}</strong> dari <strong>${filtered.length}</strong> anggota</span>
+                        <select onchange="window.ubahUkuranHalamanAnggota(this.value)" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold outline-none">
+                            <option value="18" ${window.anggotaPageSize === 18 ? 'selected' : ''}>18 / Hal</option>
+                            <option value="36" ${window.anggotaPageSize === 36 ? 'selected' : ''}>36 / Hal</option>
+                            <option value="72" ${window.anggotaPageSize === 72 ? 'selected' : ''}>72 / Hal</option>
+                            <option value="0" ${window.anggotaPageSize === 0 ? 'selected' : ''}>Semua</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" onclick="window.ubahHalamanAnggota(${window.anggotaPage - 1})" ${window.anggotaPage <= 1 ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 font-bold text-[11px] ${window.anggotaPage <= 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}">◀ Sebelumnya</button>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-extrabold text-[11px]">Hal ${window.anggotaPage} / ${totalPagesA}</span>
+                        <button type="button" onclick="window.ubahHalamanAnggota(${window.anggotaPage + 1})" ${window.anggotaPage >= totalPagesA ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 font-bold text-[11px] ${window.anggotaPage >= totalPagesA ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}">Berikutnya ▶</button>
+                    </div>
+                `;
             }
 
             const sShu = window.hitungRingkasanShuKoperasi();
 
-            container.innerHTML = filtered.map(a => {
+            container.innerHTML = pagedAnggota.map(a => {
                 const rSimp = window.hitungRincianSimpananAnggota(a.id);
                 const shuInd = window.hitungShuIndividu(a.id, sShu);
                 const memberLoans = (appState.pinjaman || []).filter(p => p.status === 'Disetujui' && p.anggotaId === a.id);
@@ -7354,7 +8167,7 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `Data_Anggota_Koperasi_Keluarga_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute('download', `Data_Anggota_Koperasi_Keluarga_${window.getTanggalLokalHariIni()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -7388,6 +8201,7 @@
                 return;
             }
             window.showConfirmModal('Hapus Anggota', 'Yakin ingin menghapus anggota keluarga ini?', () => {
+                window.markDeletedItemId(id);
                 appState.anggota = appState.anggota.filter(a => a.id !== id);
                 if (appState.arisan && Array.isArray(appState.arisan.peserta)) {
                     appState.arisan.peserta = appState.arisan.peserta.filter(p => p.anggotaId !== id);
@@ -7443,7 +8257,9 @@
             document.getElementById('modalAnggotaTitle').textContent = 'Tambah Anggota Keluarga Baru';
             window.populateDropdownKeluargaModal('');
             const tglEl = document.getElementById('anggotaTglGabung');
-            if (tglEl) tglEl.value = new Date().toISOString().slice(0, 10);
+            if (tglEl) tglEl.value = window.getTanggalLokalHariIni();
+            const chkPokokEl = document.getElementById('chkSetorPokokAwal');
+            if (chkPokokEl) chkPokokEl.checked = false;
             const stdPokok = Number(appState.parameterStandar?.simpananPokok ?? 500000);
             const nomPokokEl = document.getElementById('inputNominalPokokAwal');
             if (nomPokokEl) nomPokokEl.value = stdPokok;
@@ -7513,7 +8329,7 @@
             const rekeningPribadi = document.getElementById('anggotaRekening')?.value.trim() || '';
             const rawPin = document.getElementById('anggotaPin').value.trim() || '1234';
             const rawRole = document.getElementById('anggotaRole').value;
-            const tglGabung = document.getElementById('anggotaTglGabung')?.value || new Date().toISOString().slice(0, 10);
+            const tglGabung = document.getElementById('anggotaTglGabung')?.value || window.getTanggalLokalHariIni();
 
             const fotoInput = document.getElementById('anggotaFotoInput');
             let fotoProfilBaru = '';
@@ -7580,7 +8396,7 @@
             if (chkPokok && nomPokokAwal > 0) {
                 appState.transaksi.push({
                     id: 't_awal_' + Date.now(),
-                    waktu: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                    waktu: window.getWaktuLokalSekarang(),
                     anggotaId: newId,
                     nama,
                     tipe: 'Setoran',
@@ -7705,7 +8521,7 @@
             const stCicil = isKeuangan ? 'Disetujui' : 'Menunggu';
             p.riwayatCicilan.push({
                 id: 'cicil_' + Date.now(),
-                tanggal: new Date().toISOString().slice(0, 10),
+                tanggal: window.getTanggalLokalHariIni(),
                 nominal,
                 bankTujuan,
                 bukti: buktiUrl,
@@ -7740,7 +8556,8 @@
 
         window.kocokUndianArisan = () => {
             if (!appState.arisan || !Array.isArray(appState.arisan.peserta)) return;
-            const kandidat = appState.arisan.peserta.filter(p => !p.sudahMenang);
+            const pesertaDisetujui = appState.arisan.peserta.filter(p => (p.statusKepesertaan || 'Disetujui') === 'Disetujui');
+            const kandidat = pesertaDisetujui.filter(p => !p.sudahMenang);
             if (kandidat.length === 0) {
                 window.showConfirmModal('Reset Putaran Arisan', 'Seluruh peserta sudah pernah menang pada periode ini. Mulai putaran arisan baru?', () => {
                     appState.arisan.peserta.forEach(p => {
@@ -7755,12 +8572,12 @@
                 return;
             }
             const pemenang = kandidat[Math.floor(Math.random() * kandidat.length)];
-            const tglMenang = new Date().toISOString().slice(0, 10);
+            const tglMenang = window.getTanggalLokalHariIni();
             pemenang.sudahMenang = true;
             pemenang.tanggalMenang = tglMenang;
 
             const iuranPerOrang = Number(appState.parameterStandar?.iuranArisan ?? 100000);
-            const nominalPot = appState.arisan.peserta.length * iuranPerOrang;
+            const nominalPot = pesertaDisetujui.length * iuranPerOrang;
             if (!Array.isArray(appState.arisan.riwayatPemenang)) appState.arisan.riwayatPemenang = [];
             appState.arisan.riwayatPemenang.unshift({
                 putaranKe: appState.arisan.riwayatPemenang.length + 1,
@@ -7778,12 +8595,163 @@
             window.showToast(`🎉 Selamat! Pemenang undian arisan adalah ${pemenang.nama} (Pot: ${window.formatRupiah(nominalPot)})!`);
         };
 
+        window.bukaModalAturPeriodeArisan = () => {
+            if (!window.isBendaharaOrSuper()) {
+                window.showToast('🔒 Hanya Pengurus / Admin yang dapat mengatur periode putaran arisan!', 'error');
+                return;
+            }
+            document.getElementById('arisanNamaPeriodeInput').value = appState.arisan?.namaPeriode || 'Putaran Arisan Silaturahmi 2026';
+            document.getElementById('arisanTglMulaiInput').value = appState.arisan?.tglMulai || window.getTanggalLokalHariIni();
+            document.getElementById('arisanTglSelesaiInput').value = appState.arisan?.tglSelesai || '2026-12-31';
+            document.getElementById('modalAturPeriodeArisan').classList.remove('hidden');
+        };
+
+        window.simpanPeriodeArisan = (e) => {
+            if (e && e.preventDefault) e.preventDefault();
+            const namaPeriode = document.getElementById('arisanNamaPeriodeInput').value.trim() || 'Putaran Arisan Silaturahmi';
+            const tglMulai = document.getElementById('arisanTglMulaiInput').value;
+            const tglSelesai = document.getElementById('arisanTglSelesaiInput').value;
+            if (tglMulai && tglSelesai && tglSelesai < tglMulai) {
+                window.showToast('Tanggal selesai tidak boleh lebih awal dari tanggal mulai!', 'error');
+                return false;
+            }
+            if (!appState.arisan) appState.arisan = { peserta: [], riwayatPemenang: [], riwayatIuran: [] };
+            appState.arisan.namaPeriode = namaPeriode;
+            appState.arisan.tglMulai = tglMulai;
+            appState.arisan.tglSelesai = tglSelesai;
+            window.catatLogAuditSistem('PENGATURAN', 'Ubah Periode Putaran Arisan', `${namaPeriode}: ${tglMulai} s/d ${tglSelesai}`, 'Sukses');
+            saveStateToCloud();
+            document.getElementById('modalAturPeriodeArisan').classList.add('hidden');
+            window.renderApp();
+            window.showToast(`📅 Periode Arisan (${tglMulai} s/d ${tglSelesai}) berhasil disimpan!`);
+            return false;
+        };
+
+        window.bukaModalDaftarProgramArisan = (preselectProgId = '') => {
+            const isPengurus = window.isPengurusAny();
+            const wrapAnggota = document.getElementById('wrapDaftarProgPilihAnggota');
+            const selAnggota = document.getElementById('daftarProgAnggotaId');
+            const searchInput = document.getElementById('searchSelectDaftarProgAnggota');
+            if (searchInput) searchInput.value = '';
+            if (selAnggota && wrapAnggota) {
+                window.renderGroupedMemberOptions('daftarProgAnggotaId', '', false, currentUserSession.id);
+                selAnggota.value = currentUserSession.id;
+                if (isPengurus) wrapAnggota.classList.remove('hidden');
+                else wrapAnggota.classList.add('hidden');
+            }
+            const selProg = document.getElementById('pilihProgramDaftarSelect');
+            if (selProg) {
+                const arisanOpt = `<option value="ARISAN_UTAMA">🎯 ${window.escapeHtml(appState.arisan?.namaPeriode || 'Arisan Silaturahmi Bulanan')} (${window.escapeHtml(appState.arisan?.tglMulai || '2026-01-01')} s/d ${window.escapeHtml(appState.arisan?.tglSelesai || '2026-12-31')})</option>`;
+                const progOpts = (appState.programKeluarga || []).map(pr =>
+                    `<option value="${pr.id}">🐑 [${window.escapeHtml(pr.kategori || 'Program')}] ${window.escapeHtml(pr.nama)} (${window.escapeHtml(pr.tglMulai || '2026-01-01')} s/d ${window.escapeHtml(pr.tglSelesai || '2026-12-31')})</option>`
+                ).join('');
+                selProg.innerHTML = arisanOpt + progOpts;
+                if (preselectProgId && [...selProg.options].some(o => o.value === preselectProgId)) {
+                    selProg.value = preselectProgId;
+                }
+            }
+            window.updatePreviewProgramDaftarModal();
+            document.getElementById('modalDaftarProgramArisan').classList.remove('hidden');
+        };
+
+        window.ajukanIkutProgramTertentu = (progId) => {
+            window.bukaModalDaftarProgramArisan(progId);
+        };
+
+        window.updatePreviewProgramDaftarModal = () => {
+            const box = document.getElementById('infoDetailProgramDipilih');
+            if (!box) return;
+            const isPengurus = window.isPengurusAny();
+            const anggotaId = (isPengurus && document.getElementById('daftarProgAnggotaId')?.value) ? document.getElementById('daftarProgAnggotaId').value : currentUserSession.id;
+            const progId = document.getElementById('pilihProgramDaftarSelect')?.value || 'ARISAN_UTAMA';
+
+            if (progId === 'ARISAN_UTAMA') {
+                const mulai = appState.arisan?.tglMulai || '2026-01-01';
+                const selesai = appState.arisan?.tglSelesai || '2026-12-31';
+                const iuran = Number(appState.parameterStandar?.iuranArisan ?? 100000);
+                const existing = (appState.arisan?.peserta || []).find(p => p.anggotaId === anggotaId);
+                const statusTxt = !existing ? 'Belum Terdaftar' : existing.statusKepesertaan === 'Menunggu' ? '⏳ Menunggu Persetujuan Admin' : '✅ Sudah Terdaftar Aktif';
+                box.innerHTML = `
+                    <div class="flex justify-between"><span>Kategori:</span><strong>🎯 Arisan Silaturahmi Bulanan</strong></div>
+                    <div class="flex justify-between"><span>📅 Mulai s/d Selesai:</span><strong>${window.escapeHtml(mulai)} s/d ${window.escapeHtml(selesai)}</strong></div>
+                    <div class="flex justify-between"><span>Iuran per Putaran:</span><strong class="text-emerald-600">${window.formatRupiah(iuran)}</strong></div>
+                    <div class="flex justify-between pt-1 border-t border-emerald-200 dark:border-slate-700"><span>Status Kepesertaan:</span><strong>${statusTxt}</strong></div>
+                `;
+            } else {
+                const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+                if (!pr) return;
+                const existing = (pr.pesertaProgram || []).find(p => p.anggotaId === anggotaId);
+                const statusTxt = !existing ? 'Belum Terdaftar' : existing.status === 'Menunggu' ? '⏳ Menunggu Persetujuan Admin' : '✅ Sudah Terdaftar Aktif';
+                box.innerHTML = `
+                    <div class="flex justify-between"><span>Kategori:</span><strong>${window.escapeHtml(pr.kategori || 'Program Keluarga')}</strong></div>
+                    <div class="flex justify-between"><span>📅 Mulai s/d Selesai:</span><strong>${window.escapeHtml(pr.tglMulai || '2026-01-01')} s/d ${window.escapeHtml(pr.tglSelesai || '2026-12-31')}</strong></div>
+                    <div class="flex justify-between"><span>Target Program / Iuran:</span><strong class="text-emerald-600">${window.formatRupiah(pr.target)} (Iuran: ${window.formatRupiah(pr.iuranStandar || 250000)})</strong></div>
+                    <div class="flex justify-between pt-1 border-t border-emerald-200 dark:border-slate-700"><span>Status Kepesertaan:</span><strong>${statusTxt}</strong></div>
+                `;
+            }
+        };
+
+        window.simpanPengajuanIkutProgram = (e) => {
+            if (e && e.preventDefault) e.preventDefault();
+            const isPengurus = window.isPengurusAny();
+            const anggotaId = (isPengurus && document.getElementById('daftarProgAnggotaId')?.value) ? document.getElementById('daftarProgAnggotaId').value : currentUserSession.id;
+            const anggotaObj = (appState.anggota || []).find(a => a.id === anggotaId) || currentUserSession;
+            const progId = document.getElementById('pilihProgramDaftarSelect')?.value || 'ARISAN_UTAMA';
+            const statusAwal = isPengurus ? 'Disetujui' : 'Menunggu';
+            const tglSekarang = window.getTanggalLokalHariIni();
+
+            if (progId === 'ARISAN_UTAMA') {
+                if (!appState.arisan) appState.arisan = { peserta: [], riwayatPemenang: [], riwayatIuran: [] };
+                const existing = appState.arisan.peserta.find(p => p.anggotaId === anggotaObj.id);
+                if (existing) {
+                    window.showToast(`${anggotaObj.nama} sudah tercatat di Arisan (${existing.statusKepesertaan || 'Disetujui'})!`, 'info');
+                    return false;
+                }
+                appState.arisan.peserta.push({
+                    anggotaId: anggotaObj.id,
+                    nama: anggotaObj.nama,
+                    statusKepesertaan: statusAwal,
+                    tglDaftar: tglSekarang,
+                    sudahMenang: false,
+                    tanggalMenang: '-',
+                    lunasPutaranIni: false
+                });
+                window.catatLogAuditSistem('PENGATURAN', 'Pendaftaran Peserta Arisan', `${anggotaObj.nama} mendaftar Arisan Silaturahmi (${statusAwal})`, statusAwal);
+            } else {
+                const pr = (appState.programKeluarga || []).find(x => x.id === progId);
+                if (!pr) return false;
+                if (!Array.isArray(pr.pesertaProgram)) pr.pesertaProgram = [];
+                const existing = pr.pesertaProgram.find(p => p.anggotaId === anggotaObj.id);
+                if (existing) {
+                    window.showToast(`${anggotaObj.nama} sudah tercatat di program ${pr.nama} (${existing.status})!`, 'info');
+                    return false;
+                }
+                pr.pesertaProgram.push({
+                    anggotaId: anggotaObj.id,
+                    nama: anggotaObj.nama,
+                    status: statusAwal,
+                    tglDaftar: tglSekarang
+                });
+                window.catatLogAuditSistem('PENGATURAN', 'Pendaftaran Peserta Program Keluarga', `${anggotaObj.nama} mendaftar program ${pr.nama} (${statusAwal})`, statusAwal);
+            }
+
+            saveStateToCloud();
+            document.getElementById('modalDaftarProgramArisan').classList.add('hidden');
+            window.renderApp();
+            window.showToast(isPengurus ? `✅ ${anggotaObj.nama} berhasil didaftarkan & langsung disetujui!` : `✋ Pengajuan ikut program berhasil dikirim dan menunggu persetujuan Admin!`);
+            return false;
+        };
+
         window.bukaModalProgramKeluarga = () => {
             document.getElementById('formProgramKeluarga').reset();
             const editEl = document.getElementById('editProgId');
             if (editEl) editEl.value = '';
             const titleEl = document.getElementById('modalProgramKeluargaTitle');
-            if (titleEl) titleEl.textContent = 'Buat Program Kolektif Keluarga';
+            if (titleEl) titleEl.textContent = 'Buat Program Arisan / Kolektif Keluarga';
+            const mulaiEl = document.getElementById('progTglMulai');
+            const selesaiEl = document.getElementById('progTglSelesai');
+            if (mulaiEl) mulaiEl.value = window.getTanggalLokalHariIni();
+            if (selesaiEl) selesaiEl.value = '2026-12-31';
             document.getElementById('modalProgramKeluarga').classList.remove('hidden');
         };
 
@@ -7791,9 +8759,17 @@
             const pr = (appState.programKeluarga || []).find(x => x.id === progId);
             if (!pr) return;
             document.getElementById('editProgId').value = pr.id;
-            document.getElementById('modalProgramKeluargaTitle').textContent = 'Edit Program Kolektif Keluarga';
+            document.getElementById('modalProgramKeluargaTitle').textContent = 'Edit Program Arisan / Kolektif Keluarga';
             document.getElementById('progNama').value = pr.nama;
+            const katEl = document.getElementById('progKategori');
+            if (katEl) katEl.value = pr.kategori || 'Tabungan Qurban';
+            const mulaiEl = document.getElementById('progTglMulai');
+            const selesaiEl = document.getElementById('progTglSelesai');
+            if (mulaiEl) mulaiEl.value = pr.tglMulai || '2026-01-01';
+            if (selesaiEl) selesaiEl.value = pr.tglSelesai || '2026-12-31';
             document.getElementById('progTarget').value = pr.target;
+            const iuranEl = document.getElementById('progIuranStandar');
+            if (iuranEl) iuranEl.value = pr.iuranStandar || 250000;
             document.getElementById('modalProgramKeluarga').classList.remove('hidden');
         };
 
@@ -7801,28 +8777,47 @@
             if (e && e.preventDefault) e.preventDefault();
             const editId = document.getElementById('editProgId')?.value || '';
             const nama = document.getElementById('progNama').value.trim();
+            const kategori = document.getElementById('progKategori')?.value || 'Tabungan Qurban';
+            const tglMulai = document.getElementById('progTglMulai')?.value || window.getTanggalLokalHariIni();
+            const tglSelesai = document.getElementById('progTglSelesai')?.value || '2026-12-31';
             const target = parseFloat(document.getElementById('progTarget').value) || 0;
+            const iuranStandar = parseFloat(document.getElementById('progIuranStandar')?.value) || 250000;
+
+            if (tglMulai && tglSelesai && tglSelesai < tglMulai) {
+                window.showToast('Tanggal selesai program tidak boleh lebih awal dari tanggal mulai!', 'error');
+                return false;
+            }
             if (!appState.programKeluarga) appState.programKeluarga = [];
 
             if (editId) {
                 const pr = appState.programKeluarga.find(x => x.id === editId);
                 if (pr) {
                     pr.nama = nama;
+                    pr.kategori = kategori;
+                    pr.tglMulai = tglMulai;
+                    pr.tglSelesai = tglSelesai;
                     pr.target = target;
+                    pr.iuranStandar = iuranStandar;
                 }
             } else {
                 appState.programKeluarga.push({
                     id: 'prog_' + Date.now(),
                     nama,
+                    kategori,
+                    tglMulai,
+                    tglSelesai,
+                    iuranStandar,
                     target,
                     terkumpul: 0,
+                    pesertaProgram: [],
                     kontributor: []
                 });
             }
+            window.catatLogAuditSistem('PENGATURAN', editId ? 'Edit Program Keluarga' : 'Buat Program Keluarga Baru', `${nama} (${kategori}) Periode: ${tglMulai} s/d ${tglSelesai}`, 'Sukses');
             saveStateToCloud();
             document.getElementById('modalProgramKeluarga').classList.add('hidden');
             window.renderApp();
-            window.showToast('Program kolektif keluarga berhasil disimpan!');
+            window.showToast(`Program "${nama}" (${tglMulai} s/d ${tglSelesai}) berhasil disimpan!`);
             return false;
         };
 
@@ -7833,7 +8828,7 @@
             const titleEl = document.getElementById('modalNotulensiTitle');
             if (titleEl) titleEl.textContent = 'Catat Notulensi Rapat Keluarga';
             const tglEl = document.getElementById('notulensiTanggal');
-            if (tglEl) tglEl.value = new Date().toISOString().slice(0, 10);
+            if (tglEl) tglEl.value = window.getTanggalLokalHariIni();
             const pimpEl = document.getElementById('notulensiPimpinan');
             if (pimpEl) pimpEl.value = currentUserSession ? currentUserSession.nama : 'Pengurus';
             const hadirEl = document.getElementById('notulensiJumlahHadir');
@@ -7848,7 +8843,7 @@
             const titleEl = document.getElementById('modalNotulensiTitle');
             if (titleEl) titleEl.textContent = 'Edit Notulensi Rapat Keluarga';
             const tglEl = document.getElementById('notulensiTanggal');
-            if (tglEl) tglEl.value = n.tanggal || new Date().toISOString().slice(0, 10);
+            if (tglEl) tglEl.value = n.tanggal || window.getTanggalLokalHariIni();
             const katEl = document.getElementById('notulensiKategori');
             if (katEl) katEl.value = n.kategori || 'Musyawarah Keluarga';
             document.getElementById('notulensiJudul').value = n.judul;
@@ -7865,7 +8860,7 @@
         window.simpanNotulensiBaru = (e) => {
             if (e && e.preventDefault) e.preventDefault();
             const editId = document.getElementById('editNotulensiId')?.value || '';
-            const tanggal = document.getElementById('notulensiTanggal')?.value || new Date().toISOString().slice(0, 10);
+            const tanggal = document.getElementById('notulensiTanggal')?.value || window.getTanggalLokalHariIni();
             const kategori = document.getElementById('notulensiKategori')?.value || 'Musyawarah Keluarga';
             const judul = document.getElementById('notulensiJudul').value.trim();
             const pimpinan = document.getElementById('notulensiPimpinan')?.value.trim() || currentUserSession.nama;
@@ -8128,6 +9123,27 @@
                 </div>
             `).join('');
 
+            // Hitung Statistik Kapasitas Foto Bukti Transfer (Simpanan, Cicilan, ZIS)
+            const infoBuktiEl = document.getElementById('infoStatistikBuktiFoto');
+            if (infoBuktiEl) {
+                let countFoto = 0;
+                let bytesFoto = 0;
+                (appState.transaksi || []).forEach(t => {
+                    if (t.bukti && t.bukti.length > 64) { countFoto++; bytesFoto += t.bukti.length; }
+                });
+                (appState.pinjaman || []).forEach(p => {
+                    (p.riwayatCicilan || []).forEach(c => {
+                        if (c.bukti && c.bukti.length > 64) { countFoto++; bytesFoto += c.bukti.length; }
+                    });
+                });
+                (appState.zis || []).forEach(z => {
+                    if (z.bukti && z.bukti.length > 64) { countFoto++; bytesFoto += z.bukti.length; }
+                });
+                const kbFoto = Math.round(bytesFoto / 1024);
+                const sisaCloudKB = Math.max(0, 1024 - sizeKB);
+                infoBuktiEl.textContent = `📊 Status Memori Bukti Foto: ${countFoto} gambar aktif (~${kbFoto} KB) • Sisa Kuota Cloud Firestore 1 MB: ~${sisaCloudKB} KB`;
+            }
+
             // Render Tabel Log Audit Sistem
             const logBody = document.getElementById('tabelAuditLogBody');
             if (logBody) {
@@ -8263,11 +9279,130 @@
             const csv = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
             const link = document.createElement('a');
             link.href = encodeURI(csv);
-            link.download = `Log_Audit_Keamanan_Koperasi_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.download = `Log_Audit_Keamanan_Koperasi_${window.getTanggalLokalHariIni()}.csv`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             window.showToast('📥 Log Audit & Keamanan berhasil diekspor ke CSV/Excel!');
+        };
+
+                window.resetTransaksiDemoKeNol = () => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat mereset data transaksi demo!', 'error');
+                return;
+            }
+            window.showConfirmModal(
+                'Reset Seluruh Transaksi Demo ke Nol (Rp 0)',
+                'Tindakan ini akan menghapus transaksi contoh bawaan (Simpanan, Pinjaman, ZIS, Pendapatan/Beban SHU, dan Riwayat Arisan/Program) sehingga seluruh saldo dan Matriks 12 Bulan mulai bersih dari Rp 0. Data akun Anggota dan Rekening Bank tetap dipertahankan. Lanjutkan?',
+                () => {
+                    (appState.transaksi || []).forEach(t => window.markDeletedItemId(t.id));
+                    (appState.pinjaman || []).forEach(p => window.markDeletedItemId(p.id));
+                    (appState.zis || []).forEach(z => window.markDeletedItemId(z.id));
+                    appState.transaksi = [];
+                    appState.pinjaman = [];
+                    appState.zis = [];
+                    appState.pendapatanShuList = [];
+                    appState.bebanOperasional = [];
+                    appState.totalShu = 0;
+                    appState.matriksIuranManual = {};
+                    appState.riwayatDistribusiShu = [];
+                    appState.lastShuDistribusiInfo = '';
+                    if (appState.arisan) {
+                        appState.arisan.riwayatPemenang = [];
+                        appState.arisan.riwayatIuran = [];
+                        (appState.arisan.peserta || []).forEach(ps => {
+                            ps.sudahMenang = false;
+                            ps.tanggalMenang = '-';
+                            ps.lunasPutaranIni = false;
+                        });
+                    }
+                    (appState.programKeluarga || []).forEach(pr => {
+                        pr.terkumpul = 0;
+                        pr.kontributor = [];
+                    });
+                    window.catatLogAuditSistem('PENGATURAN', 'Reset Data Transaksi Demo ke Nol', 'Seluruh transaksi bawaan dibersihkan agar buku kas mulai dari Rp 0', 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast('✅ Seluruh transaksi demo berhasil dibersihkan! Buku kas & Matriks 12 Bulan kini mulai dari Rp 0.');
+                }
+            );
+        };
+
+        window.bersihkanBuktiFotoLama = () => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang dapat menjalankan pembersihan foto bukti Cloud!', 'error');
+                return;
+            }
+            const hariBatas = parseInt(document.getElementById('opsiHariBersihkanBukti')?.value || '30') || 0;
+            const cutoffMs = hariBatas > 0 ? (Date.now() - (hariBatas * 24 * 60 * 60 * 1000)) : Infinity;
+
+            const isOlderThanCutoff = (dateStr) => {
+                if (hariBatas === 0) return true;
+                if (!dateStr) return true;
+                const parsed = Date.parse(String(dateStr).slice(0, 10));
+                if (isNaN(parsed)) return true;
+                return parsed <= cutoffMs;
+            };
+
+            let kandidatCount = 0;
+            let kandidatBytes = 0;
+            (appState.transaksi || []).forEach(t => {
+                if (t.status === 'Disetujui' && t.bukti && t.bukti.length > 64 && isOlderThanCutoff(t.waktu)) {
+                    kandidatCount++;
+                    kandidatBytes += t.bukti.length;
+                }
+            });
+            (appState.pinjaman || []).forEach(p => {
+                (p.riwayatCicilan || []).forEach(c => {
+                    if (c.status === 'Disetujui' && c.bukti && c.bukti.length > 64 && isOlderThanCutoff(c.tanggal)) {
+                        kandidatCount++;
+                        kandidatBytes += c.bukti.length;
+                    }
+                });
+            });
+            (appState.zis || []).forEach(z => {
+                if ((z.status || 'Disetujui') === 'Disetujui' && z.bukti && z.bukti.length > 64 && isOlderThanCutoff(z.tanggal)) {
+                    kandidatCount++;
+                    kandidatBytes += z.bukti.length;
+                }
+            });
+
+            if (kandidatCount === 0) {
+                window.showToast(hariBatas > 0 ? `Tidak ada foto bukti berstatus Disetujui yang lebih lama dari ${hariBatas} hari.` : 'Tidak ada foto bukti pada transaksi Disetujui yang perlu dibersihkan.', 'info');
+                return;
+            }
+
+            const kbHemat = Math.max(1, Math.round(kandidatBytes / 1024));
+            window.showConfirmModal(
+                'Arsipkan & Bersihkan Foto Bukti Lama',
+                `Ditemukan ${kandidatCount} foto bukti transaksi yang sudah Disetujui (~${kbHemat} KB). Gambar Base64 akan dihapus agar Cloud Firestore hemat kuota, sedangkan data transaksi & kode autentikasi struk (AUTH-...) tetap disimpan permanen. Lanjutkan?`,
+                () => {
+                    (appState.transaksi || []).forEach(t => {
+                        if (t.status === 'Disetujui' && t.bukti && t.bukti.length > 64 && isOlderThanCutoff(t.waktu)) {
+                            t.buktiArchivedHash = window.buatKodeHashBukti(t.id + '_' + t.waktu + '_' + t.nominal);
+                            t.bukti = '';
+                        }
+                    });
+                    (appState.pinjaman || []).forEach(p => {
+                        (p.riwayatCicilan || []).forEach(c => {
+                            if (c.status === 'Disetujui' && c.bukti && c.bukti.length > 64 && isOlderThanCutoff(c.tanggal)) {
+                                c.buktiArchivedHash = window.buatKodeHashBukti(c.id + '_' + c.tanggal + '_' + c.nominal);
+                                c.bukti = '';
+                            }
+                        });
+                    });
+                    (appState.zis || []).forEach(z => {
+                        if ((z.status || 'Disetujui') === 'Disetujui' && z.bukti && z.bukti.length > 64 && isOlderThanCutoff(z.tanggal)) {
+                            z.buktiArchivedHash = window.buatKodeHashBukti(z.id + '_' + z.tanggal + '_' + z.nominal);
+                            z.bukti = '';
+                        }
+                    });
+                    window.catatLogAuditSistem('BACKUP', 'Pembersihan Foto Bukti Lama (Optimasi Cloud)', `${kandidatCount} foto bukti diarsipkan (Hemat ~${kbHemat} KB memori Cloud)`, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast(`🧹 Berhasil mengarsipkan ${kandidatCount} foto bukti dan menghemat ~${kbHemat} KB memori Cloud!`);
+                }
+            );
         };
 
         window.bersihkanAuditLogSistem = () => {
@@ -8294,7 +9429,7 @@
                 <div class="text-center border-b border-dashed border-slate-200 dark:border-slate-700 pb-3">
                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 block">🛡️ Sertifikat Pemeriksaan Integritas Sistem</span>
                     <h4 class="text-sm sm:text-base font-black text-slate-800 dark:text-white mt-0.5">Laporan 8-Audit Neraca &amp; Keamanan Koperasi</h4>
-                    <p class="text-[10px] text-slate-400">Dicetak pada: ${new Date().toISOString().slice(0, 16).replace('T', ' ')}</p>
+                    <p class="text-[10px] text-slate-400">Dicetak pada: ${window.getWaktuLokalSekarang()}</p>
                 </div>
                 <div class="space-y-2 text-xs p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                     <div class="flex justify-between"><span>Total Simpanan Anggota Terverifikasi:</span><strong class="text-emerald-600">${window.formatRupiah(totalSimpanan)}</strong></div>
@@ -8627,7 +9762,7 @@
             } else {
                 appState.pendapatanShuList.push({
                     id: 'pend_' + Date.now(),
-                    tanggal: new Date().toISOString().slice(0, 10),
+                    tanggal: window.getTanggalLokalHariIni(),
                     keterangan,
                     nominal,
                     bankTujuan
@@ -8717,7 +9852,7 @@
                 `Bagikan dan bukukan total SHU Anggota sebesar ${window.formatRupiah(totalBagianAnggota)} langsung ke saldo Simpanan Sukarela masing-masing anggota sekarang?`,
                 () => {
                     const batchId = 'batch_shu_' + Date.now();
-                    const waktuStr = new Date().toISOString().slice(0, 16).replace('T', ' ');
+                    const waktuStr = window.getWaktuLokalSekarang();
                     let countReceiver = 0;
                     appState.anggota.forEach((a, idx) => {
                         const ind = window.hitungShuIndividu(a.id, s);
@@ -8797,7 +9932,7 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `Laporan_SHU_${role === 'admin' ? 'Koperasi' : currentUserSession.nama}_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute('download', `Laporan_SHU_${role === 'admin' ? 'Koperasi' : currentUserSession.nama}_${window.getTanggalLokalHariIni()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -8843,7 +9978,7 @@
             } else {
                 appState.bebanOperasional.push({
                     id: 'beb_' + Date.now(),
-                    tanggal: new Date().toISOString().slice(0, 10),
+                    tanggal: window.getTanggalLokalHariIni(),
                     keterangan,
                     nominal,
                     bankTujuan
@@ -9124,10 +10259,19 @@
                         var dt = new DataTransfer();
                         dt.items.add(compressedFile);
                         target.files = dt.files;
-                        if (typeof window.showToast === 'function') {
-                            window.showToast('Foto bukti otomatis dioptimasi (' + Math.round(compressedFile.size / 1024) + ' KB) agar hemat penyimpanan.', 'info');
-                        }
+                        // Kompresi berjalan di latar belakang tanpa men-submit transaksi sebelum tombol Simpan ditekan
                     }
+                }
+            }
+        }, true);
+
+                // Cegah form modal ter-submit otomatis saat pengguna menekan tombol Enter di input pencarian / nominal sebelum klik tombol Simpan
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                var target = e.target;
+                if (target && target.tagName === 'INPUT' && target.form && target.form.id !== 'loginForm') {
+                    e.preventDefault();
+                    return false;
                 }
             }
         }, true);
@@ -9152,7 +10296,10 @@
                 if (typeof _origRenderApp === 'function') {
                     _origRenderApp();
                 }
-                if (typeof window.renderBankTabPro === 'function') {
+                if (typeof window.upgradeDOMBankModalDanTab === 'function') {
+                    window.upgradeDOMBankModalDanTab();
+                }
+                if ((appState.activeTab || 'dashboard') === 'bank' && typeof window.renderBankTabPro === 'function') {
                     window.renderBankTabPro();
                 }
                 if (typeof window.pasangFooterVersiTerbaru === 'function') {
@@ -9538,7 +10685,7 @@
             var csv = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(function(r) { return r.join(','); })].join('\n');
             var link = document.createElement('a');
             link.href = encodeURI(csv);
-            link.download = 'Rekonsiliasi_Rekening_Bank_' + new Date().toISOString().slice(0, 10) + '.csv';
+            link.download = 'Rekonsiliasi_Rekening_Bank_' + window.getTanggalLokalHariIni() + '.csv';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -9839,17 +10986,18 @@
         // AUTO-VERSIONING & CHANGELOG FOOTER (v34.9 Pro)
         // =========================================================================
         window.APP_VERSION = 'v34.9 Pro';
-        window.APP_RELEASE_DATE = '14 Nov 2026';
+        window.APP_RELEASE_DATE = '15 Nov 2026';
         window.APP_CHANGELOG_LIST = [
             {
                 versi: 'v34.9 Pro',
-                tanggal: '14 Nov 2026 (Terbaru - Fix ReferenceError isAdmin & Penyempurnaan RBAC 4 Peran)',
+                tanggal: '15 Nov 2026 (Terbaru - Akurasi Waktu Lokal WIB, Anti-Auto-Submit & Optimasi Skala Besar)',
                 judul: 'Perbaikan Bug Tabel Bank (isAdmin) & Penyempurnaan Penuh Hak Akses Bendahara vs Sekretaris',
                 poin: [
                     'Perbaikan Bug ReferenceError isAdmin pada renderBankTabPro(): Tabel Rekening Bank, saldo rekonsiliasi 7 alur kas, dan tombol 🔍 Mutasi kini tampil sempurna untuk Super Admin & Bendahara.',
                     'Penyempurnaan Wewenang Bendahara (Pencatat Keuangan): Bendahara kini dapat menginput Simpanan, Pinjaman, Cicilan, Arisan, dan ZISWAF untuk seluruh anggota (langsung berstatus Disetujui), memverifikasi antrean keuangan di Pusat Persetujuan, serta mencetak Struk/Akad/Slip SHU dan Export CSV lengkap tanpa akses hapus permanen atau pengaturan sistem.',
                     'Penyempurnaan Wewenang Sekretaris (Pencatat Administrasi): Sekretaris kini dapat membuat & mengedit Topik Voting Keluarga, mencatat & mengedit Notulensi Rapat, menambah/mengedit biodata anggota (tanpa bisa mengubah Role/PIN), serta memverifikasi Calon Anggota Baru.',
-                    'Isolasi Bersih Simulasi 4 Mode (Admin / Bendahara / Sekretaris / Anggota): Menghilangkan kebocoran tombol Edit/Hapus saat Super Admin sedang menguji mode Anggota atau Sekretaris.'
+                    'Isolasi Bersih Simulasi 4 Mode (Admin / Bendahara / Sekretaris / Anggota): Menghilangkan kebocoran tombol Edit/Hapus saat Super Admin sedang menguji mode Anggota atau Sekretaris.',
+                    'Paket Optimasi Skala Member Banyak: Lazy Tab Rendering (hanya merender tab aktif), Cache Saldo O(1) sekali hitung, Paginasi Tabel Buku Simpanan & Direktori Anggota, Searchable Dropdown per Rumpun KK, Pre-Save Cloud Merge anti-tabrakan, serta Pembersih Foto Bukti Lama (Anti-Limit 1 MB Firestore).'
                 ]
             },
             {
