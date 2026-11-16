@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Koperasi Keluarga v35.1 Pro</title>
+    <title>Aplikasi Koperasi Keluarga v35.3 Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -82,6 +82,15 @@
         .anti-copy-receipt img {
             pointer-events: none !important;
             -webkit-user-drag: none !important;
+        }
+        /* Pastikan setiap pop up / modal selalu berada tepat di tengah layar */
+        div[id^="modal"]:not(.hidden) {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        div[id^="modal"] > div {
+            margin: auto !important;
         }
         @media print {
             body { background: white !important; color: black !important; }
@@ -206,7 +215,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v35.1 Pro</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v35.3 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -1817,21 +1826,37 @@
         </div>
     </div>
 
-    <!-- Custom Toast Notification -->
-    <div id="toastContainer" class="fixed bottom-4 right-4 z-[70] flex flex-col gap-2 max-w-xs w-full pointer-events-none"></div>
+    <!-- Custom Toast Notification (Selalu di Tengah Layar) -->
+    <div id="toastContainer" class="fixed inset-0 z-[95] flex flex-col items-center justify-center gap-2.5 p-4 pointer-events-none"></div>
 
-    <!-- Custom Confirmation Modal -->
-    <div id="modalConfirmCustom" class="fixed inset-0 bg-slate-900/60 z-[65] hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-sm p-5 space-y-4">
-            <h3 class="font-bold text-base text-slate-800 dark:text-white" id="confirmModalTitle">Konfirmasi Tindakan</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed" id="confirmModalMessage">Apakah Anda yakin ingin melanjutkan?</p>
+    <!-- Custom Confirmation Modal (Di Tengah Layar + Dilengkapi Captcha Konfirmasi Transaksi) -->
+    <div id="modalConfirmCustom" class="fixed inset-0 bg-slate-900/65 z-[80] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-sm p-5 space-y-3.5 m-auto">
+            <div class="text-center space-y-1">
+                <h3 class="font-extrabold text-base text-slate-800 dark:text-white" id="confirmModalTitle">Konfirmasi Transaksi</h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed" id="confirmModalMessage">Apakah Anda yakin ingin melanjutkan?</p>
+            </div>
             <div id="wrapInputAlasanConfirmModal" class="hidden space-y-1">
                 <label class="block text-[10px] font-bold uppercase text-rose-600">Alasan Penolakan / Catatan Verifikasi</label>
                 <input type="text" id="inputAlasanPenolakanText" placeholder="Contoh: Bukti foto buram / dana belum masuk ke mutasi bank" class="w-full bg-slate-50 dark:bg-slate-800 border border-rose-300 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
             </div>
-            <div class="flex justify-end gap-2 pt-2">
-                <button type="button" id="confirmModalCancelBtn" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold">Batal</button>
-                <button type="button" id="confirmModalOkBtn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md">Ya, Lanjutkan</button>
+            <div id="wrapCaptchaConfirmModal" class="p-3 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1">🛡️ Captcha Konfirmasi</span>
+                    <div class="flex items-center gap-2">
+                        <span id="confirmCaptchaStatusBadge" class="text-[9px] font-bold text-slate-400">Ketik hasil hitungan</span>
+                        <button type="button" onclick="window.refreshConfirmCaptcha()" class="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline" title="Ganti Soal Captcha">🔄 Ganti</button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <canvas id="confirmCaptchaCanvas" width="136" height="38" onclick="window.refreshConfirmCaptcha()" class="rounded-lg border border-slate-300 dark:border-slate-600 cursor-pointer shrink-0 shadow-2xs" title="Klik untuk ganti soal Captcha"></canvas>
+                    <input type="text" id="confirmCaptchaInput" inputmode="numeric" autocomplete="off" oninput="window.cekLiveConfirmCaptcha()" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('confirmModalOkBtn')?.click();}" placeholder="Ketik hasil..." class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-xs font-extrabold text-center tracking-wider outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="text" id="confirmCaptchaHp" name="website_url_hp" tabindex="-1" autocomplete="off" style="opacity:0;position:absolute;height:0;width:0;pointer-events:none;" aria-hidden="true">
+                </div>
+            </div>
+            <div class="flex justify-center gap-2.5 pt-1">
+                <button type="button" id="confirmModalCancelBtn" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold">Batal</button>
+                <button type="button" id="confirmModalOkBtn" class="flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md">Ya, Konfirmasi</button>
             </div>
         </div>
     </div>
@@ -2731,54 +2756,39 @@
         };
 
         // =========================================================================
-        // SISTEM ANTI-BOT CAPTCHA TRANSAKSI (CANVAS VISUAL + HONEYPOT SHIELD v35.1)
+        // SISTEM CAPTCHA ANTI-BOT PADA MODAL KONFIRMASI TRANSAKSI (v35.3 PRO)
         // =========================================================================
-        window._captchaStore = {};
-        window.CAPTCHA_FORM_IDS = [
-            'formTransaksi',
-            'formTransferP2P',
-            'formPinjaman',
-            'formBayarCicilan',
-            'formZis',
-            'formPendapatanShu',
-            'formBeban',
-            'formDaftarMandiri'
-        ];
+        window._confirmCaptchaAnswer = '';
+        window.CAPTCHA_FORM_IDS = [];
 
-        window.ensureCaptchaWidget = (formId) => {
-            const formEl = document.getElementById(formId);
-            if (!formEl) return;
-            let box = document.getElementById('captchaBox_' + formId);
-            if (!box) {
-                box = document.createElement('div');
-                box.id = 'captchaBox_' + formId;
-                box.className = 'koperasi-captcha-box p-2.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 space-y-1.5';
-                box.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1">🛡️ Verifikasi Anti-Bot (Captcha Transaksi)</span>
-                        <button type="button" onclick="window.refreshCaptchaForm('${formId}')" class="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5" title="Ganti Soal Captcha">🔄 Ganti Soal</button>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <canvas id="captchaCanvas_${formId}" width="136" height="38" onclick="window.refreshCaptchaForm('${formId}')" class="rounded-lg border border-slate-300 dark:border-slate-600 cursor-pointer shrink-0 shadow-2xs" title="Klik untuk ganti soal Captcha"></canvas>
-                        <input type="text" id="captchaInput_${formId}" inputmode="numeric" autocomplete="off" required placeholder="Ketik hasil..." class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-xs font-extrabold text-center tracking-wider outline-none focus:ring-2 focus:ring-emerald-500">
-                        <input type="text" id="captchaHp_${formId}" name="website_url_hp" tabindex="-1" autocomplete="off" style="opacity:0;position:absolute;height:0;width:0;pointer-events:none;" aria-hidden="true">
-                    </div>
-                `;
-                const submitBtn = formEl.querySelector('button[type="submit"]');
-                const footerFlex = submitBtn ? submitBtn.closest('div') : null;
-                if (footerFlex && footerFlex.parentElement === formEl) {
-                    formEl.insertBefore(box, footerFlex);
-                } else {
-                    formEl.appendChild(box);
-                }
+        window.ensureCaptchaWidget = () => {};
+        window.refreshCaptchaForm = () => {};
+        window.validasiCaptchaTransaksi = () => true;
+
+        window.cekLiveConfirmCaptcha = () => {
+            const inputEl = document.getElementById('confirmCaptchaInput');
+            const badgeEl = document.getElementById('confirmCaptchaStatusBadge');
+            if (!inputEl || !badgeEl) return;
+            const cleanVal = String(inputEl.value || '').replace(/[^0-9-]/g, '').trim();
+            if (!cleanVal) {
+                badgeEl.textContent = 'Ketik hasil hitungan';
+                badgeEl.className = 'text-[9px] font-bold text-slate-400';
+                inputEl.className = 'w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-xs font-extrabold text-center tracking-wider outline-none focus:ring-2 focus:ring-emerald-500';
+            } else if (Number(cleanVal) === Number(window._confirmCaptchaAnswer)) {
+                badgeEl.textContent = '✅ Captcha Sesuai';
+                badgeEl.className = 'text-[9px] font-extrabold text-emerald-600 dark:text-emerald-400';
+                inputEl.className = 'w-full bg-emerald-50/70 dark:bg-emerald-950/30 border-2 border-emerald-500 rounded-xl px-3 py-2 text-xs font-extrabold text-emerald-700 dark:text-emerald-300 text-center tracking-wider outline-none';
+            } else {
+                badgeEl.textContent = '⏳ Belum sesuai';
+                badgeEl.className = 'text-[9px] font-bold text-amber-600';
+                inputEl.className = 'w-full bg-white dark:bg-slate-900 border border-amber-400 dark:border-slate-600 rounded-xl px-3 py-2 text-xs font-extrabold text-center tracking-wider outline-none focus:ring-2 focus:ring-amber-500';
             }
-            window.refreshCaptchaForm(formId);
         };
 
-        window.refreshCaptchaForm = (formId) => {
-            const canvas = document.getElementById('captchaCanvas_' + formId);
-            const inputEl = document.getElementById('captchaInput_' + formId);
-            const hpEl = document.getElementById('captchaHp_' + formId);
+        window.refreshConfirmCaptcha = () => {
+            const canvas = document.getElementById('confirmCaptchaCanvas');
+            const inputEl = document.getElementById('confirmCaptchaInput');
+            const hpEl = document.getElementById('confirmCaptchaHp');
             if (inputEl) inputEl.value = '';
             if (hpEl) hpEl.value = '';
 
@@ -2793,11 +2803,8 @@
             }
             const ans = op === '+' ? (a + b) : (a - b);
             const labelText = `${a} ${op} ${b} = ?`;
-
-            window._captchaStore[formId] = {
-                answer: String(ans),
-                createdAt: Date.now()
-            };
+            window._confirmCaptchaAnswer = String(ans);
+            window.cekLiveConfirmCaptcha();
 
             if (canvas && typeof canvas.getContext === 'function') {
                 const ctx = canvas.getContext('2d');
@@ -2808,7 +2815,6 @@
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Garis dan titik pengacak anti-OCR bot
                 for (let i = 0; i < 5; i++) {
                     ctx.strokeStyle = i % 2 === 0 ? 'rgba(16, 185, 129, 0.38)' : 'rgba(251, 191, 36, 0.32)';
                     ctx.lineWidth = 1.2;
@@ -2841,59 +2847,26 @@
             }
         };
 
-        window.validasiCaptchaTransaksi = (formId, namaModul = 'Transaksi') => {
-            window.ensureCaptchaWidget(formId);
-            const rec = window._captchaStore[formId];
-            const inputEl = document.getElementById('captchaInput_' + formId);
-            const hpEl = document.getElementById('captchaHp_' + formId);
-
-            // 1. Cek Honeypot Trap (Jika terisi otomatis oleh Bot)
+        window.validasiConfirmCaptcha = (judulAksi = 'Konfirmasi Transaksi') => {
+            const inputEl = document.getElementById('confirmCaptchaInput');
+            const hpEl = document.getElementById('confirmCaptchaHp');
             if (hpEl && hpEl.value && hpEl.value.trim() !== '') {
-                window.catatLogAuditSistem('SECURITY', 'Blokir Bot Honeypot Captcha', `Percobaan submit otomatis oleh bot pada modul ${namaModul}`, 'Ditolak');
+                window.catatLogAuditSistem('SECURITY', 'Blokir Bot Honeypot Captcha', `Percobaan konfirmasi otomatis oleh bot pada ${judulAksi}`, 'Ditolak');
                 window.showToast('🚨 Aktivitas bot otomatis terdeteksi dan diblokir oleh sistem keamanan!', 'error');
-                window.refreshCaptchaForm(formId);
+                window.refreshConfirmCaptcha();
                 return false;
             }
-
-            // 2. Cek Kecepatan Submit (Bot Script < 400ms)
-            if (!rec || (Date.now() - (rec.createdAt || 0)) < 400) {
-                window.showToast('🛡️ Mohon selesaikan verifikasi Captcha Anti-Bot terlebih dahulu.', 'error');
-                window.refreshCaptchaForm(formId);
-                return false;
-            }
-
-            // 3. Cek Jawaban Captcha Visual
-            const userVal = (inputEl ? inputEl.value : '').trim();
-            if (!userVal || userVal !== rec.answer) {
-                window.catatLogAuditSistem('SECURITY', 'Gagal Verifikasi Captcha Transaksi', `Jawaban Captcha salah (${userVal || 'kosong'}) pada ${namaModul}`, 'Peringatan');
-                window.showToast('🤖 Jawaban Captcha Anti-Bot belum tepat! Silakan hitung ulang angka pada gambar Captcha.', 'error');
-                window.refreshCaptchaForm(formId);
+            const rawVal = inputEl ? String(inputEl.value || '') : '';
+            const cleanVal = rawVal.replace(/[^0-9-]/g, '').trim();
+            if (!cleanVal || Number(cleanVal) !== Number(window._confirmCaptchaAnswer)) {
+                window.catatLogAuditSistem('SECURITY', 'Gagal Captcha Konfirmasi', `Jawaban Captcha salah (${rawVal.trim() || 'kosong'} vs ${window._confirmCaptchaAnswer}) pada ${judulAksi}`, 'Peringatan');
+                window.showToast('🤖 Jawaban Captcha belum tepat! Silakan isi hasil hitungan Captcha pada pop-up konfirmasi.', 'error');
+                window.refreshConfirmCaptcha();
                 if (inputEl) setTimeout(() => inputEl.focus(), 50);
                 return false;
             }
-
-            // Captcha valid -> Refresh untuk transaksi berikutnya
-            window.refreshCaptchaForm(formId);
             return true;
         };
-
-        window.initAllTransactionCaptchas = () => {
-            window.CAPTCHA_FORM_IDS.forEach(fid => {
-                window.ensureCaptchaWidget(fid);
-                const formEl = document.getElementById(fid);
-                const modalEl = formEl ? formEl.closest('.fixed') : null;
-                if (modalEl && !modalEl._captchaObserverAttached && typeof MutationObserver !== 'undefined') {
-                    modalEl._captchaObserverAttached = true;
-                    const obs = new MutationObserver(() => {
-                        if (!modalEl.classList.contains('hidden')) {
-                            window.ensureCaptchaWidget(fid);
-                        }
-                    });
-                    obs.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
-                }
-            });
-        };
-        setTimeout(window.initAllTransactionCaptchas, 200);
 
         // =========================================================================
         // SISTEM ENKRIPSI PIN SATU ARAH (SALTED SHA-256 PRIVACY SHIELD v35.0)
@@ -3568,12 +3541,12 @@
             if (!container) return;
             const toast = document.createElement('div');
             const bgClass = type === 'error' ? 'bg-rose-600 text-white' : type === 'info' ? 'bg-blue-600 text-white' : 'bg-emerald-600 text-white';
-            toast.className = `${bgClass} p-3.5 rounded-2xl shadow-xl text-xs font-bold flex items-center justify-between gap-2 transition-all duration-300 pointer-events-auto border border-white/10`;
-            toast.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="text-white/80 hover:text-white font-black ml-2">✕</button>`;
+            toast.className = `${bgClass} max-w-sm w-full mx-auto p-4 rounded-2xl shadow-2xl ring-2 ring-white/30 text-xs font-extrabold flex items-center justify-between gap-3 transition-all duration-300 pointer-events-auto`;
+            toast.innerHTML = `<span class="flex-1 text-center leading-relaxed">${message}</span><button onclick="this.parentElement.remove()" class="text-white/85 hover:text-white font-black px-1.5 py-0.5 rounded-lg bg-black/15">✕</button>`;
             container.appendChild(toast);
             setTimeout(() => {
                 if (toast.parentElement) toast.remove();
-            }, 3500);
+            }, 3200);
         };
 
         window.showConfirmModal = (title, message, onConfirm) => {
@@ -3582,14 +3555,25 @@
             document.getElementById('confirmModalMessage').textContent = message;
             const wrapAlasan = document.getElementById('wrapInputAlasanConfirmModal');
             if (wrapAlasan) wrapAlasan.classList.add('hidden');
+            const wrapCaptcha = document.getElementById('wrapCaptchaConfirmModal');
+            if (wrapCaptcha) wrapCaptcha.classList.remove('hidden');
+            window.refreshConfirmCaptcha();
             modal.classList.remove('hidden');
+
+            const inputCaptcha = document.getElementById('confirmCaptchaInput');
+            if (inputCaptcha) setTimeout(() => inputCaptcha.focus(), 60);
 
             const okBtn = document.getElementById('confirmModalOkBtn');
             const cancelBtn = document.getElementById('confirmModalCancelBtn');
-            okBtn.textContent = 'Ya, Lanjutkan';
+            okBtn.textContent = 'Ya, Konfirmasi';
+            okBtn.className = 'flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md';
 
             const cleanup = () => modal.classList.add('hidden');
-            okBtn.onclick = () => { cleanup(); onConfirm(); };
+            okBtn.onclick = () => {
+                if (!window.validasiConfirmCaptcha(title)) return;
+                cleanup();
+                onConfirm();
+            };
             cancelBtn.onclick = () => cleanup();
         };
 
@@ -3600,21 +3584,26 @@
             const wrapAlasan = document.getElementById('wrapInputAlasanConfirmModal');
             const inputAlasan = document.getElementById('inputAlasanPenolakanText');
             if (wrapAlasan) wrapAlasan.classList.remove('hidden');
+            const wrapCaptcha = document.getElementById('wrapCaptchaConfirmModal');
+            if (wrapCaptcha) wrapCaptcha.classList.remove('hidden');
+            window.refreshConfirmCaptcha();
             if (inputAlasan) {
                 inputAlasan.value = '';
-                setTimeout(() => inputAlasan.focus(), 50);
+                setTimeout(() => inputAlasan.focus(), 60);
             }
             modal.classList.remove('hidden');
 
             const okBtn = document.getElementById('confirmModalOkBtn');
             const cancelBtn = document.getElementById('confirmModalCancelBtn');
-            okBtn.textContent = 'Tolak & Simpan Alasan';
+            okBtn.textContent = 'Tolak & Konfirmasi';
+            okBtn.className = 'flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-md';
 
             const cleanup = () => {
                 if (wrapAlasan) wrapAlasan.classList.add('hidden');
                 modal.classList.add('hidden');
             };
             okBtn.onclick = () => {
+                if (!window.validasiConfirmCaptcha(title)) return;
                 const alasan = (inputAlasan ? inputAlasan.value.trim() : '') || 'Belum memenuhi syarat verifikasi pengurus';
                 cleanup();
                 onRejectWithReason(alasan);
@@ -5398,7 +5387,7 @@
             const searchP2p = document.getElementById('searchSelectP2pPenerima');
             if (searchP2p) searchP2p.value = '';
             window.renderGroupedMemberOptions('p2pPenerimaId', '', true);
-            window.ensureCaptchaWidget('formTransferP2P');
+            window.ensureCaptchaWidget('formTransferP2P', true);
             document.getElementById('modalTransferP2P').classList.remove('hidden');
         };
 
@@ -5425,39 +5414,45 @@
             const penerimaObj = appState.anggota.find(a => a.id === penerimaId);
             if (!penerimaObj) return false;
 
-            const waktuStr = window.getWaktuLokalSekarang();
-            appState.transaksi.push({
-                id: 't_p2p_out_' + Date.now(),
-                waktu: waktuStr,
-                anggotaId: currentUserSession.id,
-                nama: currentUserSession.nama,
-                tipe: 'Penarikan',
-                kategori: kategoriSumber,
-                nominal,
-                status: 'Disetujui',
-                bukti: '',
-                bankTujuan: 'P2P Internal',
-                keterangan: `[P2P] Transfer ke ${penerimaObj.nama}: ${catatan}`
-            });
-            appState.transaksi.push({
-                id: 't_p2p_in_' + (Date.now() + 1),
-                waktu: waktuStr,
-                anggotaId: penerimaObj.id,
-                nama: penerimaObj.nama,
-                tipe: 'Setoran',
-                kategori: 'Simpanan Sukarela',
-                nominal,
-                status: 'Disetujui',
-                bukti: '',
-                bankTujuan: 'P2P Internal',
-                keterangan: `[P2P] Terima dari ${currentUserSession.nama}: ${catatan}`
-            });
+            window.showConfirmModal(
+                'Konfirmasi Transfer Saldo P2P',
+                `Kirim saldo sebesar ${window.formatRupiah(nominal)} kepada ${penerimaObj.nama} (${catatan})?`,
+                () => {
+                    const waktuStr = window.getWaktuLokalSekarang();
+                    appState.transaksi.push({
+                        id: 't_p2p_out_' + Date.now(),
+                        waktu: waktuStr,
+                        anggotaId: currentUserSession.id,
+                        nama: currentUserSession.nama,
+                        tipe: 'Penarikan',
+                        kategori: kategoriSumber,
+                        nominal,
+                        status: 'Disetujui',
+                        bukti: '',
+                        bankTujuan: 'P2P Internal',
+                        keterangan: `[P2P] Transfer ke ${penerimaObj.nama}: ${catatan}`
+                    });
+                    appState.transaksi.push({
+                        id: 't_p2p_in_' + (Date.now() + 1),
+                        waktu: waktuStr,
+                        anggotaId: penerimaObj.id,
+                        nama: penerimaObj.nama,
+                        tipe: 'Setoran',
+                        kategori: 'Simpanan Sukarela',
+                        nominal,
+                        status: 'Disetujui',
+                        bukti: '',
+                        bankTujuan: 'P2P Internal',
+                        keterangan: `[P2P] Terima dari ${currentUserSession.nama}: ${catatan}`
+                    });
 
-            window.catatLogAuditSistem('TRANSAKSI', 'Transfer Saldo P2P Sesama Anggota', `${currentUserSession.nama} -> ${penerimaObj.nama} sebesar ${window.formatRupiah(nominal)} (${catatan})`, 'Sukses');
-            saveStateToCloud();
-            document.getElementById('modalTransferP2P').classList.add('hidden');
-            window.renderApp();
-            window.showToast(`Berhasil mengirim ${window.formatRupiah(nominal)} ke ${penerimaObj.nama}!`);
+                    window.catatLogAuditSistem('TRANSAKSI', 'Transfer Saldo P2P Sesama Anggota', `${currentUserSession.nama} -> ${penerimaObj.nama} sebesar ${window.formatRupiah(nominal)} (${catatan})`, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalTransferP2P').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast(`Berhasil mengirim ${window.formatRupiah(nominal)} ke ${penerimaObj.nama}!`);
+                }
+            );
             return false;
         };
 
@@ -5543,7 +5538,7 @@
             window.updateInfoSaldoModalTransaksi();
             window.handleTipeTransaksiChange(document.getElementById('transaksiTipe'));
             if (typeof window.updateHelperBankTujuanTrx === 'function') window.updateHelperBankTujuanTrx();
-            window.ensureCaptchaWidget('formTransaksi');
+            window.ensureCaptchaWidget('formTransaksi', true);
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
 
@@ -5580,7 +5575,7 @@
             window.updateInfoSaldoModalTransaksi();
             window.handleTipeTransaksiChange(document.getElementById('transaksiTipe'));
             if (typeof window.updateHelperBankTujuanTrx === 'function') window.updateHelperBankTujuanTrx();
-            window.ensureCaptchaWidget('formTransaksi');
+            window.ensureCaptchaWidget('formTransaksi', true);
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
 
@@ -5691,20 +5686,26 @@
                         }
                     }
                     const waktuManual = (document.getElementById('transaksiWaktuInput')?.value || '').trim();
-                    trx.anggotaId = anggotaId;
-                    trx.nama = anggotaObj ? anggotaObj.nama : trx.nama;
-                    if (waktuManual) trx.waktu = waktuManual;
-                    trx.tipe = tipe;
-                    trx.kategori = kategori;
-                    trx.nominal = nominal;
-                    trx.bankTujuan = bankTujuan;
-                    trx.keterangan = keterangan;
-                    if (buktiUrl) trx.bukti = buktiUrl;
-                    window.catatLogAuditSistem('TRANSAKSI', `Edit ${tipe} Simpanan`, `${kategori} a.n ${trx.nama} (${window.formatRupiah(nominal)}) via ${bankTujuan || 'Kas'}`, trx.status);
-                    saveStateToCloud();
-                    document.getElementById('modalTransaksi').classList.add('hidden');
-                    window.renderApp();
-                    window.showToast('Catatan transaksi & mutasi bank berhasil diperbarui!');
+                    window.showConfirmModal(
+                        'Konfirmasi Perubahan Transaksi',
+                        `Simpan perubahan ${tipe} ${kategori} a.n ${anggotaObj ? anggotaObj.nama : trx.nama} sebesar ${window.formatRupiah(nominal)}?`,
+                        () => {
+                            trx.anggotaId = anggotaId;
+                            trx.nama = anggotaObj ? anggotaObj.nama : trx.nama;
+                            if (waktuManual) trx.waktu = waktuManual;
+                            trx.tipe = tipe;
+                            trx.kategori = kategori;
+                            trx.nominal = nominal;
+                            trx.bankTujuan = bankTujuan;
+                            trx.keterangan = keterangan;
+                            if (buktiUrl) trx.bukti = buktiUrl;
+                            window.catatLogAuditSistem('TRANSAKSI', `Edit ${tipe} Simpanan`, `${kategori} a.n ${trx.nama} (${window.formatRupiah(nominal)}) via ${bankTujuan || 'Kas'}`, trx.status);
+                            saveStateToCloud();
+                            document.getElementById('modalTransaksi').classList.add('hidden');
+                            window.renderApp();
+                            window.showToast('Catatan transaksi & mutasi bank berhasil diperbarui!');
+                        }
+                    );
                 }
                 return false;
             }
@@ -6403,7 +6404,7 @@
             window.populateDropdownBankAktif('pinjamanBankSumber');
             window.updatePlafonPemohonModal();
             window.hitungSimulasiPinjamanModal();
-            window.ensureCaptchaWidget('formPinjaman');
+            window.ensureCaptchaWidget('formPinjaman', true);
             document.getElementById('modalPinjaman').classList.remove('hidden');
         };
 
@@ -6487,20 +6488,26 @@
             if (editId) {
                 const p = (appState.pinjaman || []).find(x => x.id === editId);
                 if (p) {
-                    p.anggotaId = pemohonObj.id;
-                    p.nama = pemohonObj.nama;
-                    p.jenisAkad = jenisAkad;
-                    p.nominal = nominal;
-                    p.tenor = tenor;
-                    p.bungaPersen = ratePersen;
-                    p.marginTotalNominal = marginTotalNominal;
-                    p.bankSumber = bankSumber;
-                    p.keperluan = keperluan || '-';
-                    window.catatLogAuditSistem('TRANSAKSI', 'Edit Akad Pembiayaan Syariah', `${jenisAkad} a.n ${pemohonObj.nama} (${window.formatRupiah(nominal)}) via ${bankSumber}`, 'Sukses');
-                    saveStateToCloud();
-                    document.getElementById('modalPinjaman').classList.add('hidden');
-                    window.renderApp();
-                    window.showToast('Kontrak pembiayaan syariah berhasil diperbarui!');
+                    window.showConfirmModal(
+                        'Konfirmasi Perubahan Akad Pembiayaan',
+                        `Simpan perubahan Akad ${jenisAkad} a.n ${pemohonObj.nama} sebesar ${window.formatRupiah(nominal)}?`,
+                        () => {
+                            p.anggotaId = pemohonObj.id;
+                            p.nama = pemohonObj.nama;
+                            p.jenisAkad = jenisAkad;
+                            p.nominal = nominal;
+                            p.tenor = tenor;
+                            p.bungaPersen = ratePersen;
+                            p.marginTotalNominal = marginTotalNominal;
+                            p.bankSumber = bankSumber;
+                            p.keperluan = keperluan || '-';
+                            window.catatLogAuditSistem('TRANSAKSI', 'Edit Akad Pembiayaan Syariah', `${jenisAkad} a.n ${pemohonObj.nama} (${window.formatRupiah(nominal)}) via ${bankSumber}`, 'Sukses');
+                            saveStateToCloud();
+                            document.getElementById('modalPinjaman').classList.add('hidden');
+                            window.renderApp();
+                            window.showToast('Kontrak pembiayaan syariah berhasil diperbarui!');
+                        }
+                    );
                 }
                 return false;
             }
@@ -6522,28 +6529,34 @@
                 return false;
             }
 
-            const newPinjaman = {
-                id: 'p_' + Date.now(),
-                tanggalPengajuan: window.getTanggalLokalHariIni(),
-                anggotaId: pemohonObj.id,
-                nama: pemohonObj.nama,
-                jenisAkad,
-                nominal,
-                tenor,
-                bungaPersen: ratePersen,
-                marginTotalNominal,
-                bankSumber,
-                keperluan: keperluan || '-',
-                status: isKeuangan ? 'Disetujui' : 'Menunggu',
-                riwayatCicilan: []
-            };
+            window.showConfirmModal(
+                'Konfirmasi Akad Pembiayaan Syariah',
+                `Simpan pengajuan Akad ${jenisAkad} a.n ${pemohonObj.nama} sebesar ${window.formatRupiah(nominal)} (Tenor ${tenor} bulan)?`,
+                () => {
+                    const newPinjaman = {
+                        id: 'p_' + Date.now(),
+                        tanggalPengajuan: window.getTanggalLokalHariIni(),
+                        anggotaId: pemohonObj.id,
+                        nama: pemohonObj.nama,
+                        jenisAkad,
+                        nominal,
+                        tenor,
+                        bungaPersen: ratePersen,
+                        marginTotalNominal,
+                        bankSumber,
+                        keperluan: keperluan || '-',
+                        status: isKeuangan ? 'Disetujui' : 'Menunggu',
+                        riwayatCicilan: []
+                    };
 
-            appState.pinjaman.push(newPinjaman);
-            window.catatLogAuditSistem('TRANSAKSI', isKeuangan ? 'Pencairan Akad Pembiayaan Baru' : 'Pengajuan Akad Pembiayaan Baru', `${jenisAkad} a.n ${pemohonObj.nama} (${window.formatRupiah(nominal)}) Sumber: ${bankSumber}`, newPinjaman.status);
-            saveStateToCloud();
-            document.getElementById('modalPinjaman').classList.add('hidden');
-            window.renderApp();
-            window.showToast(isKeuangan ? `Akad ${jenisAkad} berhasil dicatat & disetujui!` : `Pengajuan Akad ${jenisAkad} berhasil dikirim ke Pengurus!`);
+                    appState.pinjaman.push(newPinjaman);
+                    window.catatLogAuditSistem('TRANSAKSI', isKeuangan ? 'Pencairan Akad Pembiayaan Baru' : 'Pengajuan Akad Pembiayaan Baru', `${jenisAkad} a.n ${pemohonObj.nama} (${window.formatRupiah(nominal)}) Sumber: ${bankSumber}`, newPinjaman.status);
+                    saveStateToCloud();
+                    document.getElementById('modalPinjaman').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast(isKeuangan ? `Akad ${jenisAkad} berhasil dicatat & disetujui!` : `Pengajuan Akad ${jenisAkad} berhasil dikirim ke Pengurus!`);
+                }
+            );
             return false;
         };
 
@@ -6730,7 +6743,7 @@
                 tipeSel.disabled = !isKeuangan;
                 window.handleTipeMutasiZisChange(tipeSel);
             }
-            window.ensureCaptchaWidget('formZis');
+            window.ensureCaptchaWidget('formZis', true);
             document.getElementById('modalZis').classList.remove('hidden');
         };
 
@@ -6795,18 +6808,24 @@
             if (editId) {
                 const z = (appState.zis || []).find(x => x.id === editId);
                 if (z) {
-                    z.tipeMutasi = tipeMutasi;
-                    z.jenis = jenis;
-                    z.sumberDana = sumberDana;
-                    z.bankTujuan = bankTujuan;
-                    z.isAnonim = isAnonim;
-                    z.nominal = nominal;
-                    z.keterangan = keterangan;
-                    if (buktiUrl) z.bukti = buktiUrl;
-                    saveStateToCloud();
-                    document.getElementById('modalZis').classList.add('hidden');
-                    window.renderApp();
-                    window.showToast('Catatan ZISWAF / Santunan berhasil diperbarui!');
+                    window.showConfirmModal(
+                        'Konfirmasi Perubahan ZISWAF',
+                        `Simpan perubahan catatan ${tipeMutasi} ${jenis} sebesar ${window.formatRupiah(nominal)}?`,
+                        () => {
+                            z.tipeMutasi = tipeMutasi;
+                            z.jenis = jenis;
+                            z.sumberDana = sumberDana;
+                            z.bankTujuan = bankTujuan;
+                            z.isAnonim = isAnonim;
+                            z.nominal = nominal;
+                            z.keterangan = keterangan;
+                            if (buktiUrl) z.bukti = buktiUrl;
+                            saveStateToCloud();
+                            document.getElementById('modalZis').classList.add('hidden');
+                            window.renderApp();
+                            window.showToast('Catatan ZISWAF / Santunan berhasil diperbarui!');
+                        }
+                    );
                 }
                 return false;
             }
@@ -7965,7 +7984,7 @@
                 metSel.value = 'TUNAI';
                 window.handleCicilanMetodeChange(metSel);
             }
-            window.ensureCaptchaWidget('formBayarCicilan');
+            window.ensureCaptchaWidget('formBayarCicilan', true);
             document.getElementById('modalBayarCicilan').classList.remove('hidden');
         };
 
@@ -8245,17 +8264,23 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 window.showToast('Nomor WhatsApp sudah terdaftar sebagai anggota aktif!', 'error');
                 return false;
             }
-            if (!appState.calonAnggota) appState.calonAnggota = [];
-            appState.calonAnggota.push({
-                id: 'calon_' + Date.now(),
-                nama,
-                namaKeluarga,
-                kontak,
-                pin
-            });
-            saveStateToCloud();
-            document.getElementById('modalDaftarMandiri').classList.add('hidden');
-            window.showToast('Pendaftaran terkirim! Menunggu verifikasi Admin.');
+            window.showConfirmModal(
+                'Konfirmasi Pendaftaran Calon Anggota',
+                `Kirim pendaftaran anggota baru atas nama ${nama} (${namaKeluarga} - WA: ${kontak})?`,
+                () => {
+                    if (!appState.calonAnggota) appState.calonAnggota = [];
+                    appState.calonAnggota.push({
+                        id: 'calon_' + Date.now(),
+                        nama,
+                        namaKeluarga,
+                        kontak,
+                        pin
+                    });
+                    saveStateToCloud();
+                    document.getElementById('modalDaftarMandiri').classList.add('hidden');
+                    window.showToast('Pendaftaran terkirim! Menunggu verifikasi Admin.');
+                }
+            );
             return false;
         };
 
@@ -9047,28 +9072,34 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             const nominal = parseFloat(document.getElementById('pendapatanShuNominal').value) || 0;
             const bankTujuan = document.getElementById('pendapatanShuBankTujuan')?.value || ((appState.rekeningBank?.[0]?.nama) || '');
 
-            if (!Array.isArray(appState.pendapatanShuList)) appState.pendapatanShuList = [];
-            if (editId) {
-                const item = appState.pendapatanShuList.find(x => x.id === editId);
-                if (item) {
-                    item.keterangan = keterangan;
-                    item.nominal = nominal;
-                    item.bankTujuan = bankTujuan;
+            window.showConfirmModal(
+                'Konfirmasi Pendapatan Usaha SHU',
+                `Simpan catatan pendapatan usaha "${keterangan}" sebesar ${window.formatRupiah(nominal)} ke rekening ${bankTujuan || 'Kas'}?`,
+                () => {
+                    if (!Array.isArray(appState.pendapatanShuList)) appState.pendapatanShuList = [];
+                    if (editId) {
+                        const item = appState.pendapatanShuList.find(x => x.id === editId);
+                        if (item) {
+                            item.keterangan = keterangan;
+                            item.nominal = nominal;
+                            item.bankTujuan = bankTujuan;
+                        }
+                    } else {
+                        appState.pendapatanShuList.push({
+                            id: 'pend_' + Date.now(),
+                            tanggal: window.getTanggalLokalHariIni(),
+                            keterangan,
+                            nominal,
+                            bankTujuan
+                        });
+                    }
+                    window.catatLogAuditSistem('TRANSAKSI', editId ? 'Edit Pendapatan Usaha SHU' : 'Catat Pendapatan Usaha SHU', `${keterangan} (+${window.formatRupiah(nominal)}) ke Bank ${bankTujuan}`, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalPendapatanShu').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast('Sumber pendapatan usaha SHU & saldo bank berhasil diperbarui!');
                 }
-            } else {
-                appState.pendapatanShuList.push({
-                    id: 'pend_' + Date.now(),
-                    tanggal: window.getTanggalLokalHariIni(),
-                    keterangan,
-                    nominal,
-                    bankTujuan
-                });
-            }
-            window.catatLogAuditSistem('TRANSAKSI', editId ? 'Edit Pendapatan Usaha SHU' : 'Catat Pendapatan Usaha SHU', `${keterangan} (+${window.formatRupiah(nominal)}) ke Bank ${bankTujuan}`, 'Sukses');
-            saveStateToCloud();
-            document.getElementById('modalPendapatanShu').classList.add('hidden');
-            window.renderApp();
-            window.showToast('Sumber pendapatan usaha SHU & saldo bank berhasil diperbarui!');
+            );
             return false;
         };
 
@@ -9293,28 +9324,34 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             const nominal = parseFloat(document.getElementById('bebanNominal').value) || 0;
             const bankTujuan = document.getElementById('bebanBankTujuan')?.value || ((appState.rekeningBank?.[0]?.nama) || '');
 
-            if (editId) {
-                const b = (appState.bebanOperasional || []).find(x => x.id === editId);
-                if (b) {
-                    b.keterangan = keterangan;
-                    b.nominal = nominal;
-                    b.bankTujuan = bankTujuan;
-                }
-            } else {
-                appState.bebanOperasional.push({
-                    id: 'beb_' + Date.now(),
-                    tanggal: window.getTanggalLokalHariIni(),
-                    keterangan,
-                    nominal,
-                    bankTujuan
-                });
-            }
+            window.showConfirmModal(
+                'Konfirmasi Beban Operasional SHU',
+                `Simpan catatan beban operasional "${keterangan}" sebesar ${window.formatRupiah(nominal)} dari rekening ${bankTujuan || 'Kas'}?`,
+                () => {
+                    if (editId) {
+                        const b = (appState.bebanOperasional || []).find(x => x.id === editId);
+                        if (b) {
+                            b.keterangan = keterangan;
+                            b.nominal = nominal;
+                            b.bankTujuan = bankTujuan;
+                        }
+                    } else {
+                        appState.bebanOperasional.push({
+                            id: 'beb_' + Date.now(),
+                            tanggal: window.getTanggalLokalHariIni(),
+                            keterangan,
+                            nominal,
+                            bankTujuan
+                        });
+                    }
 
-            window.catatLogAuditSistem('TRANSAKSI', editId ? 'Edit Beban Operasional SHU' : 'Catat Beban Operasional SHU', `${keterangan} (-${window.formatRupiah(nominal)}) dari Bank ${bankTujuan}`, 'Sukses');
-            saveStateToCloud();
-            document.getElementById('modalBeban').classList.add('hidden');
-            window.renderApp();
-            window.showToast('Catatan beban operasional & saldo bank berhasil diperbarui!');
+                    window.catatLogAuditSistem('TRANSAKSI', editId ? 'Edit Beban Operasional SHU' : 'Catat Beban Operasional SHU', `${keterangan} (-${window.formatRupiah(nominal)}) dari Bank ${bankTujuan}`, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalBeban').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast('Catatan beban operasional & saldo bank berhasil diperbarui!');
+                }
+            );
             return false;
         };
 
@@ -10257,11 +10294,30 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         setTimeout(function() { if (typeof window.renderBankTabPro === 'function') window.renderBankTabPro(); }, 300);
 
         // =========================================================================
-        // AUTO-VERSIONING & CHANGELOG FOOTER (v35.1 Pro)
+        // AUTO-VERSIONING & CHANGELOG FOOTER (v35.3 Pro)
         // =========================================================================
-        window.APP_VERSION = 'v35.1 Pro';
-        window.APP_RELEASE_DATE = '15 Nov 2026';
+        window.APP_VERSION = 'v35.3 Pro';
+        window.APP_RELEASE_DATE = '16 Nov 2026';
         window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v35.3 Pro',
+                tanggal: '16 Nov 2026 (Terbaru - Captcha Terpusat di Pop-Up Konfirmasi & Perataan Tengah Seluruh Pop-Up)',
+                judul: 'Pemindahan Captcha ke Pop-Up Konfirmasi Semua Transaksi & Posisi Tengah untuk Seluruh Pop-Up/Notifikasi',
+                poin: [
+                    'Captcha di Dalam Pop-Up Konfirmasi Semua Transaksi: Captcha kini tidak lagi membebani bawah form input, melainkan tampil langsung di dalam pop-up Konfirmasi (Simpanan, Transfer P2P, Pembiayaan, Angsuran, ZISWAF, Pendapatan/Beban SHU, dan Pendaftaran Anggota).',
+                    'Seluruh Pop-Up & Notifikasi Tepat di Tengah Layar: Semua modal konfirmasi, form pop-up, serta notifikasi peringatan/sukses (Toast) kini selalu tampil tepat di tengah layar (center viewport) baik di HP maupun Desktop.'
+                ]
+            },
+            {
+                versi: 'v35.2 Pro',
+                tanggal: '16 Nov 2026 (Terbaru - Perbaikan Bug Submit Captcha & Indikator Live Captcha)',
+                judul: 'Perbaikan Bug Reset Captcha Saat Submit & Penambahan Indikator Live "✅ Captcha Sesuai"',
+                poin: [
+                    'Perbaikan Bug gagal submit Captcha: Menghapus pemanggilan ulang refreshCaptchaForm() di awal validasiCaptchaTransaksi() yang sebelumnya menyebabkan input jawaban Captcha ter-reset dan dianggap belum selesai (< 400ms) saat tombol Simpan ditekan.',
+                    'Indikator Live Status Captcha: Menampilkan status real-time "✅ Captcha Sesuai" berwarna hijau begitu angka jawaban yang diketik benar sebelum tombol Simpan ditekan.',
+                    'Toleransi Format Angka Keyboard Mobile: Memastikan spasi otomatis dari keyboard HP tidak menggagalkan pencocokan angka Captcha.'
+                ]
+            },
             {
                 versi: 'v35.1 Pro',
                 tanggal: '15 Nov 2026 (Terbaru - Proteksi Captcha Anti-Bot di Seluruh Transaksi)',
