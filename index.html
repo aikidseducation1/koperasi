@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Koperasi Keluarga v35.3 Pro</title>
+    <title>Aplikasi Koperasi Keluarga v35.4 Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -156,11 +156,15 @@
                 <div class="bg-blue-900 text-amber-400 p-1.5 rounded-lg shadow-xs border border-blue-800 shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </div>
-                <div class="flex items-center gap-2 overflow-hidden">
+                <div class="flex items-center gap-1.5 overflow-hidden">
                     <h1 class="font-extrabold text-slate-800 dark:text-white text-xs sm:text-sm leading-tight truncate">Koperasi Keluarga</h1>
-                    <button type="button" onclick="window.bukaModalSyncStatus()" title="Klik untuk cek detail API Key & Sinkronisasi Data" id="firebaseStatusBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 transition-colors truncate max-w-[160px] sm:max-w-none hover:ring-2 hover:ring-emerald-400 cursor-pointer">
+                    <button type="button" onclick="window.bukaModalSyncStatus()" title="Klik untuk cek detail API Key & Sinkronisasi Data" id="firebaseStatusBadge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 transition-colors truncate max-w-[145px] sm:max-w-none hover:ring-2 hover:ring-emerald-400 cursor-pointer">
                         <span id="firebaseStatusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                         <span id="firebaseStatusText" class="truncate">Mengecek...</span>
+                    </button>
+                    <button type="button" onclick="window.paksaSinkronCloud()" id="btnQuickSyncHeader" title="Sinkronkan Sekarang ke Cloud Firebase" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/80 dark:hover:bg-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition cursor-pointer shrink-0">
+                        <span id="iconQuickSyncSpin">🔄</span>
+                        <span class="hidden sm:inline">Sync Cloud</span>
                     </button>
                 </div>
             </div>
@@ -197,7 +201,7 @@
             <span class="text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">Info</span>
         </div>
         <div class="running-text-wrapper flex-1 overflow-hidden" title="Arahkan kursor / sentuh untuk menghentikan sejenak">
-            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v34.9 Pro!</p>
+            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v35.5 Pro!</p>
         </div>
         <button id="btnEditPengumuman" onclick="window.bukaModalEditPengumuman()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
             ✏️ Edit
@@ -215,7 +219,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v35.3 Pro</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v35.5 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -227,15 +231,43 @@
                 
                 <!-- TAB: DASHBOARD -->
                 <div id="tab-dashboard" class="space-y-3 w-full">
-                    <div id="boxPengingatKewajibanPribadi" class="grid grid-cols-1 md:grid-cols-3 gap-2"></div>
+                    <!-- Banner Wajib Notifikasi Status Iuran Bulanan / Simpanan Wajib -->
+                    <div id="notifIuranWajibBerandaBanner" class="w-full"></div>
 
-                    <div class="bg-white dark:bg-slate-900 px-3.5 py-2.5 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
-                        <div>
-                            <h2 class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-white leading-tight" id="dashboardGreetingTitle">Dashboard & Keuangan Keluarga</h2>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400">Ringkasan tabungan pribadi, kas koperasi, pembiayaan syariah, ZISWAF, dan voting keluarga.</p>
+                    <!-- Header Beranda & Tombol Pintasan Aksi Cepat yang Rapi -->
+                    <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-xs border border-slate-200/80 dark:border-slate-800 space-y-2.5">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h2 class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-white leading-tight" id="dashboardGreetingTitle">Dashboard & Keuangan Keluarga</h2>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">Ringkasan tabungan pribadi, status iuran wajib bulanan, kas koperasi, pembiayaan syariah, dan ZISWAF.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <span id="dashboardIuranStatusPill" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">📅 Mengecek Iuran...</span>
+                                <span id="privacyRoleBadgeDashboard" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">🔒 Privasi Aktif</span>
+                            </div>
                         </div>
-                        <span id="privacyRoleBadgeDashboard" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">🔒 Privasi Aktif</span>
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+                                <button type="button" onclick="window.bukaSetorWajibCepatBeranda()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl text-[11px] shadow-xs transition cursor-pointer">
+                                    <span>💳</span><span>Setor Iuran / Tabungan</span>
+                                </button>
+                                <button type="button" onclick="window.bukaModalTransferP2P()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl text-[11px] shadow-xs transition cursor-pointer">
+                                    <span>⚡</span><span>Transfer P2P</span>
+                                </button>
+                                <button type="button" onclick="window.bukaMatriksDariBeranda()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold px-3 py-1.5 rounded-xl text-[11px] transition cursor-pointer">
+                                    <span>📅</span><span>Kartu Kendali 12 Bulan</span>
+                                </button>
+                                <button type="button" onclick="window.switchTab('pinjaman')" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold px-3 py-1.5 rounded-xl text-[11px] transition cursor-pointer">
+                                    <span>🤝</span><span>Pembiayaan</span>
+                                </button>
+                            </div>
+                            <button type="button" onclick="window.paksaSinkronCloud()" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/50 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-bold px-3 py-1.5 rounded-xl text-[11px] transition cursor-pointer" title="Sinkronkan Data dengan Cloud Firebase">
+                                <span>🔄</span><span>Sync Otomatis Cloud</span>
+                            </button>
+                        </div>
                     </div>
+
+                    <div id="boxPengingatKewajibanPribadi" class="grid grid-cols-1 md:grid-cols-3 gap-2.5"></div>
 
                     <!-- Notifikasi Tugas Admin -->
                     <div id="adminPendingAlertBanner" class="hidden bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-2.5 shadow-xs">
@@ -489,16 +521,31 @@
 
                 <!-- TAB: BUKU SIMPANAN -->
                 <div id="tab-simpanan" class="space-y-4 sm:space-y-5 w-full hidden print-container">
-                    <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <h2 class="text-base sm:text-xl font-bold text-slate-900 dark:text-white">Buku Simpanan & Arus Kas</h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Kelola simpanan pokok, wajib, sukarela, kwitansi digital, dan transfer saldo sesama anggota (P2P).</p>
-                        </div>
-                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto no-print">
-                            <button onclick="window.exportToExcel()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-3 py-2 rounded-xl shadow-md transition text-xs shrink-0">📥 Export CSV/Excel</button>
-                            <button onclick="window.exportToPDF()" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-2 rounded-xl shadow-md transition text-xs shrink-0">🖨️ Print PDF</button>
-                            <button onclick="window.bukaModalTransferP2P()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-md transition text-xs shrink-0">⚡ Transfer Sesama (P2P)</button>
-                            <button onclick="window.bukaModalTransaksi()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-lg transition text-xs shrink-0">+ Setor / Tarik</button>
+                    <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-3">
+                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+                            <div>
+                                <h2 class="text-base sm:text-xl font-bold text-slate-900 dark:text-white">Buku Simpanan &amp; Arus Kas</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Kelola simpanan pokok, wajib, sukarela, matriks kartu kendali 12 bulan, dan transfer sesama anggota (P2P).</p>
+                            </div>
+                            <!-- Grup Tombol Utama Transaksi & Alat Bantu yang Rapi -->
+                            <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-start lg:justify-end no-print">
+                                <button type="button" onclick="window.bukaModalTransaksi()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition text-xs cursor-pointer">
+                                    <span>➕</span><span>Setor / Tarik Simpanan</span>
+                                </button>
+                                <button type="button" onclick="window.bukaModalTransferP2P()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-sm transition text-xs cursor-pointer">
+                                    <span>⚡</span><span>Transfer Sesama (P2P)</span>
+                                </button>
+                                <div class="hidden sm:block h-5 w-px bg-slate-200 dark:bg-slate-700 mx-0.5"></div>
+                                <button type="button" onclick="window.sinkronkanBukuSimpananPenuh(true)" class="inline-flex items-center justify-center gap-1 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/70 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold px-3 py-2 rounded-xl transition text-xs cursor-pointer" title="Sinkronkan ulang Buku Simpanan, Saldo, Matriks 12 Bulan & Cloud Firebase">
+                                    <span>🔄</span><span>Sync Buku &amp; Cloud</span>
+                                </button>
+                                <button type="button" onclick="window.exportToExcel()" class="inline-flex items-center justify-center gap-1 bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/70 dark:hover:bg-teal-900 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-bold px-3 py-2 rounded-xl transition text-xs cursor-pointer">
+                                    <span>📥</span><span>CSV/Excel</span>
+                                </button>
+                                <button type="button" onclick="window.exportToPDF()" class="inline-flex items-center justify-center gap-1 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/70 dark:hover:bg-rose-900 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-bold px-3 py-2 rounded-xl transition text-xs cursor-pointer">
+                                    <span>🖨️</span><span>PDF</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -608,6 +655,7 @@
                                 <p class="text-[11px] text-slate-500">Pantau kelunasan Simpanan Wajib tiap bulan sejak tanggal bergabung anggota. (Bendahara/Admin dapat klik kotak bulan untuk verifikasi manual).</p>
                             </div>
                             <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto no-print">
+                                <button type="button" onclick="window.sinkronkanBukuSimpananPenuh(true)" class="bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-slate-700 font-bold px-2.5 py-1.5 rounded-xl text-xs transition" title="Sinkronkan otomatis transaksi Simpanan Wajib ke Matriks 12 Bulan">🔄 Auto-Sync Matriks</button>
                                 <select id="filterTahunMatriksIuran" onchange="window.renderMatriksIuran12Bulan()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold outline-none">
                                     <option value="2026" selected>Tahun 2026</option>
                                     <option value="2025">Tahun 2025</option>
@@ -2036,11 +2084,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nominal (Rp)</label>
-                        <input type="number" id="transaksiNominal" required min="1000" placeholder="100000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
+                        <input type="number" id="transaksiNominal" required min="1000" oninput="window.sinkronkanNominalKeRapelWajib()" placeholder="100000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-emerald-600 mb-1">📅 Tanggal &amp; Jam Transaksi</label>
-                        <input type="text" id="transaksiWaktuInput" required placeholder="YYYY-MM-DD HH:mm" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono font-bold outline-none">
+                        <input type="text" id="transaksiWaktuInput" required oninput="window.sinkronkanTanggalTransaksiKeBulanWajib()" placeholder="YYYY-MM-DD HH:mm" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono font-bold outline-none">
                     </div>
                 </div>
                 <div id="groupBuktiTransfer">
@@ -3731,30 +3779,39 @@
                 if (typeof window._unsubscribeFirestore === 'function') window._unsubscribeFirestore();
                 window._unsubscribeFirestore = fsMod.onSnapshot(docRef, (docSnap) => {
                     lastSyncTimestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                    cloudSyncState = 'Terhubung & Tersinkron (Realtime Cloud)';
+                    cloudSyncState = 'Terhubung & Tersinkron Otomatis (Realtime Cloud)';
                     if (docSnap.exists()) {
                         const cloudData = docSnap.data();
                         if (cloudData && cloudData.anggota) {
                             const hadDemoInCloud = window.purifikasiDataDemoProduksi(cloudData);
+                            const mergedTransaksi = window.mergeArrayById(appState.transaksi || [], cloudData.transaksi || [], window._recentlyDeletedIds);
+                            const mergedPinjaman = window.mergeArrayById(appState.pinjaman || [], cloudData.pinjaman || [], window._recentlyDeletedIds);
+                            const mergedZis = window.mergeArrayById(appState.zis || [], cloudData.zis || [], window._recentlyDeletedIds);
+                            const mergedCalon = window.mergeArrayById(appState.calonAnggota || [], cloudData.calonAnggota || [], window._recentlyDeletedIds);
+                            const mergedAnggota = window.mergeArrayById(appState.anggota || [], cloudData.anggota || [], window._recentlyDeletedIds);
                             appState = {
                                 ...appState,
                                 ...cloudData,
-                                votings: cloudData.votings || [],
-                                rekeningBank: cloudData.rekeningBank || [],
-                                pendapatanShuList: cloudData.pendapatanShuList || [],
-                                bebanOperasional: cloudData.bebanOperasional || [],
-                                notulensiRapat: cloudData.notulensiRapat || [],
-                                pinjaman: cloudData.pinjaman || [],
-                                zis: cloudData.zis || []
+                                anggota: mergedAnggota,
+                                transaksi: mergedTransaksi,
+                                pinjaman: mergedPinjaman,
+                                zis: mergedZis,
+                                calonAnggota: mergedCalon,
+                                votings: cloudData.votings || appState.votings || [],
+                                rekeningBank: cloudData.rekeningBank || appState.rekeningBank || [],
+                                pendapatanShuList: cloudData.pendapatanShuList || appState.pendapatanShuList || [],
+                                bebanOperasional: cloudData.bebanOperasional || appState.bebanOperasional || [],
+                                notulensiRapat: cloudData.notulensiRapat || appState.notulensiRapat || []
                             };
+                            window.rebuildSaldoCache(true);
                             if (hadDemoInCloud && fbSetDoc) {
-                                fbSetDoc(docRef, appState).catch(() => {});
+                                fbSetDoc(docRef, JSON.parse(JSON.stringify(appState))).catch(() => {});
                             }
                             try { localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(appState)); } catch (e) {}
                             document.getElementById('firebaseStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0';
-                            document.getElementById('firebaseStatusText').textContent = `Cloud Synced (${lastSyncTimestamp})`;
+                            document.getElementById('firebaseStatusText').textContent = `Auto-Sync (${lastSyncTimestamp})`;
                             const sideSync = document.getElementById('sidebarLastSyncTime');
-                            if (sideSync) sideSync.textContent = `Sinkron Cloud: ${lastSyncTimestamp}`;
+                            if (sideSync) sideSync.textContent = `Auto-Sync Cloud: ${lastSyncTimestamp}`;
                             if (!currentUserSession && typeof window.restoreUserSessionState === 'function') {
                                 window.restoreUserSessionState();
                             }
@@ -3764,8 +3821,8 @@
                                 window.renderApp();
                             }
                         }
-                    } else {
-                        fbSetDoc(docRef, appState);
+                    } else if (fbSetDoc) {
+                        fbSetDoc(docRef, JSON.parse(JSON.stringify(appState))).catch(() => {});
                     }
                     window.updateSyncDiagnosticsUI();
                 }, (err) => {
@@ -3822,30 +3879,37 @@
         };
 
         window.mergeArrayById = (localArr, cloudArr, deletedIdsMap = {}) => {
-            if (!Array.isArray(cloudArr)) return localArr || [];
-            if (!Array.isArray(localArr)) return cloudArr;
-            const localMap = new Map();
-            localArr.forEach(item => { if (item && item.id) localMap.set(item.id, item); });
-            const merged = [...localArr];
+            if (!Array.isArray(cloudArr)) return Array.isArray(localArr) ? localArr : [];
+            if (!Array.isArray(localArr)) return cloudArr.filter(c => c && c.id && !deletedIdsMap[c.id]);
+            const mergedMap = new Map();
             cloudArr.forEach(cItem => {
-                if (cItem && cItem.id && !localMap.has(cItem.id) && !deletedIdsMap[cItem.id]) {
-                    merged.push(cItem);
+                if (cItem && cItem.id && !deletedIdsMap[cItem.id]) {
+                    mergedMap.set(cItem.id, cItem);
                 }
             });
-            return merged;
+            localArr.forEach(lItem => {
+                if (lItem && lItem.id && !deletedIdsMap[lItem.id]) {
+                    mergedMap.set(lItem.id, lItem);
+                }
+            });
+            return Array.from(mergedMap.values());
         };
 
         window._recentlyDeletedIds = { ...DEMO_BLACKLIST_IDS };
+        window._localDirtyPendingSync = false;
         window.markDeletedItemId = (id) => {
             if (id) window._recentlyDeletedIds[id] = Date.now();
         };
 
         async function saveStateToCloud() {
+            appState.lastUpdatedClientAt = Date.now();
             window.rebuildSaldoCache(true);
             lastSyncTimestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             try {
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(appState));
             } catch (e) {}
+            const spinIcon = document.getElementById('iconQuickSyncSpin');
+            if (spinIcon) spinIcon.classList.add('animate-spin');
             if (db && fbDoc && fbSetDoc) {
                 try {
                     const docRef = fbDoc(db, 'artifacts', appId, 'public', 'data', 'koperasiState', 'main');
@@ -3860,21 +3924,76 @@
                                     appState.zis = window.mergeArrayById(appState.zis, cloudData.zis, window._recentlyDeletedIds);
                                     appState.calonAnggota = window.mergeArrayById(appState.calonAnggota, cloudData.calonAnggota, window._recentlyDeletedIds);
                                     appState.anggota = window.mergeArrayById(appState.anggota, cloudData.anggota, window._recentlyDeletedIds);
+                                    window.rebuildSaldoCache(true);
                                 }
                             }
                         } catch (mergeErr) {}
                     }
-                    await fbSetDoc(docRef, appState);
-                    document.getElementById('firebaseStatusDot').className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0';
-                    document.getElementById('firebaseStatusText').textContent = `Cloud Synced (${lastSyncTimestamp})`;
+                    const cleanCloudPayload = JSON.parse(JSON.stringify(appState));
+                    await fbSetDoc(docRef, cleanCloudPayload);
+                    window._localDirtyPendingSync = false;
+                    cloudSyncState = 'Terhubung & Tersinkron Otomatis (Realtime Cloud)';
+                    const dotEl = document.getElementById('firebaseStatusDot');
+                    const txtEl = document.getElementById('firebaseStatusText');
+                    if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0';
+                    if (txtEl) txtEl.textContent = `Auto-Sync (${lastSyncTimestamp})`;
                     const sideSync = document.getElementById('sidebarLastSyncTime');
-                    if (sideSync) sideSync.textContent = `Sinkron Cloud: ${lastSyncTimestamp}`;
+                    if (sideSync) sideSync.textContent = `Auto-Sync Cloud: ${lastSyncTimestamp}`;
                 } catch (err) {
+                    window._localDirtyPendingSync = true;
                     console.error("Cloud save failed, local state active:", err);
                 }
+            } else {
+                window._localDirtyPendingSync = true;
             }
+            if (spinIcon) setTimeout(() => spinIcon.classList.remove('animate-spin'), 400);
             window.updateSyncDiagnosticsUI();
         }
+
+        // Listener Otomatis Sinkronisasi ke Firebase saat Koneksi Internet Pulih, Tab Aktif Kembali, atau Interval Berkala
+        window.sinkronOtomatisKeFirebase = async (sumberTrigger = 'auto') => {
+            if (!db || !fbDoc) {
+                try { await initFirebaseAndSync(); } catch (e) {}
+                return;
+            }
+            try {
+                if (window._localDirtyPendingSync) {
+                    await saveStateToCloud();
+                } else if (fbGetDoc) {
+                    const docRef = fbDoc(db, 'artifacts', appId, 'public', 'data', 'koperasiState', 'main');
+                    const snap = await fbGetDoc(docRef);
+                    if (snap.exists()) {
+                        const cloudData = snap.data();
+                        if (cloudData && cloudData.anggota) {
+                            appState.transaksi = window.mergeArrayById(appState.transaksi, cloudData.transaksi, window._recentlyDeletedIds);
+                            appState.pinjaman = window.mergeArrayById(appState.pinjaman, cloudData.pinjaman, window._recentlyDeletedIds);
+                            appState.zis = window.mergeArrayById(appState.zis, cloudData.zis, window._recentlyDeletedIds);
+                            appState.calonAnggota = window.mergeArrayById(appState.calonAnggota, cloudData.calonAnggota, window._recentlyDeletedIds);
+                            appState.anggota = window.mergeArrayById(appState.anggota, cloudData.anggota, window._recentlyDeletedIds);
+                            window.rebuildSaldoCache(true);
+                            lastSyncTimestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                            const txtEl = document.getElementById('firebaseStatusText');
+                            if (txtEl) txtEl.textContent = `Auto-Sync (${lastSyncTimestamp})`;
+                            if (currentUserSession && typeof window.renderApp === 'function') window.renderApp();
+                        }
+                    }
+                }
+            } catch (e) {}
+        };
+        window.addEventListener('online', () => {
+            window.showToast('🌐 Koneksi internet aktif kembali — menyinkronkan data ke Firebase...', 'info');
+            window.sinkronOtomatisKeFirebase('online');
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                window.sinkronOtomatisKeFirebase('visibility');
+            }
+        });
+        setInterval(() => {
+            if (navigator.onLine && (window._localDirtyPendingSync || db)) {
+                window.sinkronOtomatisKeFirebase('heartbeat');
+            }
+        }, 45000);
 
         window.updateSyncDiagnosticsUI = () => {
             const elCloud = document.getElementById('diagCloudStatus');
@@ -4190,37 +4309,67 @@
             const pendingRegLen = (appState.calonAnggota || []).length;
             const totalAllPending = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisCount + pendingRegLen;
 
-            const navContainer = document.getElementById('sidebarNavContainer');
-            let navs = [
-                { id: 'dashboard', label: 'Dashboard Utama', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-                { id: 'simpanan', label: 'Buku Simpanan & Kas', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-                { id: 'pinjaman', label: 'Pembiayaan Syariah', badge: window.isBendaharaOrSuper() ? (pendingLoans.length + pendingCicilanCount) : 0, icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
-                { id: 'shu', label: 'Bagi Hasil (SHU) Syariah', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-                { id: 'zis', label: 'ZIS & Dana Sosial', badge: window.isBendaharaOrSuper() ? pendingZisCount : 0, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
-                { id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-                { id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' },
-                { id: 'profil-saya', label: 'Profil & Kartu Saya', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
-            ];
+            const infoIuranUser = window.evaluasiKewajibanWajibBeranda(currentUserSession);
+            const badgeIuranSimpanan = infoIuranUser.belumLunasBulanIni ? 'Belum Iuran' : (infoIuranUser.statusBulanIni === 'MENUNGGU' ? 'Verifikasi' : 0);
 
+            const navContainer = document.getElementById('sidebarNavContainer');
+            const navTitleEl = document.getElementById('sidebarNavTitle');
+            if (navTitleEl) navTitleEl.classList.add('hidden');
+
+            const grupUtama = [
+                { id: 'dashboard', label: 'Beranda Utama', badge: infoIuranUser.belumLunasBulanIni ? '!' : 0, badgeStyle: 'rose', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+                { id: 'simpanan', label: 'Buku Simpanan & Kas', badge: badgeIuranSimpanan, badgeStyle: infoIuranUser.belumLunasBulanIni ? 'rose' : 'amber', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+                { id: 'pinjaman', label: 'Pembiayaan Syariah', badge: window.isBendaharaOrSuper() ? (pendingLoans.length + pendingCicilanCount) : 0, icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
+                { id: 'shu', label: 'Bagi Hasil (SHU)', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+                { id: 'zis', label: 'ZIS & Dana Sosial', badge: window.isBendaharaOrSuper() ? pendingZisCount : 0, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' }
+            ];
             if (window.isPengurusAny()) {
                 const badgePersetujuan = role === 'sekretaris' ? pendingRegLen : totalAllPending;
-                navs.splice(1, 0, { id: 'persetujuan', label: 'Pusat Persetujuan', badge: badgePersetujuan, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' });
-                navs.splice(navs.length - 1, 0, { id: 'anggota', label: 'Data Anggota Keluarga', badge: pendingRegLen, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
-                navs.splice(navs.length - 1, 0, { id: 'bank', label: role === 'sekretaris' ? 'Info Rekening & QRIS' : 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
-            }
-            if (role === 'admin') {
-                navs.splice(navs.length - 1, 0, { id: 'pengaturan', label: 'Sistem, Keamanan & Audit', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' });
+                grupUtama.splice(1, 0, { id: 'persetujuan', label: 'Pusat Persetujuan', badge: badgePersetujuan, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' });
             }
 
-            navContainer.innerHTML = navs.map(n => `
-                <button onclick="window.switchTab('${n.id}')" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg font-semibold text-[11px] transition ${appState.activeTab === n.id ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}">
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${n.icon}"></path></svg>
-                        <span class="truncate">${n.label}</span>
+            const grupTataKelola = [];
+            if (window.isPengurusAny()) {
+                grupTataKelola.push({ id: 'anggota', label: 'Data Anggota Keluarga', badge: pendingRegLen, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
+                grupTataKelola.push({ id: 'bank', label: role === 'sekretaris' ? 'Info Rekening & QRIS' : 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
+            }
+            grupTataKelola.push({ id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' });
+            grupTataKelola.push({ id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' });
+
+            const grupAkunSistem = [
+                { id: 'profil-saya', label: 'Profil & Kartu Saya', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
+            ];
+            if (role === 'admin') {
+                grupAkunSistem.push({ id: 'pengaturan', label: 'Sistem, Keamanan & Audit', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' });
+            }
+
+            const renderNavGroup = (groupTitle, items) => `
+                <div class="mb-2.5 last:mb-0">
+                    <p class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1 px-2.5">${groupTitle}</p>
+                    <div class="space-y-0.5">
+                        ${items.map(n => {
+                            const isActive = appState.activeTab === n.id;
+                            const badgeColor = isActive
+                                ? 'bg-white text-emerald-700'
+                                : (n.badgeStyle === 'rose' ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 animate-pulse' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300');
+                            return `
+                                <button type="button" onclick="window.switchTab('${n.id}')" class="w-full flex items-center justify-between px-2.5 py-2 rounded-xl font-semibold text-[11px] transition cursor-pointer ${isActive ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}">
+                                    <div class="flex items-center gap-2 overflow-hidden">
+                                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${n.icon}"></path></svg>
+                                        <span class="truncate">${n.label}</span>
+                                    </div>
+                                    ${n.badge ? `<span class="px-1.5 py-0.5 text-[9px] rounded-full font-extrabold shrink-0 ${badgeColor}">${n.badge}</span>` : ''}
+                                </button>
+                            `;
+                        }).join('')}
                     </div>
-                    ${n.badge ? `<span class="px-1.5 py-0.2 text-[9px] rounded-full font-extrabold shrink-0 ${appState.activeTab === n.id ? 'bg-white text-emerald-700' : 'bg-amber-100 text-amber-800'}">${n.badge}</span>` : ''}
-                </button>
-            `).join('');
+                </div>
+            `;
+
+            navContainer.innerHTML =
+                renderNavGroup('Menu Utama & Kas', grupUtama) +
+                renderNavGroup('Tata Kelola & Anggota', grupTataKelola) +
+                renderNavGroup('Akun & Sistem', grupAkunSistem);
 
             document.getElementById('teksPengumuman').textContent = appState.pengumuman;
             const superAdminOnlyBtns = ['btnSettingPinjam', 'btnSettingShu', 'adminShuControl', 'btnEditAdArt', 'btnAdminPoinBonus', 'btnAdminTambahBadge'];
@@ -4358,12 +4507,139 @@
             }
         };
 
+        window.NAMA_BULAN_PANJANG = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        window.evaluasiKewajibanWajibBeranda = (anggota) => {
+            const now = new Date();
+            const tahunIni = String(now.getFullYear());
+            const bulanIni = now.getMonth() + 1; // 1..12
+            const namaBulanIni = `${window.NAMA_BULAN_PANJANG[bulanIni - 1]} ${tahunIni}`;
+            const kodeYmBulanIni = `${tahunIni}-${String(bulanIni).padStart(2, '0')}`;
+            const stdWajib = Number(appState.parameterStandar?.simpananWajib || 100000);
+            const stdPokok = Number(appState.parameterStandar?.simpananPokok || 500000);
+
+            if (!anggota) {
+                return {
+                    tahunIni,
+                    bulanIni,
+                    namaBulanIni,
+                    kodeYmBulanIni,
+                    statusBulanIni: 'BELUM',
+                    belumLunasBulanIni: true,
+                    tunggakanBulanList: [],
+                    menungguBulanList: [],
+                    lunasCountYtd: 0,
+                    stdWajib,
+                    stdPokok,
+                    totalTagihanTunggakan: stdWajib
+                };
+            }
+
+            const tunggakanBulanList = [];
+            const menungguBulanList = [];
+            let lunasCountYtd = 0;
+
+            for (let m = 1; m <= bulanIni; m++) {
+                const st = window.evaluasiStatusBulanMatriks(anggota, tahunIni, m, 'WAJIB');
+                const ym = `${tahunIni}-${String(m).padStart(2, '0')}`;
+                const label = `${window.NAMA_BULAN_PANJANG[m - 1]} ${tahunIni}`;
+                if (st === 'LUNAS') {
+                    lunasCountYtd++;
+                } else if (st === 'MENUNGGU') {
+                    menungguBulanList.push({ bulanIndex: m, kodeYm: ym, namaBulan: label });
+                } else if (st === 'BELUM') {
+                    tunggakanBulanList.push({ bulanIndex: m, kodeYm: ym, namaBulan: label });
+                }
+            }
+
+            const statusBulanIni = window.evaluasiStatusBulanMatriks(anggota, tahunIni, bulanIni, 'WAJIB');
+            const belumLunasBulanIni = (statusBulanIni === 'BELUM') || (tunggakanBulanList.length > 0);
+            const totalTagihanTunggakan = Math.max(stdWajib, tunggakanBulanList.length * stdWajib);
+
+            return {
+                tahunIni,
+                bulanIni,
+                namaBulanIni,
+                kodeYmBulanIni,
+                statusBulanIni,
+                belumLunasBulanIni,
+                tunggakanBulanList,
+                menungguBulanList,
+                lunasCountYtd,
+                stdWajib,
+                stdPokok,
+                totalTagihanTunggakan
+            };
+        };
+
+        window.bukaSetorWajibCepatBeranda = (targetYm, jumlahRapel) => {
+            window.bukaModalTransaksi();
+            setTimeout(() => {
+                const tipeEl = document.getElementById('transaksiTipeInput');
+                const katEl = document.getElementById('transaksiKategoriInput');
+                if (tipeEl) tipeEl.value = 'Setoran';
+                if (katEl) katEl.value = 'Simpanan Wajib';
+                if (typeof window.handleTransaksiTipeChange === 'function') window.handleTransaksiTipeChange();
+
+                const info = window.evaluasiKewajibanWajibBeranda(currentUserSession);
+                const ymAwal = targetYm || (info.tunggakanBulanList[0]?.kodeYm) || info.kodeYmBulanIni;
+                const jmlBulan = jumlahRapel || Math.max(1, info.tunggakanBulanList.length || 1);
+
+                const periodeEl = document.getElementById('transaksiPeriodeWajibInput');
+                const rapelEl = document.getElementById('transaksiJumlahBulanRapelInput');
+                if (periodeEl && Array.from(periodeEl.options).some(o => o.value === ymAwal)) {
+                    periodeEl.value = ymAwal;
+                }
+                if (rapelEl && jmlBulan >= 1 && jmlBulan <= 12) {
+                    rapelEl.value = String(jmlBulan);
+                }
+                if (typeof window.hitungOtomatisRapelWajib === 'function') {
+                    window.hitungOtomatisRapelWajib();
+                }
+                const ketEl = document.getElementById('transaksiKeteranganInput');
+                if (ketEl && !ketEl.value.trim()) {
+                    ketEl.value = jmlBulan > 1
+                        ? `Setoran Iuran Simpanan Wajib (${jmlBulan} Bulan mulai ${ymAwal})`
+                        : `Setoran Iuran Simpanan Wajib Bulan ${info.namaBulanIni}`;
+                }
+            }, 60);
+        };
+
+        window.bukaSetorPokokCepatBeranda = (sisaKurangPokok) => {
+            window.bukaModalTransaksi();
+            setTimeout(() => {
+                const tipeEl = document.getElementById('transaksiTipeInput');
+                const katEl = document.getElementById('transaksiKategoriInput');
+                const nomEl = document.getElementById('transaksiNominalInput');
+                const ketEl = document.getElementById('transaksiKeteranganInput');
+                if (tipeEl) tipeEl.value = 'Setoran';
+                if (katEl) katEl.value = 'Simpanan Pokok';
+                if (typeof window.handleTransaksiTipeChange === 'function') window.handleTransaksiTipeChange();
+                if (nomEl && sisaKurangPokok > 0) nomEl.value = String(sisaKurangPokok);
+                if (ketEl) ketEl.value = 'Pelunasan Simpanan Pokok Keanggotaan';
+            }, 60);
+        };
+
+        window.bukaMatriksDariBeranda = () => {
+            window.switchTab('simpanan');
+            setTimeout(() => {
+                const tbl = document.getElementById('tabelMatriksIuranBody');
+                if (tbl) tbl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 120);
+        };
+
         function renderPengingatKewajiban(rincianUser, userLoans) {
             const box = document.getElementById('boxPengingatKewajibanPribadi');
+            const bannerNotif = document.getElementById('notifIuranWajibBerandaBanner');
+            const pillHeader = document.getElementById('dashboardIuranStatusPill');
             if (!box) return;
-            const stdPokok = appState.parameterStandar?.simpananPokok || 500000;
-            const stdWajib = appState.parameterStandar?.simpananWajib || 100000;
+
+            const infoWajib = window.evaluasiKewajibanWajibBeranda(currentUserSession);
+            const stdPokok = infoWajib.stdPokok;
+            const stdWajib = infoWajib.stdWajib;
             const lunasPokok = rincianUser.pokok >= stdPokok;
+            const kurangPokok = Math.max(0, stdPokok - rincianUser.pokok);
+
             const defaultBunga = Number(appState.pinjamanSetting?.bungaPerBulan ?? 1);
             const sisaPinjaman = userLoans.reduce((acc, p) => {
                 const akadLabel = p.jenisAkad || 'Murabahah';
@@ -4374,27 +4650,161 @@
                 return acc + Math.max(0, totalTagihan - terbayar);
             }, 0);
 
+            // Hitung rekap anggota belum setor bulan ini untuk informasi Pengurus
+            let rekapPengurusHtml = '';
+            if (window.isPengurusAny()) {
+                const anggotaAktif = (appState.anggota || []).filter(a => a.statusKeanggotaan !== 'Nonaktif');
+                const belumBayarList = anggotaAktif.filter(a => {
+                    const st = window.evaluasiStatusBulanMatriks(a, infoWajib.tahunIni, infoWajib.bulanIni, 'WAJIB');
+                    return st === 'BELUM';
+                });
+                if (belumBayarList.length > 0) {
+                    rekapPengurusHtml = `
+                        <div class="mt-2 pt-2 border-t border-slate-200/70 dark:border-slate-700/70 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">📊 <strong>Pantauan Pengurus (${infoWajib.namaBulanIni}):</strong> Terdapat <strong class="text-rose-600 dark:text-rose-400">${belumBayarList.length} dari ${anggotaAktif.length} anggota aktif</strong> yang belum setor Simpanan Wajib bulan ini.</span>
+                            <button type="button" onclick="window.bukaMatriksDariBeranda()" class="text-blue-600 dark:text-blue-400 font-extrabold hover:underline cursor-pointer">Lihat Rekap Matriks Anggota →</button>
+                        </div>
+                    `;
+                }
+            }
+
+            // Update Pill Status di Header Beranda
+            if (pillHeader) {
+                if (infoWajib.belumLunasBulanIni) {
+                    pillHeader.className = 'text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 border border-rose-300 dark:border-rose-800 animate-pulse';
+                    pillHeader.textContent = `🚨 Iuran ${infoWajib.namaBulanIni}: BELUM SETOR`;
+                } else if (infoWajib.statusBulanIni === 'MENUNGGU') {
+                    pillHeader.className = 'text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800';
+                    pillHeader.textContent = `⏳ Iuran ${infoWajib.namaBulanIni}: MENUNGGU VERIFIKASI`;
+                } else {
+                    pillHeader.className = 'text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800';
+                    pillHeader.textContent = `✅ Iuran ${infoWajib.namaBulanIni}: SUDAH LUNAS`;
+                }
+            }
+
+            // Render Banner Notifikasi Utama di Beranda (#notifIuranWajibBerandaBanner)
+            if (bannerNotif) {
+                if (infoWajib.belumLunasBulanIni) {
+                    const daftarBulanTunggakan = infoWajib.tunggakanBulanList.map(b => b.namaBulan).join(', ') || infoWajib.namaBulanIni;
+                    const jmlTunggakan = Math.max(1, infoWajib.tunggakanBulanList.length);
+                    const ymPertama = infoWajib.tunggakanBulanList[0]?.kodeYm || infoWajib.kodeYmBulanIni;
+                    bannerNotif.innerHTML = `
+                        <div class="bg-rose-50/95 dark:bg-rose-950/40 border-2 border-rose-300 dark:border-rose-800 rounded-2xl p-3.5 sm:p-4 shadow-sm">
+                            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-lg font-extrabold shrink-0 shadow-xs">🔔</div>
+                                    <div class="space-y-1">
+                                        <div class="flex flex-wrap items-center gap-1.5">
+                                            <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-rose-600 text-white">Status: Belum Bayar Iuran Wajib</span>
+                                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-white dark:bg-slate-800 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-700">${jmlTunggakan} Bulan Belum Lunas</span>
+                                            ${!lunasPokok ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Simpanan Pokok Kurang ${window.formatRupiah(kurangPokok)}</span>` : ''}
+                                        </div>
+                                        <h3 class="text-xs sm:text-sm font-extrabold text-rose-950 dark:text-rose-200 leading-snug">
+                                            Pengingat Kewajiban Anggota: Anda belum melakukan setoran Iuran / Tabungan Wajib (${daftarBulanTunggakan})
+                                        </h3>
+                                        <p class="text-[11px] text-rose-800 dark:text-rose-300 leading-relaxed">
+                                            Standar Iuran Wajib adalah <strong>${window.formatRupiah(stdWajib)} / bulan</strong> (Total Tagihan: <strong>${window.formatRupiah(infoWajib.totalTagihanTunggakan)}</strong>). Segera lakukan setoran agar Matriks Kartu Kendali 12 Bulan Anda otomatis berstatus <strong>✓ LUNAS</strong>.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto shrink-0">
+                                    <button type="button" onclick="window.bukaSetorWajibCepatBeranda('${ymPertama}', ${jmlTunggakan})" class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white font-extrabold px-3.5 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer">
+                                        <span>💳</span><span>Setor Iuran Wajib Sekarang</span>
+                                    </button>
+                                    <button type="button" onclick="window.bukaMatriksDariBeranda()" class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-white hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-rose-700 dark:text-rose-200 border border-rose-300 dark:border-rose-700 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer">
+                                        <span>📅</span><span>Lihat Kartu Kendali</span>
+                                    </button>
+                                </div>
+                            </div>
+                            ${rekapPengurusHtml}
+                        </div>
+                    `;
+                } else if (infoWajib.statusBulanIni === 'MENUNGGU') {
+                    bannerNotif.innerHTML = `
+                        <div class="bg-amber-50/95 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-800 rounded-2xl p-3.5 sm:p-4 shadow-sm">
+                            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-base font-extrabold shrink-0">⏳</div>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-1.5 mb-0.5">
+                                            <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-500 text-white">Status: Menunggu Verifikasi Pengurus</span>
+                                        </div>
+                                        <h3 class="text-xs sm:text-sm font-extrabold text-amber-950 dark:text-amber-200">Setoran Iuran Wajib Bulan ${infoWajib.namaBulanIni} Sedang Diverifikasi</h3>
+                                        <p class="text-[11px] text-amber-800 dark:text-amber-300">Transaksi Anda telah tercatat di Matriks Kartu Kendali (⏳) dan akan otomatis menjadi ✓ LUNAS begitu disetujui Bendahara/Admin.</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="window.bukaMatriksDariBeranda()" class="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-amber-100 dark:bg-slate-800 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer shrink-0">
+                                    <span>📅</span><span>Cek Kartu Kendali</span>
+                                </button>
+                            </div>
+                            ${rekapPengurusHtml}
+                        </div>
+                    `;
+                } else {
+                    bannerNotif.innerHTML = `
+                        <div class="bg-emerald-50/90 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/80 rounded-2xl px-3.5 py-2.5 shadow-xs">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0">✓</span>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-1.5">
+                                            <span class="text-xs font-extrabold text-emerald-900 dark:text-emerald-200">Status Iuran Wajib ${infoWajib.namaBulanIni}: SUDAH LUNAS</span>
+                                            <span class="px-2 py-0.2 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">${infoWajib.lunasCountYtd} Bulan Lunas (${infoWajib.tahunIni})</span>
+                                        </div>
+                                        <p class="text-[10px] text-emerald-700 dark:text-emerald-300">Terima kasih! Kewajiban tabungan wajib bulanan Anda telah terpenuhi dan tersinkron di Matriks Kartu Kendali.</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="window.bukaMatriksDariBeranda()" class="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 hover:underline shrink-0 cursor-pointer">📅 Lihat Matriks 12 Bulan →</button>
+                            </div>
+                            ${rekapPengurusHtml}
+                        </div>
+                    `;
+                }
+            }
+
+            // Render 3 Kartu Status Kewajiban Pribadi (#boxPengingatKewajibanPribadi)
+            const statusWajibCardClass = infoWajib.belumLunasBulanIni
+                ? 'bg-rose-50/80 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900'
+                : (infoWajib.statusBulanIni === 'MENUNGGU'
+                    ? 'bg-amber-50/80 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900'
+                    : 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900');
+
+            const statusWajibText = infoWajib.belumLunasBulanIni
+                ? `Belum Lunas (${infoWajib.tunggakanBulanList.length || 1} Bln • ${window.formatRupiah(infoWajib.totalTagihanTunggakan)})`
+                : (infoWajib.statusBulanIni === 'MENUNGGU'
+                    ? `⏳ Menunggu Verifikasi (${infoWajib.namaBulanIni})`
+                    : `✓ Lunas Bulan Ini (${window.formatRupiah(rincianUser.wajib)})`);
+
+            const statusWajibColor = infoWajib.belumLunasBulanIni
+                ? 'text-rose-700 dark:text-rose-300'
+                : (infoWajib.statusBulanIni === 'MENUNGGU' ? 'text-amber-700 dark:text-amber-300' : 'text-emerald-700 dark:text-emerald-300');
+
             box.innerHTML = `
-                <div class="p-3 rounded-2xl border ${lunasPokok ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900' : 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900'} flex items-center justify-between">
+                <div class="p-3 rounded-2xl border ${lunasPokok ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900' : 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900'} flex items-center justify-between gap-2">
                     <div>
-                        <span class="text-[10px] font-bold uppercase text-slate-500 block">Status Simpanan Pokok</span>
-                        <strong class="text-xs ${lunasPokok ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}">${lunasPokok ? '✓ Lunas (' + window.formatRupiah(rincianUser.pokok) + ')' : 'Kurang ' + window.formatRupiah(stdPokok - rincianUser.pokok)}</strong>
+                        <span class="text-[10px] font-bold uppercase text-slate-500 block">1. Status Simpanan Pokok</span>
+                        <strong class="text-xs ${lunasPokok ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'} block">${lunasPokok ? '✓ Lunas (' + window.formatRupiah(rincianUser.pokok) + ')' : 'Kurang ' + window.formatRupiah(kurangPokok)}</strong>
+                        ${!lunasPokok ? `<button type="button" onclick="window.bukaSetorPokokCepatBeranda(${kurangPokok})" class="mt-1 text-[10px] font-extrabold text-amber-700 dark:text-amber-300 underline cursor-pointer">Lunasi Pokok Sekarang →</button>` : `<span class="text-[10px] text-slate-400">Standar: ${window.formatRupiah(stdPokok)}</span>`}
                     </div>
-                    <span class="text-lg">${lunasPokok ? '✅' : '⏳'}</span>
+                    <span class="text-lg shrink-0">${lunasPokok ? '✅' : '⏳'}</span>
                 </div>
-                <div class="p-3 rounded-2xl border bg-blue-50/70 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900 flex items-center justify-between">
+                <div class="p-3 rounded-2xl border ${statusWajibCardClass} flex items-center justify-between gap-2">
                     <div>
-                        <span class="text-[10px] font-bold uppercase text-slate-500 block">Standar Iuran Wajib</span>
-                        <strong class="text-xs text-blue-700 dark:text-blue-300">${window.formatRupiah(stdWajib)} / Bulan</strong>
+                        <span class="text-[10px] font-bold uppercase text-slate-500 block">2. Status Iuran Wajib (${infoWajib.namaBulanIni})</span>
+                        <strong class="text-xs ${statusWajibColor} block">${statusWajibText}</strong>
+                        ${infoWajib.belumLunasBulanIni
+                            ? `<button type="button" onclick="window.bukaSetorWajibCepatBeranda()" class="mt-1 text-[10px] font-extrabold text-rose-600 dark:text-rose-400 underline cursor-pointer">Bayar Iuran Wajib (${window.formatRupiah(stdWajib)}/bln) →</button>`
+                            : `<span class="text-[10px] text-slate-400">Standar: ${window.formatRupiah(stdWajib)}/bln • ${infoWajib.lunasCountYtd}/12 Bln Lunas</span>`}
                     </div>
-                    <span class="text-lg">📅</span>
+                    <span class="text-lg shrink-0">${infoWajib.belumLunasBulanIni ? '🚨' : (infoWajib.statusBulanIni === 'MENUNGGU' ? '⏳' : '✅')}</span>
                 </div>
-                <div class="p-3 rounded-2xl border ${sisaPinjaman === 0 ? 'bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700' : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900'} flex items-center justify-between">
+                <div class="p-3 rounded-2xl border ${sisaPinjaman === 0 ? 'bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700' : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900'} flex items-center justify-between gap-2">
                     <div>
-                        <span class="text-[10px] font-bold uppercase text-slate-500 block">Sisa Tagihan Pinjaman Anda</span>
-                        <strong class="text-xs ${sisaPinjaman === 0 ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600'}">${sisaPinjaman === 0 ? 'Tidak Ada Tagihan' : window.formatRupiah(sisaPinjaman)}</strong>
+                        <span class="text-[10px] font-bold uppercase text-slate-500 block">3. Sisa Tagihan Pinjaman Anda</span>
+                        <strong class="text-xs ${sisaPinjaman === 0 ? 'text-slate-700 dark:text-slate-300' : 'text-rose-600'} block">${sisaPinjaman === 0 ? '✓ Bebas Tagihan Aktif' : window.formatRupiah(sisaPinjaman)}</strong>
+                        ${sisaPinjaman > 0 ? `<button type="button" onclick="window.switchTab('pinjaman')" class="mt-1 text-[10px] font-extrabold text-rose-600 dark:text-rose-400 underline cursor-pointer">Bayar Angsuran →</button>` : `<span class="text-[10px] text-slate-400">Pembiayaan Syariah 0% Riba</span>`}
                     </div>
-                    <span class="text-lg">${sisaPinjaman === 0 ? '🛡️' : '💳'}</span>
+                    <span class="text-lg shrink-0">${sisaPinjaman === 0 ? '🛡️' : '💳'}</span>
                 </div>
             `;
         }
@@ -4861,6 +5271,7 @@
             t.status = statusBaru;
             delete t.alasanPenolakan;
             window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Transaksi Simpanan`, `${t.tipe} ${t.kategori} a.n ${t.nama} (${window.formatRupiah(t.nominal)})`, statusBaru);
+            window.sinkronkanBukuSimpananPenuh(false);
             saveStateToCloud();
             window.renderApp();
             window.showToast(`Transaksi ${statusBaru.toLowerCase()}!`);
@@ -5135,12 +5546,19 @@
                 }
             }
 
+            // Selalu render Matriks Kartu Kendali Iuran 12 Bulan setiap kali Buku Simpanan dirender
+            window.renderMatriksIuran12Bulan();
+
             // Render Tabel Rekapitulasi Saldo Simpanan (Privasi: Member hanya melihat baris miliknya sendiri)
             const rekapBody = document.getElementById('tabelRekapAnggotaSimpananBody');
             if (rekapBody) {
-                window.renderMatriksIuran12Bulan();
+                const tahunAktifMatriks = parseInt(document.getElementById('filterTahunMatriksIuran')?.value || '2026') || 2026;
                 rekapBody.innerHTML = targetAnggotaList.map(a => {
                     const r = window.hitungRincianSimpananAnggota(a.id);
+                    let lunasM = 0;
+                    for (let m = 1; m <= 12; m++) {
+                        if (window.evaluasiStatusBulanMatriks(a, tahunAktifMatriks, m, 'WAJIB') === 'LUNAS') lunasM++;
+                    }
                     const avatarHtml = a.fotoProfil
                         ? `<img src="${a.fotoProfil}" alt="Avatar" class="w-7 h-7 rounded-lg object-cover shrink-0 border border-emerald-300">`
                         : `<div class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-black text-[11px] flex items-center justify-center shrink-0">${(a.nama || 'A').charAt(0).toUpperCase()}</div>`;
@@ -5156,7 +5574,10 @@
                                 </div>
                             </td>
                             <td class="py-2.5 px-3 font-semibold text-emerald-700 dark:text-emerald-400">${window.formatRupiah(r.pokok)}</td>
-                            <td class="py-2.5 px-3 font-semibold text-blue-600 dark:text-blue-400">${window.formatRupiah(r.wajib)}</td>
+                            <td class="py-2.5 px-3">
+                                <span class="font-semibold text-blue-600 dark:text-blue-400 block">${window.formatRupiah(r.wajib)}</span>
+                                <span class="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-blue-50 dark:bg-slate-800 text-blue-700 dark:text-blue-300">📅 Matriks ${tahunAktifMatriks}: ${lunasM}/12 Lunas</span>
+                            </td>
                             <td class="py-2.5 px-3 font-semibold text-purple-600 dark:text-purple-400">${window.formatRupiah(r.sukarela)}</td>
                             <td class="py-2.5 px-3 font-black text-emerald-600">${window.formatRupiah(r.total)}</td>
                             <td class="py-2.5 px-3 text-center no-print">
@@ -5168,54 +5589,187 @@
             }
         }
 
-        window.evaluasiStatusBulanMatriks = (anggota, tahun, bulanIdx, jenis) => {
+        // Mesin Sinkronisasi Otomatis Transaksi Simpanan -> Matriks Kartu Kendali Iuran 12 Bulan
+        window.isTransaksiIuranWajibMatriks = (t) => {
+            if (!t || t.tipe !== 'Setoran' || t.status === 'Ditolak') return false;
+            if (t.kategori === 'Simpanan Wajib') return true;
+            if (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.length > 0) return true;
+            if (/iuran\s+(wajib|bulan)|simpanan\s+wajib/i.test(String(t.keterangan || ''))) return true;
+            return false;
+        };
+
+        window.hitungUnitWajibEfektifAnggota = (anggotaId) => {
+            const stdParam = Math.max(10000, Number(appState.parameterStandar?.simpananWajib) || 100000);
+            const trxWajib = (appState.transaksi || []).filter(t => t.anggotaId === anggotaId && window.isTransaksiIuranWajibMatriks(t) && Number(t.nominal) >= 10000);
+            if (trxWajib.length === 0) return stdParam;
+            const singleMonthCandidates = trxWajib
+                .filter(t => !Array.isArray(t.periodeWajibBulan) || t.periodeWajibBulan.length <= 1)
+                .map(t => Number(t.nominal) || stdParam);
+            if (singleMonthCandidates.length > 0) {
+                const minNom = Math.min(...singleMonthCandidates);
+                if (minNom >= 10000 && minNom < stdParam) return minNom;
+            }
+            return stdParam;
+        };
+
+        window.hitungMapBulanMatriksAnggota = (anggota) => {
+            const mapStatus = {}; // { 'YYYY-MM': 'LUNAS' | 'MENUNGGU' }
+            if (!anggota) return mapStatus;
+            const unitWajib = window.hitungUnitWajibEfektifAnggota(anggota.id);
+            const trxList = (appState.transaksi || [])
+                .filter(t => t.anggotaId === anggota.id && window.isTransaksiIuranWajibMatriks(t))
+                .slice()
+                .sort((a, b) => String(a.waktu || '').localeCompare(String(b.waktu || '')));
+
+            const nextYm = (ymStr) => {
+                const [y, m] = ymStr.split('-').map(Number);
+                const d = new Date(y, m, 1); // m is 1-based, so new Date(y, m, 1) is next month
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            };
+
+            trxList.forEach(t => {
+                const targetStatus = t.status === 'Disetujui' ? 'LUNAS' : 'MENUNGGU';
+                const rawYm = /^\d{4}-\d{2}/.test(String(t.waktu || '')) ? String(t.waktu).slice(0, 7) : window.getTanggalLokalHariIni().slice(0, 7);
+                const explicitMonths = (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.length > 0)
+                    ? t.periodeWajibBulan.filter(x => /^\d{4}-\d{2}$/.test(x))
+                    : [];
+                const countFromNom = Math.max(1, Math.floor((Number(t.nominal) || 0) / unitWajib));
+                const totalMonthsToAllocate = Math.max(1, explicitMonths.length, countFromNom <= 12 ? countFromNom : 1);
+
+                let cursorYm = explicitMonths[0] || rawYm;
+                for (let i = 0; i < totalMonthsToAllocate; i++) {
+                    let candidateYm = explicitMonths[i] || cursorYm;
+                    // Jika bulan kandidat sudah LUNAS dari transaksi sebelumnya, geser otomatis ke bulan berikutnya yang belum LUNAS
+                    let guard = 0;
+                    while (mapStatus[candidateYm] === 'LUNAS' && guard < 24) {
+                        candidateYm = nextYm(candidateYm);
+                        guard++;
+                    }
+                    if (targetStatus === 'LUNAS' || !mapStatus[candidateYm]) {
+                        mapStatus[candidateYm] = targetStatus;
+                    }
+                    cursorYm = nextYm(candidateYm);
+                }
+            });
+            return mapStatus;
+        };
+
+        window.cariBulanWajibBerikutnya = (anggotaId) => {
+            const anggota = (appState.anggota || []).find(a => a.id === anggotaId) || currentUserSession;
+            const nowYm = window.getTanggalLokalHariIni().slice(0, 7);
+            if (!anggota) return nowYm;
+            const mapStatus = window.hitungMapBulanMatriksAnggota(anggota);
+            const tahunIni = parseInt(nowYm.slice(0, 4)) || 2026;
+            const tglGabung = anggota.tglGabung || `${tahunIni}-01-01`;
+            const joinYear = parseInt(tglGabung.slice(0, 4)) || tahunIni;
+            const startMonth = joinYear === tahunIni ? (parseInt(tglGabung.slice(5, 7)) || 1) : 1;
+
+            // Cek mulai dari bulan bergabung (atau bulan berjalan jika belum terisi)
+            if (!mapStatus[nowYm]) return nowYm;
+            for (let m = startMonth; m <= 12; m++) {
+                const ym = `${tahunIni}-${String(m).padStart(2, '0')}`;
+                if (!mapStatus[ym]) return ym;
+            }
+            return nowYm;
+        };
+
+        window.evaluasiStatusBulanMatriks = (anggota, tahun, bulanIdx, jenis = 'WAJIB') => {
+            if (!anggota) return 'BELUM';
+            const ymPrefix = `${tahun}-${String(bulanIdx).padStart(2, '0')}`;
+            const mapAuto = window.hitungMapBulanMatriksAnggota(anggota);
+
+            // 1. Prioritaskan transaksi nyata (Setoran Simpanan Wajib) agar Matriks 100% terisi otomatis setelah transaksi!
+            if (mapAuto[ymPrefix] === 'LUNAS') return 'LUNAS';
+            if (mapAuto[ymPrefix] === 'MENUNGGU') return 'MENUNGGU';
+
+            // 2. Cek verifikasi manual pengurus di matriksIuranManual
+            const keyManual = `${anggota.id}_${tahun}_${bulanIdx}_${jenis}`;
+            if (appState.matriksIuranManual && typeof appState.matriksIuranManual[keyManual] === 'boolean') {
+                return appState.matriksIuranManual[keyManual] ? 'LUNAS' : 'BELUM';
+            }
+
+            // 3. Cek apakah bulan tersebut sebelum Tanggal Bergabung anggota
             const tglGabung = anggota.tglGabung || '2026-01-01';
             const joinYear = parseInt(tglGabung.slice(0, 4)) || 2026;
             const joinMonth = parseInt(tglGabung.slice(5, 7)) || 1;
             if (tahun < joinYear || (tahun === joinYear && bulanIdx < joinMonth)) {
                 return 'BELUM_GABUNG';
             }
-            const keyManual = `${anggota.id}_${tahun}_${bulanIdx}_${jenis}`;
-            if (appState.matriksIuranManual && typeof appState.matriksIuranManual[keyManual] === 'boolean') {
-                return appState.matriksIuranManual[keyManual] ? 'LUNAS' : 'BELUM';
-            }
-            const ymPrefix = `${tahun}-${String(bulanIdx).padStart(2, '0')}`;
-            const stdWajib = Math.max(10000, Number(appState.parameterStandar?.simpananWajib) || 100000);
-            // Simpanan Wajib: Cek alokasi bulan rapel (periodeWajibBulan) atau perhitungan kelipatan bulan dari transaksi Setoran Simpanan Wajib yang Disetujui
-            const adaTrxBulanIni = (appState.transaksi || []).some(t => {
-                if (t.status !== 'Disetujui' || t.anggotaId !== anggota.id || t.tipe !== 'Setoran' || t.kategori !== 'Simpanan Wajib') return false;
-                if (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.length > 0) {
-                    return t.periodeWajibBulan.includes(ymPrefix);
+            return 'BELUM';
+        };
+
+        window.sinkronkanBukuSimpananPenuh = (tampilkanNotif = false) => {
+            let autoFixedCount = 0;
+            (appState.transaksi || []).forEach(t => {
+                if (t && t.tipe === 'Setoran' && t.kategori !== 'Simpanan Wajib' && /iuran\s+(wajib|bulan)|simpanan\s+wajib/i.test(String(t.keterangan || ''))) {
+                    t.kategori = 'Simpanan Wajib';
+                    autoFixedCount++;
                 }
-                const txYm = String(t.waktu || '').slice(0, 7);
-                if (txYm === ymPrefix) return true;
-                const jmlBulanAuto = Math.floor((Number(t.nominal) || 0) / stdWajib);
-                if (jmlBulanAuto > 1 && /^\d{4}-\d{2}$/.test(txYm)) {
-                    const [ty, tm] = txYm.split('-').map(Number);
-                    for (let k = 0; k < Math.min(12, jmlBulanAuto); k++) {
-                        const d = new Date(ty, tm - 1 + k, 1);
-                        const coveredYm = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                        if (coveredYm === ymPrefix) return true;
-                    }
+                if (t && t.tipe === 'Setoran' && t.kategori === 'Simpanan Wajib' && (!Array.isArray(t.periodeWajibBulan) || t.periodeWajibBulan.length === 0)) {
+                    const ym = /^\d{4}-\d{2}/.test(String(t.waktu || '')) ? String(t.waktu).slice(0, 7) : window.getTanggalLokalHariIni().slice(0, 7);
+                    const unit = window.hitungUnitWajibEfektifAnggota(t.anggotaId);
+                    const jml = Math.max(1, Math.min(12, Math.floor((Number(t.nominal) || 0) / unit)));
+                    t.periodeWajibBulan = window.buatDaftarBulanRapel(ym, jml);
+                    autoFixedCount++;
                 }
-                return false;
             });
-            return adaTrxBulanIni ? 'LUNAS' : 'BELUM';
+
+            // Bersihkan override manual false yang menghalangi bulan yang sudah punya transaksi Disetujui
+            if (appState.matriksIuranManual) {
+                (appState.anggota || []).forEach(a => {
+                    const mapAuto = window.hitungMapBulanMatriksAnggota(a);
+                    Object.keys(mapAuto).forEach(ym => {
+                        if (mapAuto[ym] === 'LUNAS') {
+                            const [y, m] = ym.split('-').map(Number);
+                            const keyM = `${a.id}_${y}_${m}_WAJIB`;
+                            if (appState.matriksIuranManual[keyM] === false) {
+                                delete appState.matriksIuranManual[keyM];
+                            }
+                        }
+                    });
+                });
+            }
+
+            window.rebuildSaldoCache(true);
+            if (autoFixedCount > 0) {
+                saveStateToCloud();
+            }
+            if (typeof renderSimpananTab === 'function') renderSimpananTab();
+            window.renderMatriksIuran12Bulan();
+            if (tampilkanNotif) {
+                window.showToast('🔄 Buku Simpanan, Rekap Saldo, dan Matriks Kartu Kendali 12 Bulan berhasil disinkronkan!');
+            }
         };
 
         window.toggleBulanMatriksIuran = (anggotaId, tahun, bulanIdx) => {
-            if (!window.isBendaharaOrSuper()) {
-                window.showToast('Hanya Bendahara atau Super Admin yang dapat mencatat verifikasi matriks iuran.', 'info');
-                return;
-            }
             const jenis = document.getElementById('filterJenisMatriksIuran')?.value || 'WAJIB';
             const anggota = (appState.anggota || []).find(a => a.id === anggotaId);
             if (!anggota) return;
             const currentStatus = window.evaluasiStatusBulanMatriks(anggota, tahun, bulanIdx, jenis);
-            if (currentStatus === 'BELUM_GABUNG') {
-                window.showToast(`Anggota baru bergabung pada ${anggota.tglGabung || '2026-01-01'}.`, 'info');
+            const ymKlik = `${tahun}-${String(bulanIdx).padStart(2, '0')}`;
+
+            // Jika Member biasa mengklik kotak bulan yang belum lunas, langsung buka form Setor Simpanan Wajib untuk bulan tersebut
+            if (!window.isBendaharaOrSuper()) {
+                if (currentStatus === 'LUNAS') {
+                    window.showToast(`Iuran Simpanan Wajib bulan ${ymKlik} sudah tercatat Lunas!`, 'info');
+                    return;
+                }
+                window.bukaModalTransaksi(ymKlik);
                 return;
             }
+
+            // Jika status sedang MENUNGGU dan diklik oleh Bendahara/Super Admin, tawarkan persetujuan langsung
+            if (currentStatus === 'MENUNGGU') {
+                const pendingTrx = (appState.transaksi || []).find(t =>
+                    t.status === 'Menunggu' && t.anggotaId === anggotaId && window.isTransaksiIuranWajibMatriks(t) &&
+                    ((Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.includes(ymKlik)) || String(t.waktu || '').startsWith(ymKlik))
+                );
+                if (pendingTrx) {
+                    window.updateStatusTransaksi(pendingTrx.id, 'Disetujui');
+                    return;
+                }
+            }
+
             if (!appState.matriksIuranManual) appState.matriksIuranManual = {};
             const keyManual = `${anggotaId}_${tahun}_${bulanIdx}_${jenis}`;
             const nextBool = currentStatus !== 'LUNAS';
@@ -5235,19 +5789,24 @@
 
             tbody.innerHTML = listAnggota.map(a => {
                 let lunasCount = 0;
+                let menungguCount = 0;
                 let wajibCount = 0;
                 let cellsHtml = '';
                 for (let m = 1; m <= 12; m++) {
                     const st = window.evaluasiStatusBulanMatriks(a, tahun, m, jenis);
                     if (st === 'BELUM_GABUNG') {
-                        cellsHtml += `<td class="py-2 px-1 text-center"><span class="inline-block w-6 h-6 leading-6 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-400 text-[10px]" title="Belum bergabung">—</span></td>`;
+                        cellsHtml += `<td class="py-2 px-1 text-center"><button type="button" onclick="window.toggleBulanMatriksIuran('${a.id}', ${tahun}, ${m})" class="w-6 h-6 leading-6 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-400 text-[10px] hover:ring-1 hover:ring-slate-300 transition" title="Sebelum tanggal gabung (Klik untuk catat/verifikasi)">—</button></td>`;
                     } else if (st === 'LUNAS') {
                         lunasCount++;
                         wajibCount++;
-                        cellsHtml += `<td class="py-2 px-1 text-center"><button type="button" onclick="window.toggleBulanMatriksIuran('${a.id}', ${tahun}, ${m})" class="w-6 h-6 rounded-md bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-black text-[10px] hover:ring-2 hover:ring-emerald-400 transition" title="Lunas (Klik untuk ubah)">✓</button></td>`;
+                        cellsHtml += `<td class="py-2 px-1 text-center"><button type="button" onclick="window.toggleBulanMatriksIuran('${a.id}', ${tahun}, ${m})" class="w-6 h-6 rounded-md bg-emerald-500 text-white font-black text-[10px] shadow-2xs hover:bg-emerald-600 transition" title="✓ Lunas Terverifikasi (Bulan ke-${m}/${tahun})">✓</button></td>`;
+                    } else if (st === 'MENUNGGU') {
+                        menungguCount++;
+                        wajibCount++;
+                        cellsHtml += `<td class="py-2 px-1 text-center"><button type="button" onclick="window.toggleBulanMatriksIuran('${a.id}', ${tahun}, ${m})" class="w-6 h-6 rounded-md bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-400 font-bold text-[10px] animate-pulse transition" title="⏳ Menunggu Persetujuan Bendahara (Klik untuk setujui)">⏳</button></td>`;
                     } else {
                         wajibCount++;
-                        cellsHtml += `<td class="py-2 px-1 text-center"><button type="button" onclick="window.toggleBulanMatriksIuran('${a.id}', ${tahun}, ${m})" class="w-6 h-6 rounded-md bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-slate-400 font-bold text-[10px] border border-amber-200 dark:border-slate-700 hover:ring-2 hover:ring-amber-400 transition" title="Belum Lunas (Klik untuk tandai Lunas)">•</button></td>`;
+                        cellsHtml += `<td class="py-2 px-1 text-center"><button type="button" onclick="window.toggleBulanMatriksIuran('${a.id}', ${tahun}, ${m})" class="w-6 h-6 rounded-md bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-slate-400 font-bold text-[10px] border border-amber-200 dark:border-slate-700 hover:ring-2 hover:ring-emerald-400 transition" title="Belum Lunas (Klik untuk setor/tandai Lunas)">•</button></td>`;
                     }
                 }
                 const avatarSmall = a.fotoProfil
@@ -5266,7 +5825,7 @@
                         </td>
                         ${cellsHtml}
                         <td class="py-2 px-2.5 text-center">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${lunasCount === wajibCount && wajibCount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300'}">${lunasCount}/${wajibCount} Bln</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${lunasCount === wajibCount && wajibCount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300'}">${lunasCount}/${wajibCount} Lunas${menungguCount > 0 ? ' (+' + menungguCount + ' ⏳)' : ''}</span>
                         </td>
                     </tr>
                 `;
@@ -5509,7 +6068,7 @@
             }
         };
 
-        window.bukaModalTransaksi = () => {
+        window.bukaModalTransaksi = (preselectYm = '') => {
             if (typeof window.upgradeDOMBankModalDanTab === 'function') window.upgradeDOMBankModalDanTab();
             document.getElementById('formTransaksi').reset();
             const searchTrxAnggota = document.getElementById('searchSelectTransaksiAnggota');
@@ -5531,14 +6090,24 @@
                 document.getElementById('wrapperPilihAnggota').style.display = 'block';
             }
 
+            // Default kategori ke Simpanan Wajib jika Simpanan Pokok sudah pernah disetor atau jika diklik dari Matriks 12 Bulan
+            const rAnggota = window.hitungRincianSimpananAnggota(select.value || currentUserSession.id);
+            const katSel = document.getElementById('transaksiKategori');
+            if (katSel) {
+                katSel.value = (preselectYm || rAnggota.pokok > 0) ? 'Simpanan Wajib' : 'Simpanan Pokok';
+            }
+
             const blnAwalEl = document.getElementById('wajibBulanAwalInput');
-            if (blnAwalEl) blnAwalEl.value = window.getTanggalLokalHariIni().slice(0, 7);
+            const targetYm = (preselectYm && /^\d{4}-\d{2}$/.test(preselectYm))
+                ? preselectYm
+                : window.cariBulanWajibBerikutnya(select.value || currentUserSession.id);
+            if (blnAwalEl) blnAwalEl.value = targetYm;
             const jmlBlnEl = document.getElementById('wajibJumlahBulanSelect');
             if (jmlBlnEl) jmlBlnEl.value = '1';
+
             window.updateInfoSaldoModalTransaksi();
             window.handleTipeTransaksiChange(document.getElementById('transaksiTipe'));
             if (typeof window.updateHelperBankTujuanTrx === 'function') window.updateHelperBankTujuanTrx();
-            window.ensureCaptchaWidget('formTransaksi', true);
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
 
@@ -5548,6 +6117,14 @@
             const r = window.hitungRincianSimpananAnggota(anggotaId);
             const lbl = document.getElementById('lblSaldoModalTransaksi');
             if (lbl) lbl.textContent = `${window.formatRupiah(r.total)} (Sukarela: ${window.formatRupiah(r.sukarela)})`;
+            const editId = document.getElementById('editTransaksiId')?.value || '';
+            if (!editId) {
+                const blnAwalEl = document.getElementById('wajibBulanAwalInput');
+                if (blnAwalEl) blnAwalEl.value = window.cariBulanWajibBerikutnya(anggotaId);
+                if (document.getElementById('transaksiKategori')?.value === 'Simpanan Wajib') {
+                    window.hitungOtomatisRapelWajib(false);
+                }
+            }
         };
 
         window.bukaModalEditTransaksi = (id) => {
@@ -5572,10 +6149,19 @@
             if (t.bankTujuan) document.getElementById('transaksiBankTujuan').value = t.bankTujuan;
             document.getElementById('transaksiKeterangan').value = t.keterangan || '';
 
+            const blnAwalEl = document.getElementById('wajibBulanAwalInput');
+            const jmlBlnEl = document.getElementById('wajibJumlahBulanSelect');
+            if (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.length > 0) {
+                if (blnAwalEl) blnAwalEl.value = t.periodeWajibBulan[0];
+                if (jmlBlnEl) jmlBlnEl.value = String(t.periodeWajibBulan.length);
+            } else if (blnAwalEl && /^\d{4}-\d{2}/.test(String(t.waktu || ''))) {
+                blnAwalEl.value = String(t.waktu).slice(0, 7);
+                if (jmlBlnEl) jmlBlnEl.value = '1';
+            }
+
             window.updateInfoSaldoModalTransaksi();
             window.handleTipeTransaksiChange(document.getElementById('transaksiTipe'));
             if (typeof window.updateHelperBankTujuanTrx === 'function') window.updateHelperBankTujuanTrx();
-            window.ensureCaptchaWidget('formTransaksi', true);
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
 
@@ -5590,19 +6176,51 @@
             return list;
         };
 
-        window.hitungOtomatisRapelWajib = () => {
+        window.hitungOtomatisRapelWajib = (updateNominalField = true) => {
+            const isKeuangan = window.isBendaharaOrSuper();
+            const anggotaId = isKeuangan ? (document.getElementById('transaksiAnggotaId')?.value || currentUserSession?.id) : currentUserSession?.id;
             const ymMulai = document.getElementById('wajibBulanAwalInput')?.value || window.getTanggalLokalHariIni().slice(0, 7);
             const jmlBulan = parseInt(document.getElementById('wajibJumlahBulanSelect')?.value || '1') || 1;
-            const stdWajib = Number(appState.parameterStandar?.simpananWajib) || 100000;
+            const unitWajib = window.hitungUnitWajibEfektifAnggota(anggotaId);
             const editId = document.getElementById('editTransaksiId')?.value || '';
             const nomInput = document.getElementById('transaksiNominal');
-            if (nomInput && !editId) {
-                nomInput.value = stdWajib * jmlBulan;
+            if (nomInput && !editId && updateNominalField) {
+                nomInput.value = unitWajib * jmlBulan;
             }
+            const nominalAktual = parseFloat(nomInput?.value) || (unitWajib * jmlBulan);
             const listBulan = window.buatDaftarBulanRapel(ymMulai, jmlBulan);
             const prevEl = document.getElementById('previewBulanRapelWajib');
             if (prevEl) {
-                prevEl.textContent = `✓ Melunasi ${listBulan.length} bulan di Matriks: ${listBulan.join(', ')} (${window.formatRupiah(stdWajib * jmlBulan)})`;
+                prevEl.textContent = `✓ Otomatis mengisi ${listBulan.length} bulan di Matriks: ${listBulan.join(', ')} (${window.formatRupiah(nominalAktual)})`;
+            }
+        };
+
+        window.sinkronkanNominalKeRapelWajib = () => {
+            const tipe = document.getElementById('transaksiTipe')?.value || 'Setoran';
+            const kat = document.getElementById('transaksiKategori')?.value || '';
+            if (tipe !== 'Setoran' || kat !== 'Simpanan Wajib') return;
+            const isKeuangan = window.isBendaharaOrSuper();
+            const anggotaId = isKeuangan ? (document.getElementById('transaksiAnggotaId')?.value || currentUserSession?.id) : currentUserSession?.id;
+            const unitWajib = window.hitungUnitWajibEfektifAnggota(anggotaId);
+            const nomVal = parseFloat(document.getElementById('transaksiNominal')?.value) || 0;
+            if (nomVal >= unitWajib && unitWajib > 0) {
+                const kelipatan = Math.min(12, Math.max(1, Math.floor(nomVal / unitWajib)));
+                const jmlSel = document.getElementById('wajibJumlahBulanSelect');
+                if (jmlSel && [...jmlSel.options].some(o => Number(o.value) === kelipatan)) {
+                    jmlSel.value = String(kelipatan);
+                }
+            }
+            window.hitungOtomatisRapelWajib(false);
+        };
+
+        window.sinkronkanTanggalTransaksiKeBulanWajib = () => {
+            const waktuVal = (document.getElementById('transaksiWaktuInput')?.value || '').trim();
+            if (/^\d{4}-\d{2}/.test(waktuVal)) {
+                const blnAwalEl = document.getElementById('wajibBulanAwalInput');
+                if (blnAwalEl) {
+                    blnAwalEl.value = waktuVal.slice(0, 7);
+                    window.hitungOtomatisRapelWajib(false);
+                }
             }
         };
 
@@ -5686,9 +6304,15 @@
                         }
                     }
                     const waktuManual = (document.getElementById('transaksiWaktuInput')?.value || '').trim();
+                    let editPeriodeWajib = [];
+                    if (tipe === 'Setoran' && kategori === 'Simpanan Wajib') {
+                        const ymMulaiEdit = document.getElementById('wajibBulanAwalInput')?.value || (waktuManual || trx.waktu || window.getTanggalLokalHariIni()).slice(0, 7);
+                        const jmlBulanEdit = parseInt(document.getElementById('wajibJumlahBulanSelect')?.value || '1') || 1;
+                        editPeriodeWajib = window.buatDaftarBulanRapel(ymMulaiEdit, jmlBulanEdit);
+                    }
                     window.showConfirmModal(
                         'Konfirmasi Perubahan Transaksi',
-                        `Simpan perubahan ${tipe} ${kategori} a.n ${anggotaObj ? anggotaObj.nama : trx.nama} sebesar ${window.formatRupiah(nominal)}?`,
+                        `Simpan perubahan ${tipe} ${kategori} a.n ${anggotaObj ? anggotaObj.nama : trx.nama} sebesar ${window.formatRupiah(nominal)}${editPeriodeWajib.length > 0 ? ' (Matriks Bulan: ' + editPeriodeWajib.join(', ') + ')' : ''}?`,
                         () => {
                             trx.anggotaId = anggotaId;
                             trx.nama = anggotaObj ? anggotaObj.nama : trx.nama;
@@ -5697,13 +6321,20 @@
                             trx.kategori = kategori;
                             trx.nominal = nominal;
                             trx.bankTujuan = bankTujuan;
+                            trx.periodeWajibBulan = editPeriodeWajib;
                             trx.keterangan = keterangan;
                             if (buktiUrl) trx.bukti = buktiUrl;
+                            if (editPeriodeWajib.length > 0) {
+                                const thnSel = document.getElementById('filterTahunMatriksIuran');
+                                const targetThn = editPeriodeWajib[0].slice(0, 4);
+                                if (thnSel && [...thnSel.options].some(o => o.value === targetThn)) thnSel.value = targetThn;
+                            }
                             window.catatLogAuditSistem('TRANSAKSI', `Edit ${tipe} Simpanan`, `${kategori} a.n ${trx.nama} (${window.formatRupiah(nominal)}) via ${bankTujuan || 'Kas'}`, trx.status);
+                            window.sinkronkanBukuSimpananPenuh(false);
                             saveStateToCloud();
                             document.getElementById('modalTransaksi').classList.add('hidden');
                             window.renderApp();
-                            window.showToast('Catatan transaksi & mutasi bank berhasil diperbarui!');
+                            window.showToast('Catatan transaksi & Matriks Kartu Kendali 12 Bulan berhasil diperbarui!');
                         }
                     );
                 }
@@ -5726,8 +6357,14 @@
             const waktuManual = (document.getElementById('transaksiWaktuInput')?.value || '').trim();
             const waktuStr = waktuManual || window.getWaktuLokalSekarang(now);
 
+            // Jika keterangan menyebutkan iuran wajib/bulan namun kategori masih Simpanan Pokok, sesuaikan otomatis ke Simpanan Wajib
+            let kategoriFinal = kategori;
+            if (tipe === 'Setoran' && kategoriFinal === 'Simpanan Pokok' && /iuran\s+(wajib|bulan)|simpanan\s+wajib/i.test(keterangan)) {
+                kategoriFinal = 'Simpanan Wajib';
+            }
+
             let periodeWajibBulan = [];
-            if (tipe === 'Setoran' && kategori === 'Simpanan Wajib') {
+            if (tipe === 'Setoran' && kategoriFinal === 'Simpanan Wajib') {
                 const ymMulai = document.getElementById('wajibBulanAwalInput')?.value || waktuStr.slice(0, 7);
                 const jmlBulan = parseInt(document.getElementById('wajibJumlahBulanSelect')?.value || '1') || 1;
                 periodeWajibBulan = window.buatDaftarBulanRapel(ymMulai, jmlBulan);
@@ -5736,7 +6373,7 @@
             const namaAnggotaLabel = anggotaObj ? anggotaObj.nama : 'Anggota';
             window.showConfirmModal(
                 `Konfirmasi ${tipe} Simpanan`,
-                `Simpan ${tipe} ${kategori} atas nama ${namaAnggotaLabel} sebesar ${window.formatRupiah(nominal)}${periodeWajibBulan.length > 0 ? ' (Alokasi Bulan: ' + periodeWajibBulan.join(', ') + ')' : ''} melalui ${bankTujuan || 'Kas Koperasi'}?`,
+                `Simpan ${tipe} ${kategoriFinal} atas nama ${namaAnggotaLabel} sebesar ${window.formatRupiah(nominal)}${periodeWajibBulan.length > 0 ? ' (Otomatis Mengisi Matriks Bulan: ' + periodeWajibBulan.join(', ') + ')' : ''} melalui ${bankTujuan || 'Kas Koperasi'}?`,
                 () => {
                     const newTrx = {
                         id: 't_' + Date.now(),
@@ -5744,21 +6381,27 @@
                         anggotaId,
                         nama: namaAnggotaLabel,
                         tipe,
-                        kategori,
+                        kategori: kategoriFinal,
                         nominal,
                         status: isKeuangan ? 'Disetujui' : 'Menunggu',
                         bukti: buktiUrl,
                         bankTujuan: bankTujuan,
-                        periodeWajibBulan: periodeWajibBulan.length > 0 ? periodeWajibBulan : undefined,
+                        periodeWajibBulan: periodeWajibBulan,
                         keterangan: keterangan || (periodeWajibBulan.length > 0 ? `Iuran Wajib (${periodeWajibBulan.join(', ')})` : '')
                     };
 
                     appState.transaksi.push(newTrx);
-                    window.catatLogAuditSistem('TRANSAKSI', `Input ${tipe} Simpanan`, `${kategori} a.n ${newTrx.nama} (${window.formatRupiah(nominal)}) via ${bankTujuan || 'Kas'}`, newTrx.status);
+                    if (periodeWajibBulan.length > 0) {
+                        const thnSel = document.getElementById('filterTahunMatriksIuran');
+                        const targetThn = periodeWajibBulan[0].slice(0, 4);
+                        if (thnSel && [...thnSel.options].some(o => o.value === targetThn)) thnSel.value = targetThn;
+                    }
+                    window.catatLogAuditSistem('TRANSAKSI', `Input ${tipe} Simpanan`, `${kategoriFinal} a.n ${newTrx.nama} (${window.formatRupiah(nominal)}) via ${bankTujuan || 'Kas'}`, newTrx.status);
+                    window.sinkronkanBukuSimpananPenuh(false);
                     saveStateToCloud();
                     document.getElementById('modalTransaksi').classList.add('hidden');
                     window.renderApp();
-                    window.showToast(isKeuangan ? 'Transaksi berhasil dicatat & disetujui!' : 'Transaksi diajukan dan menunggu persetujuan Bendahara/Admin.');
+                    window.showToast(isKeuangan ? '✅ Transaksi disimpan & Matriks Kartu Kendali 12 Bulan otomatis terisi!' : '⏳ Transaksi diajukan & tercatat di Matriks 12 Bulan (Menunggu Verifikasi).');
                 }
             );
             return false;
@@ -10294,11 +10937,32 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         setTimeout(function() { if (typeof window.renderBankTabPro === 'function') window.renderBankTabPro(); }, 300);
 
         // =========================================================================
-        // AUTO-VERSIONING & CHANGELOG FOOTER (v35.3 Pro)
+        // AUTO-VERSIONING & CHANGELOG FOOTER (v35.4 Pro)
         // =========================================================================
-        window.APP_VERSION = 'v35.3 Pro';
+        window.APP_VERSION = 'v35.5 Pro';
         window.APP_RELEASE_DATE = '16 Nov 2026';
         window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v35.5 Pro',
+                tanggal: '16 Nov 2026 (Terbaru - Notif Iuran Wajib Beranda, Menu Rapi & Auto-Sync Firebase)',
+                judul: 'Notifikasi & Status Iuran Wajib di Beranda, Tata Letak Menu/Tombol Terstruktur & Sinkronisasi Otomatis Firebase Dua Arah',
+                poin: [
+                    'Banner Notifikasi & Status Iuran Bulanan/Wajib di Beranda (#notifIuranWajibBerandaBanner): Menampilkan status langsung (SUDAH LUNAS / MENUNGGU VERIFIKASI / BELUM BAYAR) beserta rincian bulan tunggakan dan tombol 1-klik "💳 Setor Iuran Wajib Sekarang" yang langsung mengisi bulan & nominal.',
+                    'Pantauan Kolektibilitas Pengurus di Beranda: Menampilkan jumlah anggota aktif yang belum setor Simpanan Wajib pada bulan berjalan untuk memudahkan koordinasi Bendahara & Super Admin.',
+                    'Pengelompokan Menu Sidebar & Perapihan Posisi Tombol: Navigasi dikelompokkan rapi menjadi 3 bagian (Menu Utama & Kas, Tata Kelola & Anggota, Akun & Sistem) dengan lencana peringatan "Belum Iuran" otomatis, ditambah bilah Pintasan Aksi Cepat di Beranda dan Header.',
+                    'Sinkronisasi Otomatis Dua Arah ke Firebase (koperasi-4a4fe): Sinkronisasi otomatis saat transaksi disimpan, saat koneksi internet kembali aktif (online), saat tab dibuka kembali (visibilitychange), serta penggabungan cerdas (mergeArrayById) di listener real-time onSnapshot.'
+                ]
+            },
+            {
+                versi: 'v35.4 Pro',
+                tanggal: '16 Nov 2026 (Terbaru - Auto-Sync Penuh Buku Simpanan & Matriks Kartu Kendali 12 Bulan)',
+                judul: 'Sinkronisasi Otomatis Buku Simpanan, Rekap Saldo & Matriks Kartu Kendali Iuran 12 Bulan Setelah Transaksi',
+                poin: [
+                    'Auto-Fill Matriks Kartu Kendali 12 Bulan: Setiap transaksi Setoran Simpanan Wajib langsung mengisi kotak bulan pada Matriks 12 Bulan secara otomatis (✓ Lunas untuk transaksi disetujui & ⏳ Menunggu untuk pengajuan anggota), tanpa terhalang tanggal gabung default atau override lama.',
+                    'Alokasi Pintar Bulan Berikutnya (Smart Spillover): Jika anggota menyetor lebih dari 1 kali di bulan yang sama atau membayar kelipatan iuran wajib, sistem otomatis mengalokasikan ke bulan berikutnya yang belum lunas.',
+                    'Tombol 🔄 Sync Buku & Matriks + Klik Kotak Bulan: Menambahkan tombol sinkronisasi instan serta fitur klik langsung kotak bulan di Matriks 12 Bulan untuk mencatat/menyetujui iuran bulan terkait.'
+                ]
+            },
             {
                 versi: 'v35.3 Pro',
                 tanggal: '16 Nov 2026 (Terbaru - Captcha Terpusat di Pop-Up Konfirmasi & Perataan Tengah Seluruh Pop-Up)',
@@ -10490,7 +11154,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 f.innerHTML = '<div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto px-2">' +
                     '<p>&copy; 2026 aufah tech. All rights reserved.</p>' +
                     '<div class="flex flex-wrap items-center justify-center gap-2">' +
-                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Captcha Visual Anti-Bot Seluruh Transaksi, Enkripsi PIN SHA-256, Edisi Produksi Bersih & Upgrade 6 Modul Inti.") + ')</span>' +
+                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Notif & Status Iuran Wajib di Beranda, Tata Letak Menu/Tombol Rapi, Auto-Sync Firebase & Matriks 12 Bulan.") + ')</span>' +
                         '<button id="badgeFooterChangelog" type="button" onclick="window.bukaModalChangelog()" class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] hover:ring-2 hover:ring-emerald-400 transition cursor-pointer">📋 Lihat Detail Pembaruan ' + window.escapeHtml(window.APP_VERSION) + '</button>' +
                     '</div>' +
                 '</div>';
