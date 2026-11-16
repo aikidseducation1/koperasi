@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Koperasi Keluarga v35.4 Pro</title>
+    <title>Aplikasi Koperasi Keluarga v35.7 Pro — Animasi Transaksi Berhasil, Notifikasi Interaktif & Auto-Sync Firebase</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -91,6 +91,116 @@
         }
         div[id^="modal"] > div {
             margin: auto !important;
+            animation: modalPopSpring 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes modalPopSpring {
+            0% { opacity: 0; transform: scale(0.84) translateY(14px); }
+            70% { opacity: 1; transform: scale(1.02) translateY(-2px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes toastPopIn {
+            0% { opacity: 0; transform: scale(0.76) translateY(18px); }
+            65% { opacity: 1; transform: scale(1.04) translateY(-3px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes toastPopOut {
+            0% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 0; transform: scale(0.85) translateY(-10px); }
+        }
+        .anim-toast-enter {
+            animation: toastPopIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .anim-toast-exit {
+            animation: toastPopOut 0.26s ease-in forwards;
+        }
+        @keyframes checkCircleStroke {
+            0% { stroke-dashoffset: 166; }
+            100% { stroke-dashoffset: 0; }
+        }
+        @keyframes checkTickStroke {
+            0% { stroke-dashoffset: 48; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .svg-check-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            animation: checkCircleStroke 0.55s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        .svg-check-tick {
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: checkTickStroke 0.38s cubic-bezier(0.65, 0, 0.45, 1) 0.32s forwards;
+        }
+        @keyframes pulseRippleHalo {
+            0% { transform: scale(0.85); opacity: 0.75; }
+            100% { transform: scale(1.65); opacity: 0; }
+        }
+        .anim-pulse-halo {
+            position: relative;
+        }
+        .anim-pulse-halo::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 9999px;
+            border: 2px solid currentColor;
+            animation: pulseRippleHalo 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+            pointer-events: none;
+        }
+        @keyframes bellSwing {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(15deg); }
+            30% { transform: rotate(-13deg); }
+            45% { transform: rotate(10deg); }
+            60% { transform: rotate(-7deg); }
+            75% { transform: rotate(4deg); }
+        }
+        .anim-bell-swing {
+            display: inline-block;
+            transform-origin: top center;
+            animation: bellSwing 2.2s ease-in-out infinite;
+        }
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        .anim-error-shake {
+            animation: errorShake 0.42s ease-in-out;
+        }
+        @keyframes toastProgressBar {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+        .anim-toast-progress {
+            animation: toastProgressBar 3.2s linear forwards;
+        }
+        @keyframes txSuccessProgress {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+        .anim-tx-progress {
+            animation: txSuccessProgress 3.4s linear forwards;
+        }
+        @keyframes confettiBurstParticle {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.4) rotate(0deg); }
+            70% { opacity: 1; }
+            100% { opacity: 0; transform: translate(var(--tx, 60px), var(--ty, -60px)) scale(1.1) rotate(var(--rot, 240deg)); }
+        }
+        .confetti-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            pointer-events: none;
+            animation: confettiBurstParticle 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes shimmerBannerSweep {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .anim-shimmer-card {
+            background-size: 200% 100%;
         }
         @media print {
             body { background: white !important; color: black !important; }
@@ -136,9 +246,8 @@
                     </button>
                 </div>
             </form>
-            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Belum terdaftar di KK?</span>
-                <button type="button" onclick="window.bukaModalDaftarMandiri()" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline cursor-pointer">+ Daftar Calon Anggota</button>
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-center text-[10px] text-slate-400">
+                <span>Penambahan anggota keluarga dikelola terpusat oleh Pengurus / Sekretaris.</span>
             </div>
             <div class="mt-3 text-center">
                 <p class="text-[10px] sm:text-[11px] text-slate-400 font-medium">&copy; 2026 aufah tech. All rights reserved.</p>
@@ -201,7 +310,7 @@
             <span class="text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">Info</span>
         </div>
         <div class="running-text-wrapper flex-1 overflow-hidden" title="Arahkan kursor / sentuh untuk menghentikan sejenak">
-            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v35.5 Pro!</p>
+            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v35.7 Pro!</p>
         </div>
         <button id="btnEditPengumuman" onclick="window.bukaModalEditPengumuman()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
             ✏️ Edit
@@ -219,7 +328,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v35.5 Pro</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v35.7 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -387,8 +496,8 @@
                 <div id="tab-persetujuan" class="space-y-4 sm:space-y-5 w-full hidden">
                     <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">Pusat Persetujuan Terpadu (Admin)</h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Verifikasi setoran/penarikan simpanan, akad pinjaman, cicilan, ZIS, dan pendaftaran anggota baru.</p>
+                            <h2 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white">Pusat Persetujuan Keuangan Terpadu</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Verifikasi setoran/penarikan simpanan, akad pembiayaan syariah, angsuran cicilan, dan donasi ZISWAF.</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                             <button onclick="window.approveAllSelected()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm transition shrink-0">✓ Setujui Terpilih</button>
@@ -398,8 +507,8 @@
                         </div>
                     </div>
 
-                    <!-- 5 Kartu Ringkasan Antrean per Kategori -->
-                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                    <!-- 4 Kartu Ringkasan Antrean Keuangan per Kategori -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                         <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
                             <div>
                                 <span class="text-[10px] font-bold uppercase text-slate-400 block">Simpanan</span>
@@ -428,13 +537,6 @@
                             </div>
                             <span class="text-lg">❤️</span>
                         </div>
-                        <div class="col-span-2 sm:col-span-1 bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
-                            <div>
-                                <span class="text-[10px] font-bold uppercase text-slate-400 block">Calon Anggota</span>
-                                <strong id="countPendingCalon" class="text-sm sm:text-base font-black text-teal-600">0 Antrean</strong>
-                            </div>
-                            <span class="text-lg">👤</span>
-                        </div>
                     </div>
 
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
@@ -461,8 +563,8 @@
                         </div>
                     </div>
 
-                    <!-- Antrean Verifikasi Pinjaman Baru, Cicilan, ZIS & Pendaftaran Calon Anggota -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Antrean Verifikasi Pinjaman Baru, Cicilan & ZIS -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 space-y-3">
                             <div class="flex justify-between items-center">
                                 <h3 class="text-sm font-bold text-slate-800 dark:text-white">2. Pengajuan Pinjaman Baru</h3>
@@ -479,17 +581,10 @@
                         </div>
                         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 space-y-3">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-sm font-bold text-slate-800 dark:text-white">4. Verifikasi Donasi & Santunan ZIS</h3>
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-white">4. Verifikasi Donasi &amp; Santunan ZIS</h3>
                                 <span id="badgeSubZis" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">0</span>
                             </div>
                             <div id="listPersetujuanZis" class="space-y-2.5 text-xs"></div>
-                        </div>
-                        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 space-y-3">
-                            <div class="flex justify-between items-center">
-                                <h3 class="text-sm font-bold text-slate-800 dark:text-white">5. Pendaftaran Calon Anggota</h3>
-                                <span id="badgeSubCalon" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300">0</span>
-                            </div>
-                            <div id="listPersetujuanCalonAnggota" class="space-y-2.5 text-xs"></div>
                         </div>
                     </div>
 
@@ -1070,7 +1165,7 @@
                         <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 shadow-xs">
                             <span class="text-[9px] text-slate-400 font-bold uppercase block">Total Anggota Aktif</span>
                             <strong id="anggotaCardTotal" class="text-sm sm:text-base font-black text-emerald-600 block mt-0.5">0 Anggota</strong>
-                            <span id="anggotaCardCalonSub" class="text-[9px] text-slate-400 block">0 Calon Menunggu</span>
+                            <span id="anggotaCardCalonSub" class="text-[9px] text-slate-400 block">Status Keanggotaan Aktif</span>
                         </div>
                         <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 shadow-xs">
                             <span class="text-[9px] text-slate-400 font-bold uppercase block">Rumpun Keluarga (KK)</span>
@@ -1844,38 +1939,71 @@
         </div>
     </div>
 
-    <!-- Modal Pendaftaran Calon Anggota Mandiri -->
-    <div id="modalDaftarMandiri" class="fixed inset-0 bg-slate-900/60 z-[55] hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3">
-            <h3 class="font-bold text-base text-slate-800 dark:text-white">Pendaftaran Calon Anggota Keluarga</h3>
-            <p class="text-[11px] text-slate-500">Data Anda akan diverifikasi oleh Pengurus / Admin sebelum aktif.</p>
-            <form id="formDaftarMandiri" class="space-y-3" onsubmit="return window.simpanCalonAnggotaMandiri(event)">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Lengkap</label>
-                    <input type="text" id="regNama" required placeholder="Nama Lengkap" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+    <!-- Custom Toast Notification (Selalu di Tengah Layar dengan Animasi Spring & Progress) -->
+    <div id="toastContainer" class="fixed inset-0 z-[95] flex flex-col items-center justify-center gap-3 p-4 pointer-events-none"></div>
+
+    <!-- Modal Animasi Transaksi Berhasil (Pop-up Perayaan di Tengah Layar) -->
+    <div id="modalAnimasiTransaksiBerhasil" onclick="window.tutupAnimasiTransaksiBerhasil()" class="fixed inset-0 bg-slate-950/65 z-[94] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div onclick="event.stopPropagation()" class="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border-2 border-emerald-400/80 dark:border-emerald-600/80 w-full max-w-sm p-5 text-center space-y-3.5 overflow-hidden m-auto">
+            <!-- Latar Glow Dekoratif -->
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-28 bg-emerald-400/20 dark:bg-emerald-500/15 blur-2xl rounded-full pointer-events-none"></div>
+
+            <!-- Wadah Confetti & Ikon Centang SVG Animasi -->
+            <div class="relative flex items-center justify-center pt-1">
+                <div id="txSuccessConfettiContainer" class="absolute inset-0 flex items-center justify-center pointer-events-none"></div>
+                <div class="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/80 border-2 border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-500 anim-pulse-halo shadow-md">
+                    <svg class="w-10 h-10 text-emerald-600 dark:text-emerald-400" viewBox="0 0 52 52" fill="none">
+                        <circle class="svg-check-circle" cx="26" cy="26" r="23" fill="none" stroke="currentColor" stroke-width="3.5" />
+                        <path class="svg-check-tick" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M14.5 27.2l7.2 7.2 15.8-15.8" />
+                    </svg>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nama Keluarga (KK)</label>
-                    <input type="text" id="regKeluarga" required placeholder="Contoh: Keluarga Besar Aufah" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+            </div>
+
+            <!-- Judul & Nominal Animasi -->
+            <div class="space-y-1 relative z-10">
+                <span id="txAnimBadgeStatus" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                    ✨ Transaksi Berhasil
+                </span>
+                <h3 id="txAnimTitle" class="text-base font-extrabold text-slate-800 dark:text-white leading-tight">Setoran Simpanan Berhasil!</h3>
+                <p id="txAnimNominal" class="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">Rp 0</p>
+            </div>
+
+            <!-- Rincian Mini Struk Transaksi -->
+            <div class="bg-slate-50 dark:bg-slate-800/80 rounded-2xl p-3 border border-slate-200/80 dark:border-slate-700/80 text-left space-y-1.5 text-[11px] relative z-10">
+                <div class="flex justify-between items-center gap-2">
+                    <span class="text-slate-400 font-semibold">Anggota / Tujuan</span>
+                    <strong id="txAnimNama" class="text-slate-800 dark:text-white truncate">-</strong>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Nomor WhatsApp</label>
-                    <input type="text" id="regKontak" required placeholder="0812..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none">
+                <div class="flex justify-between items-center gap-2">
+                    <span class="text-slate-400 font-semibold">Kategori / Akad</span>
+                    <strong id="txAnimKategori" class="text-blue-700 dark:text-blue-300 truncate">-</strong>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">PIN Pilihan Anda</label>
-                    <input type="password" id="regPin" required placeholder="4 Digit PIN" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none font-bold">
+                <div class="flex justify-between items-center gap-2">
+                    <span class="text-slate-400 font-semibold">Kanal / Metode</span>
+                    <span id="txAnimKanal" class="font-bold text-slate-700 dark:text-slate-300 truncate">-</span>
                 </div>
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="document.getElementById('modalDaftarMandiri').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">Batal</button>
-                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Kirim Pendaftaran</button>
+                <div class="flex justify-between items-center gap-2 pt-1 border-t border-slate-200/70 dark:border-slate-700">
+                    <span id="txAnimWaktu" class="text-[9px] font-mono text-slate-400">-</span>
+                    <span id="txAnimKodeAuth" class="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400">AUTH-VERIFIED</span>
                 </div>
-            </form>
+            </div>
+
+            <!-- Tombol Aksi Cepat (Cetak Struk / Tutup) -->
+            <div class="flex items-center justify-center gap-2 pt-0.5 relative z-10">
+                <button type="button" id="txAnimBtnStruk" class="hidden flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/80 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold text-xs transition cursor-pointer">
+                    <span>🧾</span><span>Lihat Struk</span>
+                </button>
+                <button type="button" onclick="window.tutupAnimasiTransaksiBerhasil()" class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md transition cursor-pointer">
+                    <span>✓</span><span>Selesai</span>
+                </button>
+            </div>
+
+            <!-- Bar Progress Auto-Close -->
+            <div class="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full overflow-hidden">
+                <div id="txAnimProgressBar" class="bg-emerald-500 h-full anim-tx-progress"></div>
+            </div>
         </div>
     </div>
-
-    <!-- Custom Toast Notification (Selalu di Tengah Layar) -->
-    <div id="toastContainer" class="fixed inset-0 z-[95] flex flex-col items-center justify-center gap-2.5 p-4 pointer-events-none"></div>
 
     <!-- Custom Confirmation Modal (Di Tengah Layar + Dilengkapi Captcha Konfirmasi Transaksi) -->
     <div id="modalConfirmCustom" class="fixed inset-0 bg-slate-900/65 z-[80] hidden flex items-center justify-center p-4 backdrop-blur-sm">
@@ -3040,13 +3168,9 @@
                     }
                 });
             }
-            if (Array.isArray(st.calonAnggota)) {
-                st.calonAnggota.forEach(c => {
-                    if (c && c.pin && !window.isPinEncrypted(c.pin)) {
-                        c.pin = window.encryptPinKoperasi(c.pin);
-                        changed = true;
-                    }
-                });
+            if (st.calonAnggota !== undefined) {
+                delete st.calonAnggota;
+                changed = true;
             }
 
             if (Array.isArray(st.transaksi)) {
@@ -3143,8 +3267,7 @@
                 { id: 'bg4', title: 'Juara Infaq & Wakaf', desc: 'Total amal kebajikan di Baitul Maal mencapai Rp 250.000.', icon: '🌟', metric: 'ZIS', target: 250000, color: 'bg-indigo-100 text-indigo-800 border-indigo-300' },
                 { id: 'bg5', title: 'Keluarga Musyawarah', desc: 'Hadir dan mengonfirmasi minimal 1 Berita Acara Rapat Keluarga.', icon: '⭐', metric: 'RAPAT', target: 1, color: 'bg-blue-100 text-blue-800 border-blue-300' },
                 { id: 'bg6', title: 'Pilar Solidaritas', desc: 'Mencapai total skor keaktifan minimal 200 Poin Teladan.', icon: '🛡️', metric: 'POIN', target: 200, color: 'bg-teal-100 text-teal-800 border-teal-300' }
-            ],
-            calonAnggota: []
+            ]
         };
 
         let appState = JSON.parse(JSON.stringify(defaultState));
@@ -3584,16 +3707,225 @@
             window.showToast(`Metode pembagian SHU diubah ke: ${metodeBaru === 'TERTIMBANG' ? '⚖️ Bobot Waktu Mengendap (Adil Syariah)' : '📊 Saldo Akhir'}`);
         };
 
+        window.mainkanSuaraNotifikasi = (tipe = 'success') => {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                if (!window._koperasiAudioCtx) window._koperasiAudioCtx = new AudioCtx();
+                const ctx = window._koperasiAudioCtx;
+                if (ctx.state === 'suspended') ctx.resume();
+                const now = ctx.currentTime;
+
+                if (tipe === 'celebration') {
+                    const notes = [587.33, 739.99, 880.0, 1174.66]; // D5, F#5, A5, D6
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.075);
+                        gain.gain.setValueAtTime(0.001, now + idx * 0.075);
+                        gain.gain.exponentialRampToValueAtTime(0.11, now + idx * 0.075 + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.075 + 0.28);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.075);
+                        osc.stop(now + idx * 0.075 + 0.3);
+                    });
+                } else if (tipe === 'error') {
+                    [260, 210].forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.11);
+                        gain.gain.setValueAtTime(0.07, now + idx * 0.11);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.11 + 0.15);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.11);
+                        osc.stop(now + idx * 0.11 + 0.16);
+                    });
+                } else {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(tipe === 'info' ? 523.25 : 659.25, now);
+                    osc.frequency.exponentialRampToValueAtTime(tipe === 'info' ? 659.25 : 880.0, now + 0.14);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.24);
+                }
+            } catch (e) {}
+        };
+
+        window.tutupAnimasiTransaksiBerhasil = () => {
+            const modal = document.getElementById('modalAnimasiTransaksiBerhasil');
+            if (modal) modal.classList.add('hidden');
+            if (window._txAnimTimer) {
+                clearTimeout(window._txAnimTimer);
+                window._txAnimTimer = null;
+            }
+        };
+
+        window.tampilkanAnimasiTransaksiBerhasil = (opsi = {}) => {
+            const modal = document.getElementById('modalAnimasiTransaksiBerhasil');
+            if (!modal) return;
+            window.mainkanSuaraNotifikasi('celebration');
+
+            const judul = opsi.judul || 'Transaksi Berhasil!';
+            const nominal = Number(opsi.nominal || 0);
+            const nama = opsi.nama || (currentUserSession ? currentUserSession.nama : 'Anggota');
+            const kategori = opsi.kategori || 'Simpanan Koperasi';
+            const kanal = opsi.kanal || 'Kas Koperasi';
+            const status = opsi.status || 'Disetujui';
+            const waktu = opsi.waktu || window.getWaktuLokalSekarang();
+            const trxId = opsi.trxId || '';
+
+            const badgeEl = document.getElementById('txAnimBadgeStatus');
+            const titleEl = document.getElementById('txAnimTitle');
+            const nomEl = document.getElementById('txAnimNominal');
+            const namaEl = document.getElementById('txAnimNama');
+            const katEl = document.getElementById('txAnimKategori');
+            const kanalEl = document.getElementById('txAnimKanal');
+            const waktuEl = document.getElementById('txAnimWaktu');
+            const kodeEl = document.getElementById('txAnimKodeAuth');
+            const btnStruk = document.getElementById('txAnimBtnStruk');
+            const progBar = document.getElementById('txAnimProgressBar');
+            const confettiBox = document.getElementById('txSuccessConfettiContainer');
+
+            if (badgeEl) {
+                if (status === 'Disetujui' || status === 'Sukses') {
+                    badgeEl.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300';
+                    badgeEl.textContent = '✨ Transaksi Berhasil & Tersinkron';
+                } else {
+                    badgeEl.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300';
+                    badgeEl.textContent = '⏳ Tercatat • Menunggu Verifikasi';
+                }
+            }
+            if (titleEl) titleEl.textContent = judul;
+            if (namaEl) namaEl.textContent = nama;
+            if (katEl) katEl.textContent = kategori;
+            if (kanalEl) kanalEl.textContent = kanal;
+            if (waktuEl) waktuEl.textContent = waktu;
+            if (kodeEl) kodeEl.textContent = window.buatKodeHashBukti(`${nama}|${nominal}|${waktu}`);
+
+            if (btnStruk) {
+                if (trxId) {
+                    btnStruk.classList.remove('hidden');
+                    btnStruk.onclick = () => {
+                        window.tutupAnimasiTransaksiBerhasil();
+                        window.bukaStrukTransaksi(trxId);
+                    };
+                } else {
+                    btnStruk.classList.add('hidden');
+                }
+            }
+
+            // Buat partikel confetti meriah
+            if (confettiBox) {
+                const colors = ['#10b981', '#f59e0b', '#3b82f6', '#ec4899', '#14b8a6', '#8b5cf6'];
+                const vectors = [
+                    [-72, -55], [72, -55], [-85, -15], [85, -15],
+                    [-58, 48], [58, 48], [-35, -75], [35, -75],
+                    [-92, 22], [92, 22], [0, -82], [0, 68]
+                ];
+                confettiBox.innerHTML = vectors.map((vec, i) => {
+                    const col = colors[i % colors.length];
+                    const rot = (i % 2 === 0 ? 1 : -1) * (160 + i * 25);
+                    return `<span class="confetti-dot" style="background:${col};--tx:${vec[0]}px;--ty:${vec[1]}px;--rot:${rot}deg;"></span>`;
+                }).join('');
+            }
+
+            // Reset animasi SVG & progress bar
+            if (progBar) {
+                progBar.classList.remove('anim-tx-progress');
+                void progBar.offsetWidth;
+                progBar.classList.add('anim-tx-progress');
+            }
+
+            modal.classList.remove('hidden');
+
+            // Animasi hitung angka Rupiah (Count-Up)
+            if (nomEl) {
+                if (nominal > 0) {
+                    const steps = 14;
+                    let step = 0;
+                    const timerCount = setInterval(() => {
+                        step++;
+                        const progress = 1 - Math.pow(1 - (step / steps), 3);
+                        const currentVal = Math.round(nominal * progress);
+                        nomEl.textContent = window.formatRupiah(currentVal);
+                        if (step >= steps) {
+                            clearInterval(timerCount);
+                            nomEl.textContent = window.formatRupiah(nominal);
+                        }
+                    }, 26);
+                } else {
+                    nomEl.textContent = '✓ Terverifikasi';
+                }
+            }
+
+            if (window._txAnimTimer) clearTimeout(window._txAnimTimer);
+            window._txAnimTimer = setTimeout(() => {
+                window.tutupAnimasiTransaksiBerhasil();
+            }, 3400);
+        };
+
         window.showToast = (message, type = 'success') => {
             const container = document.getElementById('toastContainer');
             if (!container) return;
+            window.mainkanSuaraNotifikasi(type);
+
             const toast = document.createElement('div');
-            const bgClass = type === 'error' ? 'bg-rose-600 text-white' : type === 'info' ? 'bg-blue-600 text-white' : 'bg-emerald-600 text-white';
-            toast.className = `${bgClass} max-w-sm w-full mx-auto p-4 rounded-2xl shadow-2xl ring-2 ring-white/30 text-xs font-extrabold flex items-center justify-between gap-3 transition-all duration-300 pointer-events-auto`;
-            toast.innerHTML = `<span class="flex-1 text-center leading-relaxed">${message}</span><button onclick="this.parentElement.remove()" class="text-white/85 hover:text-white font-black px-1.5 py-0.5 rounded-lg bg-black/15">✕</button>`;
+            const isErr = type === 'error';
+            const isInfo = type === 'info';
+
+            const theme = isErr
+                ? {
+                    bg: 'bg-gradient-to-br from-rose-600 via-rose-600 to-red-700 text-white border-rose-300/50',
+                    badgeBg: 'bg-white/20 text-white',
+                    label: 'Perhatian Sistem',
+                    iconHtml: `<svg class="w-5 h-5 anim-error-shake" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`
+                  }
+                : isInfo
+                ? {
+                    bg: 'bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 text-white border-blue-300/50',
+                    badgeBg: 'bg-white/20 text-white',
+                    label: 'Informasi Koperasi',
+                    iconHtml: `<span class="text-base anim-bell-swing">🔔</span>`
+                  }
+                : {
+                    bg: 'bg-gradient-to-br from-emerald-600 via-emerald-600 to-teal-700 text-white border-emerald-300/50',
+                    badgeBg: 'bg-white/20 text-white',
+                    label: 'Berhasil Diproses',
+                    iconHtml: `<svg class="w-5 h-5" viewBox="0 0 52 52" fill="none"><circle class="svg-check-circle" cx="26" cy="26" r="22" fill="none" stroke="currentColor" stroke-width="4"/><path class="svg-check-tick" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14.5 27.2l7.2 7.2 15.8-15.8"/></svg>`
+                  };
+
+            toast.className = `${theme.bg} anim-toast-enter relative overflow-hidden max-w-sm w-full mx-auto p-3.5 rounded-2xl shadow-2xl border ring-2 ring-white/25 text-xs pointer-events-auto`;
+            toast.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl ${theme.badgeBg} flex items-center justify-center shrink-0 anim-pulse-halo shadow-inner">
+                        ${theme.iconHtml}
+                    </div>
+                    <div class="flex-1 text-left min-w-0">
+                        <span class="block text-[9px] font-black uppercase tracking-wider text-white/80">${theme.label}</span>
+                        <p class="font-extrabold text-xs text-white leading-snug break-words">${message}</p>
+                    </div>
+                    <button type="button" onclick="this.closest('.anim-toast-enter').remove()" class="text-white/80 hover:text-white font-black px-2 py-1 rounded-lg bg-black/15 hover:bg-black/25 transition shrink-0 cursor-pointer">✕</button>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
+                    <div class="h-full bg-white/80 anim-toast-progress"></div>
+                </div>
+            `;
             container.appendChild(toast);
             setTimeout(() => {
-                if (toast.parentElement) toast.remove();
+                if (toast.parentElement) {
+                    toast.classList.remove('anim-toast-enter');
+                    toast.classList.add('anim-toast-exit');
+                    setTimeout(() => { if (toast.parentElement) toast.remove(); }, 260);
+                }
             }, 3200);
         };
 
@@ -3787,7 +4119,6 @@
                             const mergedTransaksi = window.mergeArrayById(appState.transaksi || [], cloudData.transaksi || [], window._recentlyDeletedIds);
                             const mergedPinjaman = window.mergeArrayById(appState.pinjaman || [], cloudData.pinjaman || [], window._recentlyDeletedIds);
                             const mergedZis = window.mergeArrayById(appState.zis || [], cloudData.zis || [], window._recentlyDeletedIds);
-                            const mergedCalon = window.mergeArrayById(appState.calonAnggota || [], cloudData.calonAnggota || [], window._recentlyDeletedIds);
                             const mergedAnggota = window.mergeArrayById(appState.anggota || [], cloudData.anggota || [], window._recentlyDeletedIds);
                             appState = {
                                 ...appState,
@@ -3796,7 +4127,6 @@
                                 transaksi: mergedTransaksi,
                                 pinjaman: mergedPinjaman,
                                 zis: mergedZis,
-                                calonAnggota: mergedCalon,
                                 votings: cloudData.votings || appState.votings || [],
                                 rekeningBank: cloudData.rekeningBank || appState.rekeningBank || [],
                                 pendapatanShuList: cloudData.pendapatanShuList || appState.pendapatanShuList || [],
@@ -3922,7 +4252,6 @@
                                     appState.transaksi = window.mergeArrayById(appState.transaksi, cloudData.transaksi, window._recentlyDeletedIds);
                                     appState.pinjaman = window.mergeArrayById(appState.pinjaman, cloudData.pinjaman, window._recentlyDeletedIds);
                                     appState.zis = window.mergeArrayById(appState.zis, cloudData.zis, window._recentlyDeletedIds);
-                                    appState.calonAnggota = window.mergeArrayById(appState.calonAnggota, cloudData.calonAnggota, window._recentlyDeletedIds);
                                     appState.anggota = window.mergeArrayById(appState.anggota, cloudData.anggota, window._recentlyDeletedIds);
                                     window.rebuildSaldoCache(true);
                                 }
@@ -3968,7 +4297,6 @@
                             appState.transaksi = window.mergeArrayById(appState.transaksi, cloudData.transaksi, window._recentlyDeletedIds);
                             appState.pinjaman = window.mergeArrayById(appState.pinjaman, cloudData.pinjaman, window._recentlyDeletedIds);
                             appState.zis = window.mergeArrayById(appState.zis, cloudData.zis, window._recentlyDeletedIds);
-                            appState.calonAnggota = window.mergeArrayById(appState.calonAnggota, cloudData.calonAnggota, window._recentlyDeletedIds);
                             appState.anggota = window.mergeArrayById(appState.anggota, cloudData.anggota, window._recentlyDeletedIds);
                             window.rebuildSaldoCache(true);
                             lastSyncTimestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -4306,8 +4634,7 @@
                 });
             });
             const pendingZisCount = (appState.zis || []).filter(z => z.status === 'Menunggu').length;
-            const pendingRegLen = (appState.calonAnggota || []).length;
-            const totalAllPending = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisCount + pendingRegLen;
+            const totalAllPending = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisCount;
 
             const infoIuranUser = window.evaluasiKewajibanWajibBeranda(currentUserSession);
             const badgeIuranSimpanan = infoIuranUser.belumLunasBulanIni ? 'Belum Iuran' : (infoIuranUser.statusBulanIni === 'MENUNGGU' ? 'Verifikasi' : 0);
@@ -4324,13 +4651,13 @@
                 { id: 'zis', label: 'ZIS & Dana Sosial', badge: window.isBendaharaOrSuper() ? pendingZisCount : 0, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' }
             ];
             if (window.isPengurusAny()) {
-                const badgePersetujuan = role === 'sekretaris' ? pendingRegLen : totalAllPending;
+                const badgePersetujuan = window.isBendaharaOrSuper() ? totalAllPending : 0;
                 grupUtama.splice(1, 0, { id: 'persetujuan', label: 'Pusat Persetujuan', badge: badgePersetujuan, icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' });
             }
 
             const grupTataKelola = [];
             if (window.isPengurusAny()) {
-                grupTataKelola.push({ id: 'anggota', label: 'Data Anggota Keluarga', badge: pendingRegLen, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
+                grupTataKelola.push({ id: 'anggota', label: 'Data Anggota Keluarga', badge: 0, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' });
                 grupTataKelola.push({ id: 'bank', label: role === 'sekretaris' ? 'Info Rekening & QRIS' : 'Rekening Bank Koperasi', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
             }
             grupTataKelola.push({ id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' });
@@ -4461,14 +4788,10 @@
 
             const adminAlertBanner = document.getElementById('adminPendingAlertBanner');
             const pendingKeuanganTotal = pendingTrx.length + pendingLoans.length + pendingCicilanCount + pendingZisCount;
-            const relevantPending = role === 'admin' ? totalAllPending : role === 'bendahara' ? pendingKeuanganTotal : role === 'sekretaris' ? pendingRegLen : 0;
-            if (window.isPengurusAny() && relevantPending > 0) {
+            const relevantPending = window.isBendaharaOrSuper() ? pendingKeuanganTotal : 0;
+            if (window.isBendaharaOrSuper() && relevantPending > 0) {
                 adminAlertBanner.classList.remove('hidden');
-                document.getElementById('adminPendingAlertText').textContent = role === 'sekretaris'
-                    ? `Terdapat ${pendingRegLen} pendaftaran Calon Anggota Baru yang menunggu verifikasi administrasi Anda di Pusat Persetujuan.`
-                    : role === 'bendahara'
-                        ? `Terdapat ${pendingKeuanganTotal} antrean keuangan (${pendingTrx.length} Simpanan, ${pendingLoans.length} Pinjaman, ${pendingCicilanCount} Cicilan, ${pendingZisCount} ZIS) di Pusat Persetujuan.`
-                        : `Terdapat ${totalAllPending} antrean verifikasi (${pendingTrx.length} Simpanan, ${pendingLoans.length} Pinjaman, ${pendingCicilanCount} Cicilan, ${pendingZisCount} ZIS, ${pendingRegLen} Calon Anggota) di Pusat Persetujuan.`;
+                document.getElementById('adminPendingAlertText').textContent = `Terdapat ${pendingKeuanganTotal} antrean keuangan (${pendingTrx.length} Simpanan, ${pendingLoans.length} Pinjaman, ${pendingCicilanCount} Cicilan, ${pendingZisCount} ZIS) yang menunggu verifikasi di Pusat Persetujuan.`;
             } else {
                 adminAlertBanner.classList.add('hidden');
             }
@@ -4692,7 +5015,7 @@
                         <div class="bg-rose-50/95 dark:bg-rose-950/40 border-2 border-rose-300 dark:border-rose-800 rounded-2xl p-3.5 sm:p-4 shadow-sm">
                             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
                                 <div class="flex items-start gap-3">
-                                    <div class="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-lg font-extrabold shrink-0 shadow-xs">🔔</div>
+                                    <div class="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-lg font-extrabold shrink-0 shadow-xs anim-pulse-halo"><span class="anim-bell-swing">🔔</span></div>
                                     <div class="space-y-1">
                                         <div class="flex flex-wrap items-center gap-1.5">
                                             <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-rose-600 text-white">Status: Belum Bayar Iuran Wajib</span>
@@ -5010,7 +5333,6 @@
             const pending = (appState.transaksi || []).filter(t => t.status === 'Menunggu');
             const pendingLoans = (appState.pinjaman || []).filter(p => p.status === 'Menunggu');
             const pendingZis = (appState.zis || []).filter(z => z.status === 'Menunggu');
-            const calons = appState.calonAnggota || [];
 
             const cicilanItems = [];
             (appState.pinjaman || []).forEach(p => {
@@ -5021,18 +5343,16 @@
                 });
             });
 
-            // Update 5 Kartu Ringkasan Antrean & Sub-Badge
+            // Update 4 Kartu Ringkasan Antrean Keuangan & Sub-Badge
             const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
             setTxt('countPendingSimpanan', `${pending.length} Antrean`);
             setTxt('countPendingPinjaman', `${pendingLoans.length} Antrean`);
             setTxt('countPendingCicilan', `${cicilanItems.length} Antrean`);
             setTxt('countPendingZis', `${pendingZis.length} Antrean`);
-            setTxt('countPendingCalon', `${calons.length} Antrean`);
 
             setTxt('badgeSubPinjaman', pendingLoans.length);
             setTxt('badgeSubCicilan', cicilanItems.length);
             setTxt('badgeSubZis', pendingZis.length);
-            setTxt('badgeSubCalon', calons.length);
 
             const masterCb = document.getElementById('selectAllCheckbox');
             if (masterCb) masterCb.checked = false;
@@ -5154,31 +5474,6 @@
                                     <button onclick="window.verifikasiZis('${z.id}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Setujui</button>
                                     <button onclick="window.verifikasiZis('${z.id}', 'Ditolak')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
                                 ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Bendahara</span>`}
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            }
-
-            // Render antrean pendaftaran calon anggota
-            const listCalon = document.getElementById('listPersetujuanCalonAnggota');
-            setTxt('countPendingCalon', `${calons.length} Antrean`);
-            setTxt('badgeSubCalon', calons.length);
-            if (listCalon) {
-                if (calons.length === 0) {
-                    listCalon.innerHTML = `<p class="text-slate-400 italic py-2">Tidak ada pendaftaran calon anggota baru.</p>`;
-                } else {
-                    listCalon.innerHTML = calons.map(c => `
-                        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex justify-between items-center gap-2">
-                            <div>
-                                <strong class="text-slate-800 dark:text-white block">${c.nama} (${c.namaKeluarga})</strong>
-                                <span class="text-[10px] text-slate-400">WA: ${c.kontak}</span>
-                            </div>
-                            <div class="flex gap-1 shrink-0">
-                                ${isAdmSekretaris ? `
-                                    <button onclick="window.verifikasiCalonAnggota('${c.id}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold text-[10px]">Terima</button>
-                                    <button onclick="window.verifikasiCalonAnggota('${c.id}', false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold text-[10px]">Tolak</button>
-                                ` : `<span class="text-[10px] text-slate-400 italic">Wewenang Sekretaris</span>`}
                             </div>
                         </div>
                     `).join('');
@@ -6009,7 +6304,15 @@
                     saveStateToCloud();
                     document.getElementById('modalTransferP2P').classList.add('hidden');
                     window.renderApp();
-                    window.showToast(`Berhasil mengirim ${window.formatRupiah(nominal)} ke ${penerimaObj.nama}!`);
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: 'Transfer Saldo P2P Berhasil!',
+                        nominal: nominal,
+                        nama: `${currentUserSession.nama} → ${penerimaObj.nama}`,
+                        kategori: `Transfer P2P (${kategoriSumber})`,
+                        kanal: 'P2P Internal Koperasi',
+                        status: 'Disetujui',
+                        waktu: waktuStr
+                    });
                 }
             );
             return false;
@@ -6401,7 +6704,16 @@
                     saveStateToCloud();
                     document.getElementById('modalTransaksi').classList.add('hidden');
                     window.renderApp();
-                    window.showToast(isKeuangan ? '✅ Transaksi disimpan & Matriks Kartu Kendali 12 Bulan otomatis terisi!' : '⏳ Transaksi diajukan & tercatat di Matriks 12 Bulan (Menunggu Verifikasi).');
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: `${tipe} ${kategoriFinal} Berhasil!`,
+                        nominal: nominal,
+                        nama: newTrx.nama,
+                        kategori: `${tipe} • ${kategoriFinal}${periodeWajibBulan.length > 0 ? ' (' + periodeWajibBulan.join(', ') + ')' : ''}`,
+                        kanal: bankTujuan || 'Kas Koperasi',
+                        status: newTrx.status,
+                        waktu: newTrx.waktu,
+                        trxId: newTrx.id
+                    });
                 }
             );
             return false;
@@ -7197,7 +7509,15 @@
                     saveStateToCloud();
                     document.getElementById('modalPinjaman').classList.add('hidden');
                     window.renderApp();
-                    window.showToast(isKeuangan ? `Akad ${jenisAkad} berhasil dicatat & disetujui!` : `Pengajuan Akad ${jenisAkad} berhasil dikirim ke Pengurus!`);
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: isKeuangan ? `Akad ${jenisAkad} Disetujui!` : `Pengajuan Akad ${jenisAkad} Terkirim!`,
+                        nominal: nominal,
+                        nama: pemohonObj.nama,
+                        kategori: `Pembiayaan ${jenisAkad} (${tenor} Bulan)`,
+                        kanal: bankSumber || 'Kas Koperasi',
+                        status: newPinjaman.status,
+                        waktu: newPinjaman.tanggalPengajuan
+                    });
                 }
             );
             return false;
@@ -7534,7 +7854,15 @@
                     saveStateToCloud();
                     document.getElementById('modalZis').classList.add('hidden');
                     window.renderApp();
-                    window.showToast(newZis.status === 'Disetujui' ? 'Catatan ZISWAF berhasil disimpan & terverifikasi!' : 'Donasi ZIS dicatat dan menunggu verifikasi Pengurus.');
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: `${tipeMutasi} ${jenis} Berhasil Dicatat!`,
+                        nominal: nominal,
+                        nama: newZis.isAnonim ? `${newZis.nama} (Hamba Allah)` : newZis.nama,
+                        kategori: `Baitul Maal • ${jenis} (${tipeMutasi})`,
+                        kanal: bankTujuan || 'Kas ZISWAF',
+                        status: newZis.status,
+                        waktu: newZis.tanggal
+                    });
                 }
             );
             return false;
@@ -7995,8 +8323,10 @@
             });
 
             const setCardEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-            setCardEl('anggotaCardTotal', `${allMembers.length} Anggota`);
-            setCardEl('anggotaCardCalonSub', `${(appState.calonAnggota || []).length} Calon Menunggu Verifikasi`);
+            const activeMemberCount = allMembers.filter(a => a.statusKeanggotaan !== 'Nonaktif').length;
+            const nonActiveMemberCount = allMembers.length - activeMemberCount;
+            setCardEl('anggotaCardTotal', `${activeMemberCount} Anggota Aktif`);
+            setCardEl('anggotaCardCalonSub', nonActiveMemberCount > 0 ? `${nonActiveMemberCount} Nonaktif • Total ${allMembers.length} Data` : `100% Anggota Aktif Terverifikasi`);
             setCardEl('anggotaCardTotalKK', `${uniqueKKs.length} Keluarga (KK)`);
             setCardEl('anggotaCardTotalAdmin', `${adminCount} Pengurus`);
             setCardEl('anggotaCardWarisSub', `Ahli Waris Tercatat: ${warisCount}/${allMembers.length}`);
@@ -8752,7 +9082,15 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                     saveStateToCloud();
                     document.getElementById('modalBayarCicilan').classList.add('hidden');
                     window.renderApp();
-                    window.showToast(stCicil === 'Disetujui' ? 'Pembayaran cicilan berhasil dicatat & disetujui!' : 'Pembayaran cicilan dikirim dan menunggu verifikasi Bendahara/Admin.');
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: 'Pembayaran Angsuran Berhasil!',
+                        nominal: nominal,
+                        nama: p.nama,
+                        kategori: `Angsuran Ke-${p.riwayatCicilan.length} (${p.jenisAkad || 'Murabahah'})`,
+                        kanal: metodeBayar === 'POTONG_SUKARELA' ? 'Auto-Debet Simpanan Sukarela' : (bankTujuan || 'Transfer Kas'),
+                        status: stCicil,
+                        waktu: window.getWaktuLokalSekarang()
+                    });
                 }
             );
             return false;
@@ -8888,73 +9226,6 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             window.renderApp();
             window.showToast('Pasal AD/ART berhasil diperbarui!');
             return false;
-        };
-
-        window.bukaModalDaftarMandiri = () => {
-            document.getElementById('formDaftarMandiri').reset();
-            document.getElementById('modalDaftarMandiri').classList.remove('hidden');
-        };
-
-        window.simpanCalonAnggotaMandiri = (e) => {
-            if (e && e.preventDefault) e.preventDefault();
-            if (!window.validasiCaptchaTransaksi('formDaftarMandiri', 'Pendaftaran Calon Anggota Mandiri')) return false;
-            const nama = document.getElementById('regNama').value.trim();
-            const namaKeluarga = document.getElementById('regKeluarga').value.trim();
-            const kontak = document.getElementById('regKontak').value.trim();
-            const pin = window.encryptPinKoperasi(document.getElementById('regPin').value.trim() || '1234');
-
-            if (appState.anggota.some(a => a.kontak === kontak)) {
-                window.showToast('Nomor WhatsApp sudah terdaftar sebagai anggota aktif!', 'error');
-                return false;
-            }
-            window.showConfirmModal(
-                'Konfirmasi Pendaftaran Calon Anggota',
-                `Kirim pendaftaran anggota baru atas nama ${nama} (${namaKeluarga} - WA: ${kontak})?`,
-                () => {
-                    if (!appState.calonAnggota) appState.calonAnggota = [];
-                    appState.calonAnggota.push({
-                        id: 'calon_' + Date.now(),
-                        nama,
-                        namaKeluarga,
-                        kontak,
-                        pin
-                    });
-                    saveStateToCloud();
-                    document.getElementById('modalDaftarMandiri').classList.add('hidden');
-                    window.showToast('Pendaftaran terkirim! Menunggu verifikasi Admin.');
-                }
-            );
-            return false;
-        };
-
-        window.verifikasiCalonAnggota = (id, diterima) => {
-            if (!window.isSekretarisOrSuper()) {
-                window.showToast('🔒 Hanya Sekretaris atau Super Admin yang berwenang memverifikasi pendaftaran calon anggota!', 'error');
-                return;
-            }
-            const c = (appState.calonAnggota || []).find(x => x.id === id);
-            if (!c) return;
-            appState.calonAnggota = appState.calonAnggota.filter(x => x.id !== id);
-            if (diterima) {
-                appState.anggota.push({
-                    id: 'a_' + Date.now(),
-                    nama: c.nama,
-                    namaKeluarga: c.namaKeluarga,
-                    kontak: c.kontak,
-                    email: '-',
-                    pin: window.encryptPinKoperasi(c.pin || '1234'),
-                    role: 'member',
-                    saldo: 0,
-                    simpananPokok: 0,
-                    simpananWajib: 0,
-                    simpananSukarela: 0
-                });
-                window.showToast(`${c.nama} resmi diterima menjadi Anggota Keluarga!`);
-            } else {
-                window.showToast(`Pendaftaran ${c.nama} ditolak.`, 'info');
-            }
-            saveStateToCloud();
-            window.renderApp();
         };
 
         function renderPengaturanAuditTab() {
@@ -9884,7 +10155,15 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                     window.catatLogAuditSistem('TRANSAKSI', `Distribusi SHU RAT ${tahunBuku}`, `Anggota: ${window.formatRupiah(totalBagianAnggota)} (${countReceiver} org) • Dana Sosial ZISWAF: ${window.formatRupiah(nominalSosialZis)}`, 'Sukses');
                     saveStateToCloud();
                     window.renderApp();
-                    window.showToast(`✅ SHU RAT ${tahunBuku} (${window.formatRupiah(totalBagianAnggota)}) & Dana Sosial ZISWAF (${window.formatRupiah(nominalSosialZis)}) berhasil dibukukan!`);
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: `Pembukuan SHU RAT ${tahunBuku} Berhasil!`,
+                        nominal: totalBagianAnggota + nominalSosialZis,
+                        nama: `${countReceiver} Anggota Penerima & Kas ZISWAF`,
+                        kategori: `Distribusi SHU RAT ${tahunBuku}`,
+                        kanal: `Anggota: ${window.formatRupiah(totalBagianAnggota)} • ZIS: ${window.formatRupiah(nominalSosialZis)}`,
+                        status: 'Disetujui',
+                        waktu: waktuStr
+                    });
                 }
             );
         };
@@ -10939,9 +11218,30 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         // =========================================================================
         // AUTO-VERSIONING & CHANGELOG FOOTER (v35.4 Pro)
         // =========================================================================
-        window.APP_VERSION = 'v35.5 Pro';
+        window.APP_VERSION = 'v35.7 Pro';
         window.APP_RELEASE_DATE = '16 Nov 2026';
         window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v35.7 Pro',
+                tanggal: '16 Nov 2026 (Terbaru - Animasi Transaksi Berhasil, Confetti & Notifikasi Interaktif)',
+                judul: 'Pop-up Animasi Perayaan Transaksi Berhasil (SVG Checkmark, Count-Up & Confetti) & Toast Notifikasi Beranimasi',
+                poin: [
+                    'Modal Animasi Transaksi Berhasil (#modalAnimasiTransaksiBerhasil): Menampilkan ikon centang SVG yang menggambar otomatis, efek partikel confetti, animasi angka Rupiah (Count-Up), rincian mini struk, dan tombol Lihat Struk setelah transaksi Simpanan, Transfer P2P, Pembiayaan, Angsuran, ZISWAF, dan Distribusi SHU.',
+                    'Notifikasi Toast Interaktif Beranimasi: Dilengkapi animasi masuk pegas (Spring Pop-In), lingkaran gelombang (Pulse Ripple Halo), lonceng bergoyang (Bell Swing), serta bar hitung mundur otomatis.',
+                    'Efek Suara Web Audio Synthesizer Halus: Nada denting sukses khas aplikasi finansial modern saat transaksi berhasil maupun saat notifikasi muncul tanpa membebani ukuran file.'
+                ]
+            },
+            {
+                versi: 'v35.6 Pro',
+                tanggal: '16 Nov 2026 (Terbaru - Pembersihan Modul Calon Anggota & Penyederhanaan Sistem)',
+                judul: 'Penghapusan Penuh Daftar Calon Anggota Mandiri & Perampingan Antrean Verifikasi',
+                poin: [
+                    'Penghapusan Daftar & Modal Calon Anggota Mandiri: Menghapus tombol pendaftaran mandiri di layar login, modal #modalDaftarMandiri, serta fungsi antrean calon anggota agar penambahan anggota keluarga terpusat rapi melalui Pengurus/Sekretaris.',
+                    'Perampingan Pusat Persetujuan Terpadu: Mengubah ringkasan antrean menjadi 4 kartu fokus keuangan (Simpanan, Pinjaman Baru, Cicilan, Donasi ZIS) dan 3 kolom sub-antrean yang lebih lega dan ringan.',
+                    'Pembersihan Otomatis State Database (LocalStorage & Cloud Firebase): Menghapus properti calonAnggota dari state lokal maupun dokumen Cloud Firestore secara otomatis.',
+                    'Kartu Ringkasan Keanggotaan Lebih Informatif: Menampilkan jumlah Anggota Aktif vs Nonaktif secara langsung di Direktori Anggota.'
+                ]
+            },
             {
                 versi: 'v35.5 Pro',
                 tanggal: '16 Nov 2026 (Terbaru - Notif Iuran Wajib Beranda, Menu Rapi & Auto-Sync Firebase)',
@@ -11154,7 +11454,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 f.innerHTML = '<div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto px-2">' +
                     '<p>&copy; 2026 aufah tech. All rights reserved.</p>' +
                     '<div class="flex flex-wrap items-center justify-center gap-2">' +
-                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Notif & Status Iuran Wajib di Beranda, Tata Letak Menu/Tombol Rapi, Auto-Sync Firebase & Matriks 12 Bulan.") + ')</span>' +
+                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Animasi Transaksi Berhasil (Confetti & Checkmark), Notifikasi Interaktif, Notif Iuran Beranda & Auto-Sync Firebase.") + ')</span>' +
                         '<button id="badgeFooterChangelog" type="button" onclick="window.bukaModalChangelog()" class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] hover:ring-2 hover:ring-emerald-400 transition cursor-pointer">📋 Lihat Detail Pembaruan ' + window.escapeHtml(window.APP_VERSION) + '</button>' +
                     '</div>' +
                 '</div>';
