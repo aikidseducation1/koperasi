@@ -2,11 +2,16 @@
 <html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Koperasi Keluarga v36.0 Pro (Final Production) — Sistem Terpadu 12 Menu Terverifikasi & Auto-Sync Cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#059669">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Koperasi Keluarga">
+    <title>Aplikasi Koperasi Keluarga v36.6 Pro (Final Production) — Tutup Buku Akhir Tahun (Year-End Rollover) & Auto-Sync Cloud</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <style type="text/tailwindcss">
         @custom-variant dark (&:where(.dark, .dark *));
     </style>
@@ -23,11 +28,21 @@
     </script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             font-feature-settings: "cv02", "cv03", "cv04", "cv11";
             font-variant-numeric: tabular-nums;
+            letter-spacing: -0.01em;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            letter-spacing: -0.02em;
+        }
+        .font-mono, code {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
         }
         /* Otomatisasi efisiensi ruang, scrollbar, tabel, kartu & tombol */
         * { scrollbar-width: thin; scrollbar-color: rgba(148, 163, 184, 0.35) transparent; }
@@ -36,15 +51,44 @@
         *::-webkit-scrollbar-thumb { background-color: rgba(148, 163, 184, 0.35); border-radius: 9999px; }
 
         table th, table td {
-            padding-top: 0.45rem !important;
-            padding-bottom: 0.45rem !important;
-            line-height: 1.25 !important;
+            padding-top: 0.55rem !important;
+            padding-bottom: 0.55rem !important;
+            line-height: 1.35 !important;
         }
-        button, select, input {
-            transition: all 0.15s ease-in-out;
+        table thead th {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            letter-spacing: 0.04em;
+        }
+        button, select, input, textarea {
+            transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        button {
+            cursor: pointer;
         }
         button:active:not(:disabled) {
-            transform: scale(0.98);
+            transform: scale(0.975);
+        }
+        /* Penyeragaman input & select agar nyaman disentuh di HP & rapi di Desktop */
+        main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
+        main select,
+        main textarea,
+        div[id^="modal"] input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
+        div[id^="modal"] select,
+        div[id^="modal"] textarea {
+            border-radius: 0.75rem;
+        }
+        main input:focus, main select:focus, main textarea:focus,
+        div[id^="modal"] input:focus, div[id^="modal"] select:focus, div[id^="modal"] textarea:focus {
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
+        }
+        /* Efek kartu lebih bersih, seragam & responsif */
+        .ui-card-polish {
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.03);
+            transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+        }
+        .ui-card-polish:hover {
+            box-shadow: 0 6px 18px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
         }
         @keyframes neonGlow {
             0% { border-color: rgba(245, 158, 11, 0.6); box-shadow: 0 0 15px rgba(245, 158, 11, 0.4), inset 0 0 15px rgba(245, 158, 11, 0.2); }
@@ -210,7 +254,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-100/70 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased h-screen overflow-hidden flex flex-col transition-colors duration-200 text-[11px] sm:text-xs">
+<body class="bg-slate-100/80 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased h-screen overflow-hidden flex flex-col transition-colors duration-200 text-xs sm:text-[13px]">
 
     <!-- LAYAR LOGIN -->
     <div id="loginScreen" class="fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-3 sm:p-4 backdrop-blur-md">
@@ -275,6 +319,14 @@
                         <span id="iconQuickSyncSpin">🔄</span>
                         <span class="hidden sm:inline">Sync Cloud</span>
                     </button>
+                    <button type="button" onclick="window.toggleFullScreenMode()" id="btnFullscreenHeader" title="Mode Layar Penuh (PWA Fullscreen)" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 dark:bg-slate-800 dark:hover:bg-emerald-950 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition cursor-pointer shrink-0">
+                        <span id="iconFullscreenHeader">⛶</span>
+                        <span id="lblFullscreenHeader" class="hidden md:inline">Fullscreen</span>
+                    </button>
+                    <button type="button" onclick="window.installAplikasiPwa()" id="btnInstallPwaHeader" title="Install Aplikasi Koperasi ke Layar Utama HP/Desktop" class="hidden items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition cursor-pointer shrink-0">
+                        <span>📲</span>
+                        <span class="hidden sm:inline">Install App</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -310,7 +362,7 @@
             <span class="text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">Info</span>
         </div>
         <div class="running-text-wrapper flex-1 overflow-hidden" title="Arahkan kursor / sentuh untuk menghentikan sejenak">
-            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v36.0 Pro (Edisi Final Produksi)!</p>
+            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v36.6 Pro (Edisi Optimasi & Produksi)!</p>
         </div>
         <button id="btnEditPengumuman" onclick="window.bukaModalEditPengumuman()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
             ✏️ Edit
@@ -328,7 +380,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v36.0 Pro</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v36.6 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -344,102 +396,102 @@
                     <div id="notifIuranWajibBerandaBanner" class="w-full"></div>
 
                     <!-- Header Beranda & Tombol Pintasan Aksi Cepat yang Rapi -->
-                    <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-xs border border-slate-200/80 dark:border-slate-800 space-y-2.5">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <div>
-                                <h2 class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-white leading-tight" id="dashboardGreetingTitle">Dashboard & Keuangan Keluarga</h2>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400">Ringkasan tabungan pribadi, status iuran wajib bulanan, kas koperasi, pembiayaan syariah, dan ZISWAF.</p>
+                    <div class="ui-card-polish bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2.5">
+                            <div class="space-y-0.5">
+                                <h2 class="text-base sm:text-lg font-extrabold text-slate-800 dark:text-white leading-tight" id="dashboardGreetingTitle">Dashboard & Keuangan Keluarga</h2>
+                                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Ringkasan tabungan pribadi, status iuran wajib, kas koperasi, pembiayaan syariah, dan ZISWAF.</p>
                             </div>
                             <div class="flex flex-wrap items-center gap-1.5">
-                                <span id="dashboardIuranStatusPill" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">📅 Mengecek Iuran...</span>
-                                <span id="privacyRoleBadgeDashboard" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">🔒 Privasi Aktif</span>
+                                <span id="dashboardIuranStatusPill" class="text-[10px] sm:text-[11px] font-extrabold px-3 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">📅 Mengecek Iuran...</span>
+                                <span id="privacyRoleBadgeDashboard" class="text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">🔒 Privasi Aktif</span>
                             </div>
                         </div>
-                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
-                            <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
-                                <button type="button" onclick="window.bukaSetorWajibCepatBeranda()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-xl text-[11px] shadow-xs transition cursor-pointer">
-                                    <span>💳</span><span>Setor Iuran / Tabungan</span>
+                        <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col lg:flex-row lg:items-center justify-between gap-2">
+                            <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full lg:w-auto">
+                                <button type="button" onclick="window.bukaSetorWajibCepatBeranda()" class="min-h-[38px] inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-[11px] sm:text-xs shadow-xs hover:shadow-md transition whitespace-nowrap cursor-pointer">
+                                    <span>💳</span><span>Setor Simpanan</span>
                                 </button>
-                                <button type="button" onclick="window.bukaModalTransferP2P()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl text-[11px] shadow-xs transition cursor-pointer">
+                                <button type="button" onclick="window.bukaModalTransferP2P()" class="min-h-[38px] inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3.5 py-2 rounded-xl text-[11px] sm:text-xs shadow-xs hover:shadow-md transition whitespace-nowrap cursor-pointer">
                                     <span>⚡</span><span>Transfer P2P</span>
                                 </button>
-                                <button type="button" onclick="window.bukaMatriksDariBeranda()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold px-3 py-1.5 rounded-xl text-[11px] transition cursor-pointer">
-                                    <span>📅</span><span>Kartu Kendali 12 Bulan</span>
+                                <button type="button" onclick="window.bukaMatriksDariBeranda()" class="min-h-[38px] inline-flex items-center justify-center gap-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold px-3.5 py-2 rounded-xl text-[11px] sm:text-xs transition whitespace-nowrap cursor-pointer">
+                                    <span>📅</span><span>Kartu Kendali</span>
                                 </button>
-                                <button type="button" onclick="window.switchTab('pinjaman')" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold px-3 py-1.5 rounded-xl text-[11px] transition cursor-pointer">
+                                <button type="button" onclick="window.switchTab('pinjaman')" class="min-h-[38px] inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 font-bold px-3.5 py-2 rounded-xl text-[11px] sm:text-xs transition whitespace-nowrap cursor-pointer">
                                     <span>🤝</span><span>Pembiayaan</span>
                                 </button>
                             </div>
-                            <button type="button" onclick="window.paksaSinkronCloud()" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/50 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-bold px-3 py-1.5 rounded-xl text-[11px] transition cursor-pointer" title="Sinkronkan Data dengan Cloud Firebase">
+                            <button type="button" onclick="window.paksaSinkronCloud()" class="w-full lg:w-auto min-h-[38px] inline-flex items-center justify-center gap-1.5 bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/50 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-bold px-3.5 py-2 rounded-xl text-[11px] sm:text-xs transition whitespace-nowrap cursor-pointer" title="Sinkronkan Data dengan Cloud Firebase">
                                 <span>🔄</span><span>Sync Otomatis Cloud</span>
                             </button>
                         </div>
                     </div>
 
-                    <div id="boxPengingatKewajibanPribadi" class="grid grid-cols-1 md:grid-cols-3 gap-2.5"></div>
+                    <div id="boxPengingatKewajibanPribadi" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
 
                     <!-- Notifikasi Tugas Admin -->
-                    <div id="adminPendingAlertBanner" class="hidden bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-2.5 shadow-xs">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-7 h-7 rounded-lg bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200 flex items-center justify-center font-bold text-xs shrink-0">🔔</div>
+                    <div id="adminPendingAlertBanner" class="hidden ui-card-polish bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 rounded-2xl px-4 py-3 flex items-center justify-between gap-2.5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200 flex items-center justify-center font-bold text-sm shrink-0">🔔</div>
                             <div>
-                                <h4 class="text-xs font-bold text-amber-900 dark:text-amber-200 leading-tight">Menunggu Persetujuan Pengurus</h4>
-                                <p id="adminPendingAlertText" class="text-[10px] text-amber-700 dark:text-amber-300">Terdapat transaksi atau pinjaman anggota yang memerlukan verifikasi Anda.</p>
+                                <h4 class="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200 leading-tight">Menunggu Persetujuan Pengurus</h4>
+                                <p id="adminPendingAlertText" class="text-[11px] text-amber-700 dark:text-amber-300 mt-0.5">Terdapat transaksi atau pinjaman anggota yang memerlukan verifikasi Anda.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 4 Kartu Ringkasan Eksekutif & Pribadi (Compact & Efisien) -->
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+                    <!-- 4 Kartu Ringkasan Eksekutif & Pribadi (Seragam & Mudah Dibaca) -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between border-t-2 border-t-emerald-500">
                             <div>
-                                <div class="flex justify-between items-center gap-1 mb-0.5">
-                                    <span class="text-[9px] text-slate-400 font-bold uppercase truncate">Tabungan Anda</span>
-                                    <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 font-bold shrink-0" id="dashboardPorsiModalBadge">0%</span>
+                                <div class="flex justify-between items-center gap-1 mb-1">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider truncate">💰 Tabungan Anda</span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 font-extrabold shrink-0" id="dashboardPorsiModalBadge">0%</span>
                                 </div>
-                                <strong id="dashboardSaldoPribadi" class="text-sm sm:text-lg font-black text-emerald-600 truncate block">Rp 0</strong>
+                                <strong id="dashboardSaldoPribadi" class="text-base sm:text-xl font-black text-emerald-600 dark:text-emerald-400 truncate block tracking-tight">Rp 0</strong>
                             </div>
-                            <div id="dashboardRincianPribadi" class="text-[9px] text-slate-500 dark:text-slate-400 mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 flex flex-wrap justify-between gap-x-2 gap-y-0.5">
+                            <div id="dashboardRincianPribadi" class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                                 <span>Pokok: Rp 0</span>
                                 <span>Wajib: Rp 0</span>
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between border-t-2 border-t-blue-500">
                             <div>
-                                <div class="flex justify-between items-center gap-1 mb-0.5">
-                                    <span class="text-[9px] text-slate-400 font-bold uppercase truncate">Kas Likuid Koperasi</span>
-                                    <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-bold shrink-0" id="dashboardJumlahAnggotaBadge">0 Anggota</span>
+                                <div class="flex justify-between items-center gap-1 mb-1">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider truncate">🏦 Kas Likuid</span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-extrabold shrink-0" id="dashboardJumlahAnggotaBadge">0 Anggota</span>
                                 </div>
-                                <strong id="dashboardTotalKasKoperasi" class="text-sm sm:text-lg font-black text-blue-600 truncate block">Rp 0</strong>
+                                <strong id="dashboardTotalKasKoperasi" class="text-base sm:text-xl font-black text-blue-600 dark:text-blue-400 truncate block tracking-tight">Rp 0</strong>
                             </div>
-                            <div id="dashboardRincianKas" class="text-[9px] text-slate-500 dark:text-slate-400 mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 flex justify-between truncate">
+                            <div id="dashboardRincianKas" class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between truncate">
                                 <span>Total Simpanan: Rp 0</span>
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between border-t-2 border-t-amber-500">
                             <div>
-                                <div class="flex justify-between items-center gap-1 mb-0.5">
-                                    <span class="text-[9px] text-slate-400 font-bold uppercase truncate">Pinjaman & Piutang</span>
-                                    <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300 font-bold shrink-0" id="dashboardStatusPinjamanBadge">0 Aktif</span>
+                                <div class="flex justify-between items-center gap-1 mb-1">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider truncate">🤝 Pembiayaan</span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300 font-extrabold shrink-0" id="dashboardStatusPinjamanBadge">0 Aktif</span>
                                 </div>
-                                <strong id="dashboardTotalPinjamanAktif" class="text-sm sm:text-lg font-black text-amber-600 truncate block">Rp 0</strong>
+                                <strong id="dashboardTotalPinjamanAktif" class="text-base sm:text-xl font-black text-amber-600 dark:text-amber-400 truncate block tracking-tight">Rp 0</strong>
                             </div>
-                            <div id="dashboardPinjamanPribadiText" class="text-[9px] text-slate-500 dark:text-slate-400 mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 truncate">
+                            <div id="dashboardPinjamanPribadiText" class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 truncate">
                                 Pinjaman Anda: Rp 0
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between border-t-2 border-t-purple-500">
                             <div>
-                                <div class="flex justify-between items-center gap-1 mb-0.5">
-                                    <span class="text-[9px] text-slate-400 font-bold uppercase truncate">Estimasi SHU Anda</span>
-                                    <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-bold shrink-0">SHU</span>
+                                <div class="flex justify-between items-center gap-1 mb-1">
+                                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider truncate">📈 Estimasi SHU</span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-extrabold shrink-0">SHU</span>
                                 </div>
-                                <strong id="dashboardEstimasiShu" class="text-sm sm:text-lg font-black text-purple-600 truncate block">Rp 0</strong>
+                                <strong id="dashboardEstimasiShu" class="text-base sm:text-xl font-black text-purple-600 dark:text-purple-400 truncate block tracking-tight">Rp 0</strong>
                             </div>
-                            <div id="dashboardDanaSosialZisText" class="text-[9px] text-slate-500 dark:text-slate-400 mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 truncate">
+                            <div id="dashboardDanaSosialZisText" class="text-[10px] text-slate-500 dark:text-slate-400 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 truncate">
                                 Kas ZIS & Sosial: Rp 0
                             </div>
                         </div>
@@ -447,7 +499,7 @@
 
                     <!-- Grid 3 Kolom Proporsional: Voting + 2 Grafik Berdampingan di Layar Lebar -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
-                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 space-y-2.5">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 space-y-2.5">
                             <div class="flex justify-between items-center gap-2">
                                 <div>
                                     <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">🗳️ Voting Keluarga</h3>
@@ -458,19 +510,19 @@
                             <div id="gridVoting" class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1"></div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 w-full overflow-hidden">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 w-full overflow-hidden">
                             <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white mb-2">📈 Grafik Arus Kas</h3>
                             <div class="relative h-40 sm:h-44 w-full"><canvas id="cashflowChart"></canvas></div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 w-full overflow-hidden">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 w-full overflow-hidden">
                             <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white mb-2">🍩 Kontribusi per Keluarga</h3>
                             <div class="relative h-40 sm:h-44 w-full"><canvas id="kkChart"></canvas></div>
                         </div>
                     </div>
 
                     <!-- Recent Transactions -->
-                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5">
+                    <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4">
                         <div class="flex justify-between items-center mb-2">
                             <h3 id="recentTransaksiTitle" class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">5 Aktivitas Transaksi Terakhir</h3>
                         </div>
@@ -670,10 +722,13 @@
 
                     <!-- Tabel Mutasi Buku Simpanan & Filter Lengkap -->
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden space-y-3 p-4 sm:p-5">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 no-print">
-                            <input type="text" id="searchSimpananInput" oninput="window.renderApp()" placeholder="🔍 Cari nama, keterangan, bank..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2 no-print">
+                            <input type="text" id="searchSimpananInput" oninput="window.debounceCall('searchSimp', window.renderApp, 160)" placeholder="🔍 Cari nama, keterangan, bank..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
                             <select id="filterAnggotaSimpanan" onchange="window.renderApp()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
                                 <option value="ALL">Semua Anggota</option>
+                            </select>
+                            <select id="filterBulanSimpanan" onchange="window.renderApp()" class="w-full bg-blue-50/70 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-blue-800 dark:text-blue-300 outline-none" title="Filter Mutasi Berdasarkan Periode Bulan">
+                                <option value="ALL">📅 Semua Periode Bulan</option>
                             </select>
                             <select id="filterKategoriSimpanan" onchange="window.renderApp()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
                                 <option value="ALL">Semua Kategori</option>
@@ -750,14 +805,15 @@
                                 <p class="text-[11px] text-slate-500">Pantau kelunasan Simpanan Wajib tiap bulan sejak tanggal bergabung anggota. (Bendahara/Admin dapat klik kotak bulan untuk verifikasi manual).</p>
                             </div>
                             <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto no-print">
-                                <button type="button" onclick="window.sinkronkanBukuSimpananPenuh(true)" class="bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-slate-700 font-bold px-2.5 py-1.5 rounded-xl text-xs transition" title="Sinkronkan otomatis transaksi Simpanan Wajib ke Matriks 12 Bulan">🔄 Auto-Sync Matriks</button>
+                                <button type="button" id="btnWaRekapMatriksPengurus" onclick="window.kirimWaRekapBelumIuranBulanIni()" class="bg-green-600 hover:bg-green-700 text-white font-bold px-2.5 py-1.5 rounded-xl text-xs shadow-xs transition cursor-pointer" title="Bagikan daftar pengingat anggota yang belum setor iuran bulan ini ke Grup WhatsApp">💬 WA Rekap Iuran</button>
+                                <button type="button" onclick="window.sinkronkanBukuSimpananPenuh(true)" class="bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-slate-700 font-bold px-2.5 py-1.5 rounded-xl text-xs transition cursor-pointer" title="Sinkronkan otomatis transaksi Simpanan Wajib ke Matriks 12 Bulan">🔄 Auto-Sync Matriks</button>
                                 <select id="filterTahunMatriksIuran" onchange="window.renderMatriksIuran12Bulan()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold outline-none">
                                     <option value="2026" selected>Tahun 2026</option>
                                     <option value="2025">Tahun 2025</option>
                                     <option value="2027">Tahun 2027</option>
                                 </select>
                                 <input type="hidden" id="filterJenisMatriksIuran" value="WAJIB">
-                                <button type="button" onclick="window.exportMatriksIuranToExcel()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-3 py-1.5 rounded-xl text-xs shadow-xs transition">📥 Export Matriks</button>
+                                <button type="button" onclick="window.exportMatriksIuranToExcel()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-3 py-1.5 rounded-xl text-xs shadow-xs transition cursor-pointer">📥 Export Matriks</button>
                             </div>
                         </div>
                         <div class="overflow-x-auto w-full">
@@ -833,8 +889,8 @@
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                             <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                                <span class="text-slate-400 block mb-0.5 text-[10px] uppercase font-semibold">Maksimal Plafon</span>
-                                <strong id="lblMaxPlafon" class="text-slate-800 dark:text-white text-xs sm:text-sm truncate block">3x Total Simpanan</strong>
+                                <span class="text-slate-400 block mb-0.5 text-[10px] uppercase font-semibold">Aturan Maksimal Plafon</span>
+                                <strong id="lblMaxPlafon" class="text-slate-800 dark:text-white text-xs sm:text-sm truncate block">3x Tabungan (Gabungan KK)</strong>
                             </div>
                             <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                                 <span class="text-slate-400 block mb-0.5 text-[10px] uppercase font-semibold">Skema Margin / Nisbah</span>
@@ -846,9 +902,12 @@
                             </div>
                         </div>
 
+                        <!-- Panel Rincian Kuota Plafon Gabungan Keluarga (KK) & Sisa Hutang Keluarga -->
+                        <div id="boxInfoPlafonKeluargaTabPinjaman" class="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-slate-800/90 border border-blue-200 dark:border-slate-700 text-xs space-y-2"></div>
+
                         <!-- Bar Pencarian & Filter Status Pinjaman -->
                         <div class="pt-2 border-t border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                            <input type="text" id="searchPinjamanInput" oninput="window.renderApp()" placeholder="🔍 Cari nama peminjam atau keperluan..." class="sm:col-span-2 w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
+                            <input type="text" id="searchPinjamanInput" oninput="window.debounceCall('searchPinj', window.renderApp, 160)" placeholder="🔍 Cari nama peminjam atau keperluan..." class="sm:col-span-2 w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
                             <select id="filterStatusPinjaman" onchange="window.renderApp()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs outline-none">
                                 <option value="ALL">Semua Status Pinjaman</option>
                                 <option value="AKTIF">Pinjaman Aktif (Belum Lunas)</option>
@@ -915,7 +974,7 @@
                                         <p class="text-[10px] text-slate-500">Pedoman resmi simpanan, akad pembiayaan, SHU, & ahli waris.</p>
                                     </div>
                                 </div>
-                                <input type="text" id="searchPasalAdArtInput" oninput="window.renderAdArtTab()" placeholder="🔍 Cari pasal atau kata kunci aturan..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
+                                <input type="text" id="searchPasalAdArtInput" oninput="window.debounceCall('searchAdArt', window.renderAdArtTab, 160)" placeholder="🔍 Cari pasal atau kata kunci aturan..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
                                 <div id="kontenAdArt" class="space-y-2 max-h-[420px] overflow-y-auto pr-1"></div>
                             </div>
 
@@ -935,7 +994,7 @@
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                <input type="text" id="searchNotulensiInput" oninput="window.renderAdArtTab()" placeholder="🔍 Cari agenda atau isi keputusan..." class="sm:col-span-2 w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
+                                <input type="text" id="searchNotulensiInput" oninput="window.debounceCall('searchNotul', window.renderAdArtTab, 160)" placeholder="🔍 Cari agenda atau isi keputusan..." class="sm:col-span-2 w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
                                 <select id="filterKategoriNotulensi" onchange="window.renderAdArtTab()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
                                     <option value="ALL">Semua Jenis Rapat</option>
                                     <option value="RAT Tahunan">RAT Tahunan</option>
@@ -1020,11 +1079,11 @@
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 space-y-2.5">
+                    <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 space-y-2.5">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                             <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">Riwayat Mutasi ZISWAF & Penyaluran Santunan Keluarga</h3>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto no-print">
-                                <input type="text" id="searchZisInput" oninput="window.renderZisTab()" placeholder="🔍 Cari donatur / keterangan..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none">
+                                <input type="text" id="searchZisInput" oninput="window.debounceCall('searchZis', window.renderZisTab, 160)" placeholder="🔍 Cari donatur / keterangan..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none">
                                 <select id="filterTipeZis" onchange="window.renderZisTab()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none">
                                     <option value="ALL">Semua Mutasi</option>
                                     <option value="Pemasukan">Pemasukan Donasi (+)</option>
@@ -1109,7 +1168,7 @@
                                     <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">🏆 Klasemen Poin Teladan Anggota Keluarga</h3>
                                     <p class="text-[10px] text-slate-500">Dihitung otomatis dari keaktifan menabung, ZISWAF, rapat, voting, & bonus pengurus.</p>
                                 </div>
-                                <input type="text" id="searchKlasemenInput" oninput="window.renderGamifikasiTab()" placeholder="🔍 Cari nama anggota / KK..." class="w-full sm:w-48 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none no-print">
+                                <input type="text" id="searchKlasemenInput" oninput="window.debounceCall('searchKlasemen', window.renderGamifikasiTab, 160)" placeholder="🔍 Cari nama anggota / KK..." class="w-full sm:w-48 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none no-print">
                             </div>
                             <div id="listKlasemenAnggota" class="space-y-2 text-xs max-h-96 overflow-y-auto pr-1"></div>
                         </div>
@@ -1186,7 +1245,7 @@
 
                     <!-- Bar Pencarian & Filter Direktori Anggota -->
                     <div class="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-2 no-print">
-                        <input type="text" id="searchAnggotaInput" oninput="window.renderAnggotaTab()" placeholder="🔍 Cari nama, WA, email, ahli waris..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
+                        <input type="text" id="searchAnggotaInput" oninput="window.debounceCall('searchAnggota', window.renderAnggotaTab, 160)" placeholder="🔍 Cari nama, WA, email, ahli waris..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
                         <select id="filterKeluargaAnggota" onchange="window.renderAnggotaTab()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs outline-none">
                             <option value="ALL">Semua Rumpun Keluarga (KK)</option>
                         </select>
@@ -1432,6 +1491,27 @@
                         </div>
                     </div>
 
+                    <!-- Panel Tutup Buku Akhir Tahun (Year-End Rollover) -->
+                    <div class="bg-gradient-to-r from-indigo-50/90 via-white to-amber-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/80 rounded-2xl shadow-sm border border-indigo-200 dark:border-indigo-900/60 p-4 sm:p-5 space-y-3 no-print">
+                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+                            <div class="space-y-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">📚 Tutup Buku Akhir Tahun (Year-End Rollover &amp; Arsip Tahunan)</h3>
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">🗓️ Ringankan Database</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 leading-relaxed">
+                                    Mengarsipkan seluruh riwayat transaksi tahun buku sebelumnya ke file <strong>Arsip JSON</strong> terunduh otomatis, lalu menggabungkan saldo Simpanan Pokok, Wajib, Sukarela, ZISWAF, dan Saldo Awal Bank menjadi <strong>Saldo Awal Tahun Baru</strong> agar aplikasi tetap cepat &amp; ringan.
+                                </p>
+                                <p id="infoStatistikTutupBuku" class="text-[11px] font-bold text-indigo-700 dark:text-indigo-300">Menganalisis riwayat transaksi tahun lalu...</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto shrink-0">
+                                <select id="tahunTutupBukuSelect" onchange="window.updatePreviewTutupBukuUI()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold outline-none"></select>
+                                <button type="button" onclick="window.jalankanTutupBukuAkhirTahun()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer">📚 Tutup Buku &amp; Arsipkan</button>
+                            </div>
+                        </div>
+                        <div id="boxRiwayatArsipTutupBuku" class="pt-2 border-t border-indigo-100 dark:border-slate-800"></div>
+                    </div>
+
                     <!-- Tabel Log Audit Aktivitas & Keamanan Sistem -->
                     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 sm:p-5 space-y-3">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -1440,7 +1520,7 @@
                                 <p class="text-[11px] text-slate-500">Rekam jejak otomatis aktivitas login, percobaan salah PIN, persetujuan transaksi, perubahan aturan, dan pencadangan database.</p>
                             </div>
                             <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto no-print">
-                                <input type="text" id="searchAuditLogInput" oninput="window.renderPengaturanAuditTab()" placeholder="🔍 Cari nama, aksi, detail..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none">
+                                <input type="text" id="searchAuditLogInput" oninput="window.debounceCall('searchAudit', window.renderPengaturanAuditTab, 160)" placeholder="🔍 Cari nama, aksi, detail..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs outline-none">
                                 <select id="filterKategoriAuditLog" onchange="window.renderPengaturanAuditTab()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none">
                                     <option value="ALL">Semua Kategori Log</option>
                                     <option value="AUTH">🔑 Login &amp; Sesi (AUTH)</option>
@@ -1552,7 +1632,7 @@
 
                     <!-- Grid 2 Kolom: Rincian Pendapatan Usaha & Rincian Beban Operasional -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 space-y-2.5">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 space-y-2.5">
                             <div class="flex justify-between items-center gap-2">
                                 <div>
                                     <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">📈 Sumber Pendapatan Usaha & Bagi Hasil</h3>
@@ -1575,7 +1655,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 space-y-2.5">
+                        <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 space-y-2.5">
                             <div class="flex justify-between items-center gap-2">
                                 <div>
                                     <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">📉 Catatan Beban Operasional</h3>
@@ -1600,7 +1680,7 @@
                     </div>
 
                     <!-- Formula & Pengaturan Alokasi SHU Bersih (100%) -->
-                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 space-y-2.5">
+                    <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 space-y-2.5">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                             <div>
                                 <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">Formula & Pengaturan Alokasi SHU Syariah Bersih (Total 100%)</h3>
@@ -1639,14 +1719,14 @@
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/70 dark:border-slate-800 p-3.5 space-y-2.5">
+                    <div class="ui-card-polish bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 space-y-2.5">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                             <div>
                                 <h3 id="shuTableHeaderTitle" class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">Rincian Pembagian SHU</h3>
                                 <span id="infoLastDistribusiShu" class="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400"></span>
                             </div>
                             <div id="shuFilterToolbar" class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto no-print">
-                                <input type="text" id="searchShuInput" oninput="window.renderShuTab()" placeholder="🔍 Cari anggota..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none">
+                                <input type="text" id="searchShuInput" oninput="window.debounceCall('searchShu', window.renderShuTab, 160)" placeholder="🔍 Cari anggota..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none">
                                 <select id="filterKeluargaShu" onchange="window.renderShuTab()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] outline-none">
                                     <option value="ALL">Semua Keluarga (KK)</option>
                                 </select>
@@ -2006,12 +2086,15 @@
                 </div>
             </div>
 
-            <!-- Tombol Aksi Cepat (Cetak Struk / Tutup) -->
-            <div class="flex items-center justify-center gap-2 pt-0.5 relative z-10">
-                <button type="button" id="txAnimBtnStruk" class="hidden flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/80 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold text-xs transition cursor-pointer">
-                    <span>🧾</span><span>Lihat Struk</span>
+            <!-- Tombol Aksi Cepat (Lihat Struk / Kirim WA / Tutup) -->
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-0.5 relative z-10">
+                <button type="button" id="txAnimBtnStruk" class="hidden flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/80 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold text-xs transition cursor-pointer">
+                    <span>🧾</span><span>Struk</span>
                 </button>
-                <button type="button" onclick="window.tutupAnimasiTransaksiBerhasil()" class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md transition cursor-pointer">
+                <button type="button" id="txAnimBtnWaStruk" class="hidden flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-green-50 hover:bg-green-100 dark:bg-green-950/80 dark:hover:bg-green-900 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 font-bold text-xs transition cursor-pointer">
+                    <span>💬</span><span>Kirim WA</span>
+                </button>
+                <button type="button" onclick="window.tutupAnimasiTransaksiBerhasil()" class="flex-1 inline-flex items-center justify-center gap-1 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md transition cursor-pointer">
                     <span>✓</span><span>Selesai</span>
                 </button>
             </div>
@@ -2051,6 +2134,29 @@
             <div class="flex justify-center gap-2.5 pt-1">
                 <button type="button" id="confirmModalCancelBtn" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold">Batal</button>
                 <button type="button" id="confirmModalOkBtn" class="flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md">Ya, Konfirmasi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Password Enkripsi / Dekripsi Backup JSON (AES-256-GCM) -->
+    <div id="modalBackupPassword" class="fixed inset-0 bg-slate-900/65 z-[85] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-sm p-5 space-y-3.5 m-auto">
+            <div class="text-center space-y-1">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">🔐 AES-256-GCM Enkripsi</span>
+                <h3 id="backupPwModalTitle" class="font-extrabold text-base text-slate-800 dark:text-white">Enkripsi File Backup JSON</h3>
+                <p id="backupPwModalDesc" class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">Masukkan password untuk mengunci seluruh data anggota &amp; transaksi di dalam file backup.</p>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-[10px] font-bold uppercase text-slate-500">Password / Sandi Backup</label>
+                <div class="relative">
+                    <input type="password" id="backupPwInput" autocomplete="off" placeholder="Minimal 4 karakter..." onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('backupPwOkBtn')?.click();}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 pr-10 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="button" onclick="window.togglePasswordVisibility('backupPwInput', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">👁️</button>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2 pt-1">
+                <button type="button" id="backupPwCancelBtn" class="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold cursor-pointer">Batal</button>
+                <button type="button" id="backupPwPlainBtn" class="hidden px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold cursor-pointer">Tanpa Sandi</button>
+                <button type="button" id="backupPwOkBtn" class="flex-1 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs shadow-md cursor-pointer">🔐 Enkripsi &amp; Unduh</button>
             </div>
         </div>
     </div>
@@ -2114,9 +2220,15 @@
                     <input type="text" id="searchSelectPinjamanAnggota" oninput="window.filterDropdownAnggotaModal('pinjamanAnggotaId', this.value, false, 'updatePlafonPemohonModal')" placeholder="🔍 Ketik cari nama / KK pemohon..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs outline-none mb-1.5">
                     <select id="pinjamanAnggotaId" onchange="window.updatePlafonPemohonModal()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs outline-none"></select>
                 </div>
-                <div class="p-2.5 rounded-xl bg-blue-50 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-[11px] flex justify-between items-center">
-                    <span class="text-slate-600 dark:text-slate-300">Sisa Plafon Maksimal Pemohon:</span>
-                    <strong id="infoSisaPlafonModal" class="text-blue-700 dark:text-blue-300 font-black">Rp 0</strong>
+                <div class="p-3 rounded-xl bg-blue-50/90 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-[11px] space-y-1.5">
+                    <div class="flex justify-between items-center gap-2">
+                        <span class="font-bold text-slate-700 dark:text-slate-200">Sisa Plafon Gabungan KK:</span>
+                        <div class="flex items-center gap-1.5">
+                            <strong id="infoSisaPlafonModal" class="text-blue-700 dark:text-blue-300 font-black text-xs sm:text-sm">Rp 0</strong>
+                            <button type="button" onclick="window.isiMaksimalPlafonKeInput()" class="px-2 py-0.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-[9px] transition cursor-pointer" title="Isi otomatis nominal dengan Sisa Plafon Maksimal">⚡ Isi Maks</button>
+                        </div>
+                    </div>
+                    <div id="infoRincianPlafonKeluargaModal" class="pt-1.5 border-t border-blue-200/70 dark:border-slate-700 text-[10px] text-slate-600 dark:text-slate-300 space-y-0.5"></div>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Pilih Jenis Akad Syariah</label>
@@ -2266,9 +2378,10 @@
                 <p id="kwitansiIdWaktu" class="text-[10px] font-mono text-slate-400 mt-0.5">-</p>
             </div>
             <div id="kwitansiBodyContent" class="space-y-2 text-xs"></div>
-            <div class="pt-2.5 border-t border-dashed border-slate-200 dark:border-slate-700 flex gap-2">
-                <button type="button" onclick="window.print()" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm">🖨️ Cetak Struk</button>
-                <button type="button" onclick="document.getElementById('modalKwitansiTransaksi').classList.add('hidden')" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold">Tutup</button>
+            <div class="pt-2.5 border-t border-dashed border-slate-200 dark:border-slate-700 flex flex-wrap gap-2">
+                <button type="button" id="btnKirimStrukWaModal" class="flex-1 py-2 px-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs shadow-sm inline-flex items-center justify-center gap-1 cursor-pointer">💬 Kirim Struk ke WA</button>
+                <button type="button" onclick="window.print()" class="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm inline-flex items-center justify-center gap-1 cursor-pointer">🖨️ Cetak Struk</button>
+                <button type="button" onclick="document.getElementById('modalKwitansiTransaksi').classList.add('hidden')" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold cursor-pointer">Tutup</button>
             </div>
         </div>
     </div>
@@ -2480,7 +2593,7 @@
                 <div class="absolute inset-0 z-10 cursor-not-allowed flex flex-col justify-between p-3 pointer-events-auto" oncontextmenu="return false" ondragstart="return false">
                     <div class="text-[9px] font-mono font-bold text-white/45 bg-slate-900/40 px-2 py-0.5 rounded self-start">🔒 PROTECTED RECEIPT • KOPERASI KELUARGA</div>
                     <div id="watermarkTextBuktiFoto" class="text-center text-white/30 font-black text-xs sm:text-sm uppercase tracking-widest -rotate-12 select-none">DOKUMEN INTERNAL KOPERASI • DILARANG MENYALIN</div>
-                    <div class="text-[9px] font-mono text-white/45 bg-slate-900/40 px-2 py-0.5 rounded self-end">ANTI-COPY SHIELD v36.0</div>
+                    <div class="text-[9px] font-mono text-white/45 bg-slate-900/40 px-2 py-0.5 rounded self-end">ANTI-COPY SHIELD v36.6</div>
                 </div>
             </div>
         </div>
@@ -3260,6 +3373,7 @@
             bebanOperasional: [],
             lastShuDistribusiInfo: '',
             riwayatDistribusiShu: [],
+            arsipTutupBuku: [],
             votings: [],
             anggota: [
                 { id: 'a1', isBootstrapDefault: true, namaKeluarga: 'Keluarga Besar Aufah', nama: 'Super Admin', hubungan: 'Kepala Keluarga', tglGabung: window.getTanggalLokalHariIni(), fotoProfil: '', kontak: '082298688189', email: 'admin@aufah.tech', pin: window.encryptPinKoperasi('1234'), role: 'admin', saldo: 0, simpananPokok: 0, simpananWajib: 0, simpananSukarela: 0 }
@@ -3289,6 +3403,37 @@
         };
 
         window.VALID_TABS_LIST = ['dashboard', 'persetujuan', 'simpanan', 'pinjaman', 'ad-art', 'zis', 'gamifikasi', 'anggota', 'bank', 'pengaturan', 'shu', 'profil-saya'];
+
+        // =========================================================================
+        // CORE PERFORMANCE & UTILITY ENGINE (v36.3 PRO — DEBOUNCE, CACHE & CSV)
+        // =========================================================================
+        window._debounceTimers = {};
+        window.debounceCall = (key, fn, delayMs = 160) => {
+            if (window._debounceTimers[key]) clearTimeout(window._debounceTimers[key]);
+            window._debounceTimers[key] = setTimeout(() => {
+                delete window._debounceTimers[key];
+                if (typeof fn === 'function') fn();
+            }, delayMs);
+        };
+
+        window.setTextSafe = (id, text) => {
+            const el = document.getElementById(id);
+            if (el && el.textContent !== String(text)) el.textContent = text;
+        };
+
+        window.downloadCsvUtf8 = (filename, headers, rows) => {
+            const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+            const csvLines = [headers.map(esc).join(','), ...rows.map(r => r.map(c => (typeof c === 'number' ? c : esc(c))).join(','))];
+            const blob = new Blob(['\uFEFF' + csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        };
 
         let appState = JSON.parse(JSON.stringify(defaultState));
         try {
@@ -3556,6 +3701,109 @@
             return map[anggotaId] || { pokok: 0, wajib: 0, sukarela: 0, total: 0, rawNet: 0 };
         };
 
+        // Perhitungan Plafon Pembiayaan Berbasis 3x Tabungan Pribadi + Syarat Jaminan Tabungan Gabungan Keluarga (KK) - Sisa Hutang Keluarga
+        window.hitungRincianPlafonKeluarga = (anggotaId, excludeLoanId = '') => {
+            const pemohon = (appState.anggota || []).find(a => a.id === anggotaId) || currentUserSession;
+            const mult = Number(appState.pinjamanSetting?.maxPlafonMultiplier ?? 3);
+            const defaultBunga = Number(appState.pinjamanSetting?.bungaPerBulan ?? 1);
+
+            if (!pemohon) {
+                return {
+                    anggotaId: '',
+                    namaPemohon: '-',
+                    namaKeluarga: '-',
+                    jumlahAnggotaKK: 1,
+                    mult,
+                    saldoPribadi: 0,
+                    plafon3xPribadi: 0,
+                    saldoAnggotaLainKK: 0,
+                    totalTabunganKeluarga: 0,
+                    isTabunganKeluargaMencukupi3x: false,
+                    plafonKotorSebelumHutang: 0,
+                    sisaHutangPribadi: 0,
+                    sisaHutangAnggotaLainKK: 0,
+                    sisaHutangKeluarga: 0,
+                    sisaTabunganKeluargaSetelahHutang: 0,
+                    sisaPlafonTersedia: 0
+                };
+            }
+
+            const namaKK = String(pemohon.namaKeluarga || 'Keluarga').trim();
+            const anggotaSekeluarga = (appState.anggota || []).filter(a =>
+                a && a.statusKeanggotaan !== 'Nonaktif' && String(a.namaKeluarga || 'Keluarga').trim() === namaKK
+            );
+            const kkMemberIds = new Set(anggotaSekeluarga.map(a => a.id));
+            kkMemberIds.add(pemohon.id);
+
+            const saldoPribadi = window.hitungSaldoAnggota(pemohon.id);
+            let saldoAnggotaLainKK = 0;
+            anggotaSekeluarga.forEach(a => {
+                if (a.id !== pemohon.id) {
+                    saldoAnggotaLainKK += window.hitungSaldoAnggota(a.id);
+                }
+            });
+            const totalTabunganKeluarga = saldoPribadi + saldoAnggotaLainKK;
+            const plafon3xPribadi = saldoPribadi * mult;
+
+            // Hitung sisa hutang/pinjaman berjalan (Disetujui maupun Menunggu) dari seluruh anggota di dalam 1 Keluarga (KK)
+            let sisaHutangPribadi = 0;
+            let sisaHutangAnggotaLainKK = 0;
+
+            (appState.pinjaman || []).forEach(p => {
+                if (!p || p.id === excludeLoanId) return;
+                if (p.status !== 'Disetujui' && p.status !== 'Menunggu') return;
+                if (!kkMemberIds.has(p.anggotaId)) return;
+
+                const nomPokok = Number(p.nominal) || 0;
+                const akadLabel = p.jenisAkad || 'Murabahah';
+                const rate = akadLabel === 'Qardhul Hasan' ? 0 : ((Number(p.bungaPersen ?? defaultBunga)) / 100);
+                const tMargin = typeof p.marginTotalNominal === 'number' ? p.marginTotalNominal : (nomPokok * rate * (Number(p.tenor) || 1));
+                const totalTagihan = nomPokok + tMargin;
+                const terbayar = (p.riwayatCicilan || []).filter(c => c.status === 'Disetujui').reduce((s, c) => s + (Number(c.nominal) || 0), 0);
+                const sisaTagihan = Math.max(0, totalTagihan - terbayar);
+
+                if (sisaTagihan > 0) {
+                    // Sisa kewajiban hutang yang masih mengikat plafon keluarga
+                    const sisaHutangAktif = Math.max(0, nomPokok - terbayar) > 0 ? Math.max(0, nomPokok - terbayar) : sisaTagihan;
+                    if (p.anggotaId === pemohon.id) {
+                        sisaHutangPribadi += sisaHutangAktif;
+                    } else {
+                        sisaHutangAnggotaLainKK += sisaHutangAktif;
+                    }
+                }
+            });
+
+            const sisaHutangKeluarga = sisaHutangPribadi + sisaHutangAnggotaLainKK;
+            const isTabunganKeluargaMencukupi3x = totalTabunganKeluarga >= plafon3xPribadi && plafon3xPribadi > 0;
+
+            // Plafon maksimal pemohon boleh mencapai 3x dari tabungannya dengan syarat digabung dengan tabungan di dalam keluarganya apabila mencukupi
+            const plafonKotorSebelumHutang = Math.min(plafon3xPribadi, totalTabunganKeluarga);
+
+            // Dan anggota keluarganya hanya bisa mengambil plafon dari sisa setelah dikurangi hutang keluarganya
+            const sisaTabunganKeluargaSetelahHutang = Math.max(0, totalTabunganKeluarga - sisaHutangKeluarga);
+            const sisaBatas3xSetelahHutangKeluarga = Math.max(0, plafon3xPribadi - sisaHutangKeluarga);
+            const sisaPlafonTersedia = Math.max(0, Math.min(sisaBatas3xSetelahHutangKeluarga, sisaTabunganKeluargaSetelahHutang));
+
+            return {
+                anggotaId: pemohon.id,
+                namaPemohon: pemohon.nama,
+                namaKeluarga: namaKK,
+                jumlahAnggotaKK: anggotaSekeluarga.length || 1,
+                mult,
+                saldoPribadi,
+                plafon3xPribadi,
+                saldoAnggotaLainKK,
+                totalTabunganKeluarga,
+                isTabunganKeluargaMencukupi3x,
+                plafonKotorSebelumHutang,
+                sisaHutangPribadi,
+                sisaHutangAnggotaLainKK,
+                sisaHutangKeluarga,
+                sisaTabunganKeluargaSetelahHutang,
+                sisaPlafonTersedia
+            };
+        };
+
         window.renderGroupedMemberOptions = (selectId, queryStr = '', excludeSelf = false, selectedValue = '') => {
             const sel = document.getElementById(selectId);
             if (!sel) return;
@@ -3608,8 +3856,31 @@
             }, 0);
         };
 
+        window.getTanggalGabungEfektifAnggota = (anggotaObj) => {
+            const todayStr = window.getTanggalLokalHariIni();
+            if (!anggotaObj) return todayStr;
+            const rawTgl = String(anggotaObj.tglGabung || '').trim();
+
+            // Cari tanggal transaksi paling awal milik anggota ini (jika ada)
+            const trxAnggota = (appState && Array.isArray(appState.transaksi))
+                ? appState.transaksi
+                    .filter(t => t && t.anggotaId === anggotaObj.id && t.status !== 'Ditolak' && /^\d{4}-\d{2}-\d{2}/.test(String(t.waktu || '')))
+                    .map(t => String(t.waktu).slice(0, 10))
+                    .sort()
+                : [];
+            const earliestTrxDate = trxAnggota[0] || '';
+
+            // Jika tglGabung kosong atau masih berupa nilai default lama '2026-01-01' padahal transaksi pertamanya bukan di Januari 2026
+            if (!rawTgl || (rawTgl === '2026-01-01' && (!earliestTrxDate || !earliestTrxDate.startsWith('2026-01')))) {
+                const resolved = earliestTrxDate || todayStr;
+                anggotaObj.tglGabung = resolved;
+                return resolved;
+            }
+            return rawTgl;
+        };
+
         window.formatDurasiBergabung = (tglGabung) => {
-            const raw = tglGabung || '2026-01-01';
+            const raw = (tglGabung && tglGabung !== '2026-01-01') ? tglGabung : window.getTanggalLokalHariIni();
             const parts = raw.split('-');
             if (parts.length < 2) return raw;
             const joinYear = parseInt(parts[0]) || 2026;
@@ -3628,7 +3899,7 @@
 
         window.hitungBobotModalTertimbangAnggota = (anggotaId) => {
             const anggotaObj = (appState.anggota || []).find(a => a.id === anggotaId);
-            const tglGabung = anggotaObj?.tglGabung || '2026-01-01';
+            const tglGabung = window.getTanggalGabungEfektifAnggota(anggotaObj);
             const joinMonth = parseInt((tglGabung.split('-')[1]) || '1') || 1;
             const faktorMasaKeanggotaan = Math.max(1, 13 - Math.min(12, Math.max(1, joinMonth)));
 
@@ -3850,6 +4121,7 @@
             if (waktuEl) waktuEl.textContent = waktu;
             if (kodeEl) kodeEl.textContent = window.buatKodeHashBukti(`${nama}|${nominal}|${waktu}`);
 
+            const btnWaStruk = document.getElementById('txAnimBtnWaStruk');
             if (btnStruk) {
                 if (trxId) {
                     btnStruk.classList.remove('hidden');
@@ -3859,6 +4131,16 @@
                     };
                 } else {
                     btnStruk.classList.add('hidden');
+                }
+            }
+            if (btnWaStruk) {
+                if (trxId) {
+                    btnWaStruk.classList.remove('hidden');
+                    btnWaStruk.onclick = () => {
+                        window.kirimStrukTransaksiKeWA(trxId);
+                    };
+                } else {
+                    btnWaStruk.classList.add('hidden');
                 }
             }
 
@@ -4331,6 +4613,9 @@
                 riwayatDistribusiShu: Array.isArray(cloudData.riwayatDistribusiShu) && cloudData.riwayatDistribusiShu.length >= (appState.riwayatDistribusiShu || []).length
                     ? cloudData.riwayatDistribusiShu
                     : (appState.riwayatDistribusiShu || cloudData.riwayatDistribusiShu || []),
+                arsipTutupBuku: Array.isArray(cloudData.arsipTutupBuku) && cloudData.arsipTutupBuku.length >= (appState.arsipTutupBuku || []).length
+                    ? cloudData.arsipTutupBuku
+                    : (appState.arsipTutupBuku || cloudData.arsipTutupBuku || []),
                 activeTab: currentActiveTab,
                 currentRole: currentRoleLocal
             };
@@ -4396,11 +4681,14 @@
         }
 
         // Listener Otomatis Sinkronisasi ke Firebase saat Koneksi Internet Pulih, Tab Aktif Kembali, Login, atau Interval Berkala
+        window._isSyncingCloud = false;
         window.sinkronOtomatisKeFirebase = async (sumberTrigger = 'auto') => {
+            if (window._isSyncingCloud) return;
             if (!db || !fbDoc) {
                 try { await initFirebaseAndSync(); } catch (e) {}
                 return;
             }
+            window._isSyncingCloud = true;
             try {
                 if (window._localDirtyPendingSync && window._hasInitialCloudSnapshot) {
                     await saveStateToCloud();
@@ -4425,7 +4713,9 @@
                         }
                     }
                 }
-            } catch (e) {}
+            } catch (e) {} finally {
+                window._isSyncingCloud = false;
+            }
         };
         window.addEventListener('online', () => {
             window.showToast('🌐 Koneksi internet aktif kembali — menyinkronkan data ke Firebase...', 'info');
@@ -4497,6 +4787,135 @@
             return window.buatKodeHashBukti(rawKey);
         };
 
+        window._bytesToBase64 = (bytes) => {
+            let binary = '';
+            const chunk = 0x8000;
+            for (let i = 0; i < bytes.length; i += chunk) {
+                binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+            }
+            return btoa(binary);
+        };
+
+        window._base64ToBytes = (b64) => {
+            const bin = atob(b64);
+            const bytes = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+            return bytes;
+        };
+
+        window._deriveAesKeyFromPassword = async (password, saltBytes, iterations = 100000) => {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                enc.encode(String(password)),
+                { name: 'PBKDF2' },
+                false,
+                ['deriveKey']
+            );
+            return crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: saltBytes, iterations, hash: 'SHA-256' },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        };
+
+        window.enkripsiAesGcmJson = async (plainObj, password) => {
+            const enc = new TextEncoder();
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await window._deriveAesKeyFromPassword(password, salt, 100000);
+            const cipherBuf = await crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv },
+                key,
+                enc.encode(JSON.stringify(plainObj))
+            );
+            return {
+                encrypted: true,
+                cipher: 'AES-256-GCM',
+                kdf: 'PBKDF2-SHA256',
+                iterations: 100000,
+                salt: window._bytesToBase64(salt),
+                iv: window._bytesToBase64(iv),
+                ciphertext: window._bytesToBase64(new Uint8Array(cipherBuf)),
+                appVersion: window.APP_VERSION || 'v36.4 Pro',
+                exportedAt: plainObj?._productionMeta?.exportedAt || window.getWaktuLokalSekarang(),
+                integrityChecksum: plainObj?._productionMeta?.integrityChecksum || window.hitungChecksumDatabase(plainObj)
+            };
+        };
+
+        window.dekripsiAesGcmJson = async (encEnvelope, password) => {
+            const salt = window._base64ToBytes(encEnvelope.salt);
+            const iv = window._base64ToBytes(encEnvelope.iv);
+            const cipherBytes = window._base64ToBytes(encEnvelope.ciphertext);
+            const iterations = Number(encEnvelope.iterations) || 100000;
+            const key = await window._deriveAesKeyFromPassword(password, salt, iterations);
+            const plainBuf = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv },
+                key,
+                cipherBytes
+            );
+            return JSON.parse(new TextDecoder().decode(plainBuf));
+        };
+
+        window.bukaModalPasswordBackup = (mode, onSubmitPassword, onPlainFallback = null) => {
+            const modal = document.getElementById('modalBackupPassword');
+            const titleEl = document.getElementById('backupPwModalTitle');
+            const descEl = document.getElementById('backupPwModalDesc');
+            const inpEl = document.getElementById('backupPwInput');
+            const okBtn = document.getElementById('backupPwOkBtn');
+            const cancelBtn = document.getElementById('backupPwCancelBtn');
+            const plainBtn = document.getElementById('backupPwPlainBtn');
+            if (!modal || !inpEl) return;
+
+            inpEl.value = '';
+            if (mode === 'ENCRYPT') {
+                if (titleEl) titleEl.textContent = 'Enkripsi File Backup JSON';
+                if (descEl) descEl.textContent = 'Masukkan password untuk mengunci seluruh data anggota & transaksi dengan enkripsi AES-256-GCM.';
+                if (okBtn) okBtn.textContent = '🔐 Enkripsi & Unduh';
+                if (plainBtn) {
+                    plainBtn.classList.remove('hidden');
+                    plainBtn.onclick = () => {
+                        modal.classList.add('hidden');
+                        if (typeof onPlainFallback === 'function') onPlainFallback();
+                    };
+                }
+            } else {
+                if (titleEl) titleEl.textContent = 'Buka Backup JSON Terenkripsi';
+                if (descEl) descEl.textContent = 'File backup ini dikunci dengan enkripsi AES-256-GCM. Masukkan password backup untuk memulihkan data.';
+                if (okBtn) okBtn.textContent = '🔓 Dekripsi & Pulihkan';
+                if (plainBtn) plainBtn.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => inpEl.focus(), 60);
+
+            cancelBtn.onclick = () => modal.classList.add('hidden');
+            okBtn.onclick = async () => {
+                const pw = inpEl.value.trim();
+                if (pw.length < 4) {
+                    window.showToast('Password backup minimal 4 karakter!', 'error');
+                    inpEl.focus();
+                    return;
+                }
+                modal.classList.add('hidden');
+                await onSubmitPassword(pw);
+            };
+        };
+
+        window._triggerDownloadJsonFile = (obj, filename) => {
+            const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute('href', url);
+            dlAnchor.setAttribute('download', filename);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        };
+
         window.downloadBackupJson = () => {
             appState.lastBackupTime = window.getWaktuLokalSekarang();
             const backupPayload = JSON.parse(JSON.stringify(appState));
@@ -4504,21 +4923,58 @@
             delete backupPayload.currentUser;
             delete backupPayload.currentRole;
             backupPayload._productionMeta = {
-                appVersion: window.APP_VERSION || 'v36.0 Pro',
+                appVersion: window.APP_VERSION || 'v36.4 Pro',
                 exportedAt: appState.lastBackupTime,
                 integrityChecksum: window.hitungChecksumDatabase(backupPayload)
             };
-            window.catatLogAuditSistem('BACKUP', 'Unduh Backup Database JSON', `Backup penuh v36.0 Pro diunduh (${(appState.anggota || []).length} anggota, ${(appState.transaksi || []).length} transaksi, Checksum: ${backupPayload._productionMeta.integrityChecksum})`, 'Sukses');
-            saveStateToCloud();
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupPayload, null, 2));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `Backup_Koperasi_Keluarga_v36_Final_${window.getTanggalLokalHariIni()}.json`);
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
-            if (typeof window.renderApp === 'function') window.renderApp();
-            window.showToast('📥 File Backup JSON Terverifikasi berhasil diunduh & dicatat di Log Audit!');
+
+            const eksekusiUnduhBiasa = () => {
+                window.catatLogAuditSistem('BACKUP', 'Unduh Backup Database JSON', `Backup JSON standar diunduh (${(appState.anggota || []).length} anggota, ${(appState.transaksi || []).length} transaksi, Checksum: ${backupPayload._productionMeta.integrityChecksum})`, 'Sukses');
+                saveStateToCloud();
+                window._triggerDownloadJsonFile(backupPayload, `Backup_Koperasi_Keluarga_${window.APP_VERSION.replace(/\s+/g, '_')}_${window.getTanggalLokalHariIni()}.json`);
+                if (typeof window.renderApp === 'function') window.renderApp();
+                window.showToast('📥 File Backup JSON berhasil diunduh & dicatat di Log Audit!');
+            };
+
+            if (window.crypto && window.crypto.subtle) {
+                window.bukaModalPasswordBackup(
+                    'ENCRYPT',
+                    async (password) => {
+                        try {
+                            const encryptedObj = await window.enkripsiAesGcmJson(backupPayload, password);
+                            window.catatLogAuditSistem('BACKUP', 'Unduh Backup JSON Terenkripsi (AES-256)', `Backup terenkripsi AES-256-GCM diunduh (${(appState.anggota || []).length} anggota, ${(appState.transaksi || []).length} transaksi, Checksum: ${backupPayload._productionMeta.integrityChecksum})`, 'Sukses');
+                            saveStateToCloud();
+                            window._triggerDownloadJsonFile(encryptedObj, `Backup_Terenkripsi_Koperasi_${window.getTanggalLokalHariIni()}.json`);
+                            if (typeof window.renderApp === 'function') window.renderApp();
+                            window.showToast('🔐 Backup JSON Terenkripsi (AES-256-GCM) berhasil diunduh!');
+                        } catch (err) {
+                            console.error('Encrypt backup failed:', err);
+                            window.showToast('Gagal mengenkripsi backup, mengunduh format standar...', 'info');
+                            eksekusiUnduhBiasa();
+                        }
+                    },
+                    eksekusiUnduhBiasa
+                );
+            } else {
+                eksekusiUnduhBiasa();
+            }
+        };
+
+        window._terapkanDataRestoreJson = async (parsed, fileName, isEncrypted = false) => {
+            if (parsed && Array.isArray(parsed.anggota)) {
+                window.purifikasiDataDemoProduksi(parsed);
+                delete parsed.activeTab;
+                delete parsed.currentUser;
+                delete parsed.currentRole;
+                appState = { ...defaultState, ...appState, ...parsed, activeTab: appState.activeTab || 'pengaturan' };
+                window.rebuildSaldoCache(true);
+                window.catatLogAuditSistem('BACKUP', isEncrypted ? 'Restore Backup JSON Terenkripsi' : 'Restore Database JSON', `Data dipulihkan dari file ${fileName} (${(appState.anggota || []).length} anggota, ${(appState.transaksi || []).length} transaksi)`, 'Sukses');
+                await saveStateToCloud();
+                if (currentUserSession) window.renderApp();
+                window.showToast(isEncrypted ? '🔓 Backup Terenkripsi berhasil didekripsi, dipulihkan & disinkronkan ke Cloud!' : '✅ Data Backup JSON berhasil dipulihkan & disinkronkan ke Cloud!');
+            } else {
+                window.showToast('Format file JSON tidak valid!', 'error');
+            }
         };
 
         window.restoreBackupJson = (event) => {
@@ -4528,25 +4984,28 @@
             reader.onload = async (e) => {
                 try {
                     const parsed = JSON.parse(e.target.result);
-                    if (parsed && Array.isArray(parsed.anggota)) {
-                        window.purifikasiDataDemoProduksi(parsed);
-                        delete parsed.activeTab;
-                        delete parsed.currentUser;
-                        delete parsed.currentRole;
-                        appState = { ...defaultState, ...appState, ...parsed, activeTab: appState.activeTab || 'pengaturan' };
-                        window.rebuildSaldoCache(true);
-                        window.catatLogAuditSistem('BACKUP', 'Restore Database JSON', `Data dipulihkan dari file ${file.name} (${(appState.anggota || []).length} anggota, ${(appState.transaksi || []).length} transaksi)`, 'Sukses');
-                        await saveStateToCloud();
-                        if (currentUserSession) window.renderApp();
-                        window.showToast('✅ Data Backup JSON berhasil dipulihkan, dienkripsi & disinkronkan ke Cloud!');
+                    if (parsed && parsed.encrypted === true && parsed.ciphertext) {
+                        if (!window.crypto || !window.crypto.subtle) {
+                            window.showToast('Browser ini tidak mendukung dekripsi AES-256-GCM!', 'error');
+                            return;
+                        }
+                        window.bukaModalPasswordBackup('DECRYPT', async (password) => {
+                            try {
+                                const decryptedObj = await window.dekripsiAesGcmJson(parsed, password);
+                                await window._terapkanDataRestoreJson(decryptedObj, file.name, true);
+                            } catch (decErr) {
+                                window.showToast('🔐 Password salah atau file backup terenkripsi tidak valid!', 'error');
+                            }
+                        });
                     } else {
-                        window.showToast('Format file JSON tidak valid!', 'error');
+                        await window._terapkanDataRestoreJson(parsed, file.name, false);
                     }
                 } catch (err) {
                     window.showToast('Gagal membaca file JSON!', 'error');
                 }
             };
             reader.readAsText(file);
+            event.target.value = '';
         };
 
         window.simpanCustomFirebaseConfig = () => {
@@ -4641,7 +5100,7 @@
             document.getElementById('mandiriEmail').value = currentUserSession.email || '';
             document.getElementById('mandiriPin').value = '';
             const elTglGabung = document.getElementById('mandiriTglGabung');
-            if (elTglGabung) elTglGabung.value = currentUserSession.tglGabung || '2026-01-01';
+            if (elTglGabung) elTglGabung.value = window.getTanggalGabungEfektifAnggota(currentUserSession);
             const elWaris = document.getElementById('mandiriAhliWaris');
             const elRek = document.getElementById('mandiriRekening');
             if (elWaris) elWaris.value = currentUserSession.ahliWaris || '';
@@ -4670,7 +5129,7 @@
                 kdNama.textContent = currentUserSession.nama;
                 document.getElementById('kartuDigitalKeluarga').textContent = `${currentUserSession.namaKeluarga} • WA: ${currentUserSession.kontak}`;
                 const kdTgl = document.getElementById('kartuDigitalTglGabung');
-                if (kdTgl) kdTgl.textContent = `📅 Bergabung: ${window.formatDurasiBergabung(currentUserSession.tglGabung || '2026-01-01')}`;
+                if (kdTgl) kdTgl.textContent = `📅 Bergabung: ${window.formatDurasiBergabung(window.getTanggalGabungEfektifAnggota(currentUserSession))}`;
                 document.getElementById('kartuDigitalSaldo').textContent = window.formatRupiah(saldo);
                 document.getElementById('kartuDigitalAhliWaris').textContent = `Ahli Waris: ${currentUserSession.ahliWaris || 'Belum diisi'}`;
             }
@@ -4709,7 +5168,17 @@
             renderShuTab();
         };
 
+        window._renderRafId = null;
         window.renderApp = () => {
+            if (!currentUserSession) return;
+            if (window._renderRafId) cancelAnimationFrame(window._renderRafId);
+            window._renderRafId = requestAnimationFrame(() => {
+                window._renderRafId = null;
+                window._executeRenderAppCore();
+                if (typeof window._postRenderHooks === 'function') window._postRenderHooks();
+            });
+        };
+        window._executeRenderAppCore = () => {
             if (!currentUserSession) return;
             window.rebuildSaldoCache(true);
 
@@ -4882,9 +5351,9 @@
             const shuSummary = window.hitungRingkasanShuKoperasi();
 
             const userLoans = approvedLoans.filter(p => p.anggotaId === currentUserSession.id);
-            const totalPinjamanUser = userLoans.reduce((acc, p) => acc + (Number(p.nominal) || 0), 0);
-            const mult = Number(appState.pinjamanSetting?.maxPlafonMultiplier ?? 3);
-            const sisaPlafonUser = Math.max(0, (userSaldo * mult) - totalPinjamanUser);
+            const infoPlafonUser = window.hitungRincianPlafonKeluarga(currentUserSession.id);
+            const totalPinjamanUser = infoPlafonUser.sisaHutangPribadi;
+            const sisaPlafonUser = infoPlafonUser.sisaPlafonTersedia;
 
             const zisDisetujui = (appState.zis || []).filter(z => (z.status || 'Disetujui') === 'Disetujui');
             const zisMasuk = zisDisetujui.filter(z => (z.tipeMutasi || 'Pemasukan') === 'Pemasukan').reduce((acc, z) => acc + (Number(z.nominal) || 0), 0) + shuSummary.nominalSosial;
@@ -4920,7 +5389,7 @@
 
             document.getElementById('dashboardTotalPinjamanAktif').textContent = window.formatRupiah(totalPinjamanDisalurkan);
             document.getElementById('dashboardStatusPinjamanBadge').textContent = `${approvedLoans.length} Pinjaman`;
-            document.getElementById('dashboardPinjamanPribadiText').innerHTML = `Pinjaman Anda: <strong>${window.formatRupiah(totalPinjamanUser)}</strong> • Plafon: ${window.formatRupiah(sisaPlafonUser)}`;
+            document.getElementById('dashboardPinjamanPribadiText').innerHTML = `Hutang KK: <strong>${window.formatRupiah(infoPlafonUser.sisaHutangKeluarga)}</strong> • Sisa Plafon: <strong>${window.formatRupiah(sisaPlafonUser)}</strong>`;
 
             document.getElementById('dashboardEstimasiShu').textContent = window.formatRupiah(userShuObj.totalTerima);
             document.getElementById('dashboardDanaSosialZisText').innerHTML = `Kas ZIS & Sosial: <strong class="text-emerald-600">${window.formatRupiah(totalZisTerkumpul)}</strong>`;
@@ -4987,7 +5456,8 @@
 
         window.evaluasiKewajibanWajibBeranda = (anggota) => {
             const now = new Date();
-            const tahunIni = String(now.getFullYear());
+            const tahunIniNum = now.getFullYear();
+            const tahunIni = String(tahunIniNum);
             const bulanIni = now.getMonth() + 1; // 1..12
             const namaBulanIni = `${window.NAMA_BULAN_PANJANG[bulanIni - 1]} ${tahunIni}`;
             const kodeYmBulanIni = `${tahunIni}-${String(bulanIni).padStart(2, '0')}`;
@@ -5000,6 +5470,8 @@
                     bulanIni,
                     namaBulanIni,
                     kodeYmBulanIni,
+                    namaBulanGabung: namaBulanIni,
+                    wajibCountSejakGabung: 1,
                     statusBulanIni: 'BELUM',
                     belumLunasBulanIni: true,
                     tunggakanBulanList: [],
@@ -5011,12 +5483,22 @@
                 };
             }
 
+            const tglGabungEfektif = window.getTanggalGabungEfektifAnggota(anggota);
+            const joinYear = parseInt(tglGabungEfektif.slice(0, 4), 10) || tahunIniNum;
+            const joinMonth = parseInt(tglGabungEfektif.slice(5, 7), 10) || bulanIni;
+            const namaBulanGabung = `${window.NAMA_BULAN_PANJANG[Math.max(0, Math.min(11, joinMonth - 1))]} ${joinYear}`;
+
+            // Mulai hitung HANYA dari bulan bergabung anggota (tidak pernah menghitung bulan sebelum bergabung!)
+            const bulanMulaiWajib = (joinYear < tahunIniNum) ? 1 : (joinYear === tahunIniNum ? joinMonth : 13);
+
             const tunggakanBulanList = [];
             const menungguBulanList = [];
             let lunasCountYtd = 0;
+            let wajibCountSejakGabung = 0;
 
-            for (let m = 1; m <= bulanIni; m++) {
-                const st = window.evaluasiStatusBulanMatriks(anggota, tahunIni, m, 'WAJIB');
+            for (let m = bulanMulaiWajib; m <= bulanIni; m++) {
+                wajibCountSejakGabung++;
+                const st = window.evaluasiStatusBulanMatriks(anggota, tahunIniNum, m, 'WAJIB');
                 const ym = `${tahunIni}-${String(m).padStart(2, '0')}`;
                 const label = `${window.NAMA_BULAN_PANJANG[m - 1]} ${tahunIni}`;
                 if (st === 'LUNAS') {
@@ -5028,15 +5510,23 @@
                 }
             }
 
-            const statusBulanIni = window.evaluasiStatusBulanMatriks(anggota, tahunIni, bulanIni, 'WAJIB');
+            // Juga tambahkan jika anggota sudah membayar rapel untuk bulan depan di tahun ini
+            for (let m = bulanIni + 1; m <= 12; m++) {
+                const stFuture = window.evaluasiStatusBulanMatriks(anggota, tahunIniNum, m, 'WAJIB');
+                if (stFuture === 'LUNAS') lunasCountYtd++;
+            }
+
+            const statusBulanIni = window.evaluasiStatusBulanMatriks(anggota, tahunIniNum, bulanIni, 'WAJIB');
             const belumLunasBulanIni = (statusBulanIni === 'BELUM') || (tunggakanBulanList.length > 0);
-            const totalTagihanTunggakan = Math.max(stdWajib, tunggakanBulanList.length * stdWajib);
+            const totalTagihanTunggakan = tunggakanBulanList.length > 0 ? (tunggakanBulanList.length * stdWajib) : (statusBulanIni === 'BELUM' ? stdWajib : 0);
 
             return {
                 tahunIni,
                 bulanIni,
                 namaBulanIni,
                 kodeYmBulanIni,
+                namaBulanGabung,
+                wajibCountSejakGabung: Math.max(1, wajibCountSejakGabung),
                 statusBulanIni,
                 belumLunasBulanIni,
                 tunggakanBulanList,
@@ -5141,7 +5631,10 @@
                     rekapPengurusHtml = `
                         <div class="mt-2 pt-2 border-t border-slate-200/70 dark:border-slate-700/70 flex flex-wrap items-center justify-between gap-2 text-[11px]">
                             <span class="font-semibold text-slate-700 dark:text-slate-300">📊 <strong>Pantauan Pengurus (${infoWajib.namaBulanIni}):</strong> Terdapat <strong class="text-rose-600 dark:text-rose-400">${belumBayarList.length} dari ${anggotaAktif.length} anggota aktif</strong> yang belum setor Simpanan Wajib bulan ini.</span>
-                            <button type="button" onclick="window.bukaMatriksDariBeranda()" class="text-blue-600 dark:text-blue-400 font-extrabold hover:underline cursor-pointer">Lihat Rekap Matriks Anggota →</button>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button type="button" onclick="window.kirimWaRekapBelumIuranBulanIni()" class="px-2.5 py-1 rounded-lg bg-green-600 hover:bg-green-700 text-white font-extrabold text-[10px] shadow-2xs transition cursor-pointer">💬 WA Pengingat Grup</button>
+                                <button type="button" onclick="window.bukaMatriksDariBeranda()" class="text-blue-600 dark:text-blue-400 font-extrabold hover:underline cursor-pointer">Lihat Matriks →</button>
+                            </div>
                         </div>
                     `;
                 }
@@ -5228,7 +5721,7 @@
                                     <div>
                                         <div class="flex flex-wrap items-center gap-1.5">
                                             <span class="text-xs font-extrabold text-emerald-900 dark:text-emerald-200">Status Iuran Wajib ${infoWajib.namaBulanIni}: SUDAH LUNAS</span>
-                                            <span class="px-2 py-0.2 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">${infoWajib.lunasCountYtd} Bulan Lunas (${infoWajib.tahunIni})</span>
+                                            <span class="px-2 py-0.2 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">Mulai Gabung: ${infoWajib.namaBulanGabung} • ${infoWajib.lunasCountYtd} Bulan Lunas</span>
                                         </div>
                                         <p class="text-[10px] text-emerald-700 dark:text-emerald-300">Terima kasih! Kewajiban tabungan wajib bulanan Anda telah terpenuhi dan tersinkron di Matriks Kartu Kendali.</p>
                                     </div>
@@ -5551,11 +6044,10 @@
                 if (pendingLoans.length === 0) {
                     listPinjamanBaru.innerHTML = `<p class="text-slate-400 italic py-2">Tidak ada pengajuan pembiayaan syariah baru.</p>`;
                 } else {
-                    const mult = Number(appState.pinjamanSetting?.maxPlafonMultiplier ?? 3);
                     const defaultBunga = Number(appState.pinjamanSetting?.bungaPerBulan ?? 1);
                     listPinjamanBaru.innerHTML = pendingLoans.map(p => {
-                        const saldoPemohon = window.hitungSaldoAnggota(p.anggotaId);
-                        const plafonMaks = saldoPemohon * mult;
+                        const infoPlafon = window.hitungRincianPlafonKeluarga(p.anggotaId, p.id);
+                        const plafonMaks = infoPlafon.sisaPlafonTersedia;
                         const layak = Number(p.nominal) <= plafonMaks;
                         const akadLabel = p.jenisAkad || 'Murabahah';
                         const totalMargin = typeof p.marginTotalNominal === 'number'
@@ -5581,8 +6073,8 @@
                                 </div>
                             </div>
                             <div class="pt-1.5 border-t border-slate-200/70 dark:border-slate-700 flex flex-wrap justify-between items-center text-[10px] gap-1">
-                                <span class="text-slate-500">Simpanan: <strong>${window.formatRupiah(saldoPemohon)}</strong> (Plafon Maks: ${window.formatRupiah(plafonMaks)})</span>
-                                <span class="px-2 py-0.5 rounded-full font-bold ${layak ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${layak ? '✓ Sesuai Plafon' : '⚠️ Melebihi Plafon'}</span>
+                                <span class="text-slate-500">Tabungan Pribadi: <strong>${window.formatRupiah(infoPlafon.saldoPribadi)}</strong> (${infoPlafon.mult}x: ${window.formatRupiah(infoPlafon.plafon3xPribadi)}) • Tabungan KK (${window.escapeHtml(infoPlafon.namaKeluarga)}): <strong>${window.formatRupiah(infoPlafon.totalTabunganKeluarga)}</strong> • Hutang KK: <strong class="text-rose-600">${window.formatRupiah(infoPlafon.sisaHutangKeluarga)}</strong> • Sisa Plafon: <strong class="text-blue-600">${window.formatRupiah(plafonMaks)}</strong></span>
+                                <span class="px-2 py-0.5 rounded-full font-bold ${layak ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${layak ? '✓ Sesuai Sisa Plafon KK' : '⚠️ Melebihi Sisa Plafon KK'}</span>
                             </div>
                         </div>
                     `}).join('');
@@ -5883,8 +6375,44 @@
             setCard('simpananCardWajib', window.formatRupiah(totalWajibAll));
             setCard('simpananCardSukarela', window.formatRupiah(totalSukarelaAll));
 
+            // Populate dropdown filter periode bulan (#filterBulanSimpanan)
+            const filterBulanEl = document.getElementById('filterBulanSimpanan');
+            const nowYmLocal = window.getTanggalLokalHariIni().slice(0, 7);
+            const tahunIniStr = nowYmLocal.slice(0, 4);
+            if (filterBulanEl) {
+                const prevBulanVal = filterBulanEl.value || 'ALL';
+                const ymSet = new Set();
+                for (let m = 1; m <= 12; m++) {
+                    ymSet.add(`${tahunIniStr}-${String(m).padStart(2, '0')}`);
+                }
+                (appState.transaksi || []).forEach(t => {
+                    const ym = String(t.waktu || '').slice(0, 7);
+                    if (/^\d{4}-\d{2}$/.test(ym)) ymSet.add(ym);
+                    if (Array.isArray(t.periodeWajibBulan)) {
+                        t.periodeWajibBulan.forEach(pm => { if (/^\d{4}-\d{2}$/.test(pm)) ymSet.add(pm); });
+                    }
+                });
+                const sortedYm = Array.from(ymSet).sort().reverse();
+                const formatYmLabel = (ymStr) => {
+                    const [y, m] = ymStr.split('-').map(Number);
+                    const nm = (window.NAMA_BULAN_PANJANG && window.NAMA_BULAN_PANJANG[m - 1]) ? window.NAMA_BULAN_PANJANG[m - 1] : ymStr;
+                    return `${nm} ${y}`;
+                };
+                filterBulanEl.innerHTML =
+                    `<option value="ALL">📅 Semua Periode Bulan</option>` +
+                    `<option value="${nowYmLocal}">⭐ Bulan Ini (${formatYmLabel(nowYmLocal)})</option>` +
+                    `<option value="YEAR_${tahunIniStr}">📆 Sepanjang Tahun ${tahunIniStr}</option>` +
+                    `<optgroup label="Pilih Bulan Spesifik">` +
+                    sortedYm.map(ym => `<option value="${ym}">${formatYmLabel(ym)} (${ym})</option>`).join('') +
+                    `</optgroup>`;
+                if ([...filterBulanEl.options].some(o => o.value === prevBulanVal)) {
+                    filterBulanEl.value = prevBulanVal;
+                }
+            }
+
             const q = (document.getElementById('searchSimpananInput')?.value || '').toLowerCase();
             const filterAnggota = isKeuangan ? (document.getElementById('filterAnggotaSimpanan')?.value || 'ALL') : currentUserSession.id;
+            const filterBulan = document.getElementById('filterBulanSimpanan')?.value || 'ALL';
             const kat = document.getElementById('filterKategoriSimpanan')?.value || 'ALL';
             const filterTipe = document.getElementById('filterTipeSimpanan')?.value || 'ALL';
             const filterStatus = document.getElementById('filterStatusSimpanan')?.value || 'ALL';
@@ -5908,11 +6436,20 @@
 
             const filtered = enrichedList.filter(t => {
                 const matchAnggota = filterAnggota === 'ALL' || t.anggotaId === filterAnggota;
+                let matchBulan = true;
+                if (filterBulan !== 'ALL') {
+                    if (filterBulan.startsWith('YEAR_')) {
+                        const yTarget = filterBulan.replace('YEAR_', '');
+                        matchBulan = String(t.waktu || '').startsWith(yTarget) || (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.some(pm => String(pm).startsWith(yTarget)));
+                    } else {
+                        matchBulan = String(t.waktu || '').startsWith(filterBulan) || (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.includes(filterBulan));
+                    }
+                }
                 const matchKat = kat === 'ALL' || (kat === 'Transfer P2P' ? (t.keterangan || '').includes('[P2P]') : t.kategori === kat);
                 const matchTipe = filterTipe === 'ALL' || t.tipe === filterTipe;
                 const matchStatus = filterStatus === 'ALL' || t.status === filterStatus;
                 const matchQ = !q || (t.nama || '').toLowerCase().includes(q) || (t.kategori || '').toLowerCase().includes(q) || (t.keterangan || '').toLowerCase().includes(q) || (t.bankTujuan || '').toLowerCase().includes(q);
-                return matchAnggota && matchKat && matchTipe && matchStatus && matchQ;
+                return matchAnggota && matchBulan && matchKat && matchTipe && matchStatus && matchQ;
             });
 
             let sumSetoranFilter = 0, sumPenarikanFilter = 0;
@@ -5961,7 +6498,8 @@
                             ${Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.length > 0 ? `<span class="block text-[9px] font-bold text-blue-600">📅 Alokasi: ${t.periodeWajibBulan.join(', ')}</span>` : ''}
                         </td>
                         <td class="py-3 px-3 text-center no-print space-x-1 whitespace-nowrap">
-                            <button onclick="window.bukaKwitansiTransaksi('${t.id}')" class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 font-bold text-[10px]" title="Cetak Struk / Kwitansi">🧾 Struk</button>
+                            <button onclick="window.bukaKwitansiTransaksi('${t.id}')" class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 font-bold text-[10px] cursor-pointer" title="Lihat & Cetak Struk Kwitansi">🧾 Struk</button>
+                            <button onclick="window.kirimStrukTransaksiKeWA('${t.id}')" class="px-2 py-1 rounded-lg bg-green-50 dark:bg-slate-800 hover:bg-green-100 text-green-700 dark:text-green-400 font-bold text-[10px] cursor-pointer" title="Kirim Struk Kwitansi ke WhatsApp">💬 WA</button>
                             ${isKeuangan ? `<button onclick="window.bukaModalEditTransaksi('${t.id}')" class="text-emerald-600 hover:underline font-bold text-[11px]">Edit</button>` : ''}
                             ${role === 'admin' ? `<button onclick="window.hapusTransaksi('${t.id}')" class="text-rose-500 hover:underline font-bold text-[11px]">Hapus</button>` : ''}
                         </td>
@@ -6020,7 +6558,7 @@
                                     ${avatarHtml}
                                     <div>
                                         <strong class="text-slate-800 dark:text-white block">${window.escapeHtml(a.nama)} ${a.id === currentUserSession.id ? '<span class="text-[10px] text-emerald-600 font-bold">(Anda)</span>' : ''}</strong>
-                                        <span class="text-[10px] text-slate-400">${window.escapeHtml(a.namaKeluarga)} • 📅 Gabung: ${window.escapeHtml(a.tglGabung || '2026-01-01')}</span>
+                                        <span class="text-[10px] text-slate-400">${window.escapeHtml(a.namaKeluarga)} • 📅 Gabung: ${window.escapeHtml(window.getTanggalGabungEfektifAnggota(a))}</span>
                                     </div>
                                 </div>
                             </td>
@@ -6042,7 +6580,7 @@
 
         // Mesin Sinkronisasi Otomatis Transaksi Simpanan -> Matriks Kartu Kendali Iuran 12 Bulan
         window.isTransaksiIuranWajibMatriks = (t) => {
-            if (!t || t.tipe !== 'Setoran' || t.status === 'Ditolak') return false;
+            if (!t || t.tipe !== 'Setoran' || t.status === 'Ditolak' || t.isSaldoAwalRollover) return false;
             if (t.kategori === 'Simpanan Wajib') return true;
             if (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.length > 0) return true;
             if (/iuran\s+(wajib|bulan)|simpanan\s+wajib/i.test(String(t.keterangan || ''))) return true;
@@ -6063,9 +6601,20 @@
             return stdParam;
         };
 
+        window._matriksMapCache = {};
+        window._matriksMapCacheKey = '';
+
         window.hitungMapBulanMatriksAnggota = (anggota) => {
+            if (!anggota) return {};
+            const cacheKey = window.computeSaldoCacheKey() + '_' + (appState.parameterStandar?.simpananWajib || 100000);
+            if (window._matriksMapCacheKey !== cacheKey) {
+                window._matriksMapCache = {};
+                window._matriksMapCacheKey = cacheKey;
+            }
+            if (window._matriksMapCache[anggota.id]) {
+                return window._matriksMapCache[anggota.id];
+            }
             const mapStatus = {}; // { 'YYYY-MM': 'LUNAS' | 'MENUNGGU' }
-            if (!anggota) return mapStatus;
             const unitWajib = window.hitungUnitWajibEfektifAnggota(anggota.id);
             const trxList = (appState.transaksi || [])
                 .filter(t => t.anggotaId === anggota.id && window.isTransaksiIuranWajibMatriks(t))
@@ -6102,6 +6651,7 @@
                     cursorYm = nextYm(candidateYm);
                 }
             });
+            window._matriksMapCache[anggota.id] = mapStatus;
             return mapStatus;
         };
 
@@ -6110,13 +6660,12 @@
             const nowYm = window.getTanggalLokalHariIni().slice(0, 7);
             if (!anggota) return nowYm;
             const mapStatus = window.hitungMapBulanMatriksAnggota(anggota);
-            const tahunIni = parseInt(nowYm.slice(0, 4)) || 2026;
-            const tglGabung = anggota.tglGabung || `${tahunIni}-01-01`;
-            const joinYear = parseInt(tglGabung.slice(0, 4)) || tahunIni;
-            const startMonth = joinYear === tahunIni ? (parseInt(tglGabung.slice(5, 7)) || 1) : 1;
+            const tahunIni = parseInt(nowYm.slice(0, 4), 10) || 2026;
+            const tglGabung = window.getTanggalGabungEfektifAnggota(anggota);
+            const joinYear = parseInt(tglGabung.slice(0, 4), 10) || tahunIni;
+            const startMonth = joinYear === tahunIni ? (parseInt(tglGabung.slice(5, 7), 10) || 1) : 1;
 
-            // Cek mulai dari bulan bergabung (atau bulan berjalan jika belum terisi)
-            if (!mapStatus[nowYm]) return nowYm;
+            // Cek mulai dari bulan bergabung anggota (tidak pernah mengambil bulan sebelum gabung!)
             for (let m = startMonth; m <= 12; m++) {
                 const ym = `${tahunIni}-${String(m).padStart(2, '0')}`;
                 if (!mapStatus[ym]) return ym;
@@ -6126,7 +6675,9 @@
 
         window.evaluasiStatusBulanMatriks = (anggota, tahun, bulanIdx, jenis = 'WAJIB') => {
             if (!anggota) return 'BELUM';
-            const ymPrefix = `${tahun}-${String(bulanIdx).padStart(2, '0')}`;
+            const tahunNum = parseInt(tahun, 10) || new Date().getFullYear();
+            const bulanNum = parseInt(bulanIdx, 10) || 1;
+            const ymPrefix = `${tahunNum}-${String(bulanNum).padStart(2, '0')}`;
             const mapAuto = window.hitungMapBulanMatriksAnggota(anggota);
 
             // 1. Prioritaskan transaksi nyata (Setoran Simpanan Wajib) agar Matriks 100% terisi otomatis setelah transaksi!
@@ -6134,16 +6685,16 @@
             if (mapAuto[ymPrefix] === 'MENUNGGU') return 'MENUNGGU';
 
             // 2. Cek verifikasi manual pengurus di matriksIuranManual
-            const keyManual = `${anggota.id}_${tahun}_${bulanIdx}_${jenis}`;
+            const keyManual = `${anggota.id}_${tahunNum}_${bulanNum}_${jenis}`;
             if (appState.matriksIuranManual && typeof appState.matriksIuranManual[keyManual] === 'boolean') {
                 return appState.matriksIuranManual[keyManual] ? 'LUNAS' : 'BELUM';
             }
 
-            // 3. Cek apakah bulan tersebut sebelum Tanggal Bergabung anggota
-            const tglGabung = anggota.tglGabung || '2026-01-01';
-            const joinYear = parseInt(tglGabung.slice(0, 4)) || 2026;
-            const joinMonth = parseInt(tglGabung.slice(5, 7)) || 1;
-            if (tahun < joinYear || (tahun === joinYear && bulanIdx < joinMonth)) {
+            // 3. Cek apakah bulan tersebut sebelum Bulan Bergabung anggota (menggunakan perbandingan angka integer yang ketat)
+            const tglGabung = window.getTanggalGabungEfektifAnggota(anggota);
+            const joinYear = parseInt(tglGabung.slice(0, 4), 10) || tahunNum;
+            const joinMonth = parseInt(tglGabung.slice(5, 7), 10) || 1;
+            if (tahunNum < joinYear || (tahunNum === joinYear && bulanNum < joinMonth)) {
                 return 'BELUM_GABUNG';
             }
             return 'BELUM';
@@ -6270,13 +6821,16 @@
                                 ${avatarSmall}
                                 <div>
                                     <strong class="text-slate-800 dark:text-white block text-[11px]">${window.escapeHtml(a.nama)}</strong>
-                                    <span class="text-[9px] text-slate-400">📅 Gabung: ${window.escapeHtml(a.tglGabung || '2026-01-01')}</span>
+                                    <span class="text-[9px] text-slate-400">📅 Gabung: ${window.escapeHtml(window.getTanggalGabungEfektifAnggota(a))}</span>
                                 </div>
                             </div>
                         </td>
                         ${cellsHtml}
-                        <td class="py-2 px-2.5 text-center">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${lunasCount === wajibCount && wajibCount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300'}">${lunasCount}/${wajibCount} Lunas${menungguCount > 0 ? ' (+' + menungguCount + ' ⏳)' : ''}</span>
+                        <td class="py-2 px-2.5 text-center whitespace-nowrap">
+                            <div class="inline-flex items-center gap-1">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${lunasCount === wajibCount && wajibCount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-300'}">${lunasCount}/${wajibCount} Lunas${menungguCount > 0 ? ' (+' + menungguCount + ' ⏳)' : ''}</span>
+                                ${window.isBendaharaOrSuper() && lunasCount < wajibCount ? `<button type="button" onclick="window.kirimWaPengingatIuranMatriks('${a.id}', ${tahun})" class="px-1.5 py-0.5 rounded-md bg-green-50 hover:bg-green-100 dark:bg-slate-800 text-green-700 dark:text-green-400 border border-green-200 dark:border-slate-700 font-extrabold text-[9px] transition cursor-pointer" title="Kirim Pengingat Iuran Wajib ke WhatsApp ${window.escapeHtml(a.nama)}">💬 WA</button>` : ''}
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -6297,7 +6851,7 @@
                     if (st === 'LUNAS') lunas++;
                     months.push(st === 'LUNAS' ? 'LUNAS' : st === 'BELUM_GABUNG' ? '-' : 'BELUM');
                 }
-                return [`"${a.nama}"`, `"${a.namaKeluarga}"`, a.tglGabung || '2026-01-01', ...months, `${lunas} Bulan`];
+                return [`"${a.nama}"`, `"${a.namaKeluarga}"`, window.getTanggalGabungEfektifAnggota(a), ...months, `${lunas} Bulan`];
             });
             const csv = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
             const link = document.createElement('a');
@@ -6389,7 +6943,141 @@
                     <span>${window.buatKodeHashBukti(t.id + '_' + t.waktu + '_' + t.nominal)}</span>
                 </div>
             `;
+            const btnWaModal = document.getElementById('btnKirimStrukWaModal');
+            if (btnWaModal) {
+                btnWaModal.onclick = () => window.kirimStrukTransaksiKeWA(t.id);
+            }
             document.getElementById('modalKwitansiTransaksi').classList.remove('hidden');
+        };
+
+        window.kirimStrukTransaksiKeWA = (id) => {
+            const t = (appState.transaksi || []).find(x => x.id === id);
+            if (!t) return;
+            const anggotaObj = (appState.anggota || []).find(a => a.id === t.anggotaId);
+            const r = window.hitungRincianSimpananAnggota(t.anggotaId);
+            const kodeHash = window.buatKodeHashBukti(t.id + '_' + t.waktu + '_' + t.nominal);
+
+            let phone = String(anggotaObj?.kontak || '').replace(/[^0-9]/g, '');
+            if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+
+            const pesan = `🧾 *BUKTI TRANSAKSI RESMI — KOPERASI KELUARGA SYARIAH*
+----------------------------------------
+• *No. Referensi:* ${t.id.toUpperCase()}
+• *Waktu & Tanggal:* ${t.waktu}
+• *Nama Anggota:* ${t.nama}
+• *Keluarga (KK):* ${anggotaObj ? anggotaObj.namaKeluarga : '-'}
+• *Jenis Transaksi:* ${t.tipe} — ${t.kategori}${Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.length > 0 ? ' (Periode: ' + t.periodeWajibBulan.join(', ') + ')' : ''}
+• *Metode / Kanal:* ${t.bankTujuan || 'Kas Koperasi'}
+• *Nominal:* *${t.tipe === 'Setoran' ? '+' : '-'}${window.formatRupiah(t.nominal)}*
+• *Status Verifikasi:* *${t.status.toUpperCase()}*
+• *Keterangan:* ${t.keterangan || '-'}
+----------------------------------------
+📊 *POSISI SALDO SIMPANAN SAAT INI:*
+• Simpanan Pokok: ${window.formatRupiah(r.pokok)}
+• Simpanan Wajib: ${window.formatRupiah(r.wajib)}
+• Simpanan Sukarela: ${window.formatRupiah(r.sukarela)}
+• *Total Saldo Aktif:* *${window.formatRupiah(r.total)}*
+----------------------------------------
+🔒 *Kode Autentikasi Digital:* \`${kodeHash}\`
+_Terima kasih atas amanah dan partisipasi aktif Anda di Koperasi Keluarga Syariah._`;
+
+            const waUrl = phone
+                ? `https://wa.me/${phone}?text=${encodeURIComponent(pesan)}`
+                : `https://wa.me/?text=${encodeURIComponent(pesan)}`;
+            window.open(waUrl, '_blank', 'noopener,noreferrer');
+        };
+
+        window.kirimWaPengingatIuranMatriks = (anggotaId, tahunOpt) => {
+            const a = (appState.anggota || []).find(x => x.id === anggotaId);
+            if (!a) return;
+            const now = new Date();
+            const tahun = parseInt(tahunOpt, 10) || now.getFullYear();
+            const bulanBatas = (tahun === now.getFullYear()) ? (now.getMonth() + 1) : 12;
+            const stdWajib = window.hitungUnitWajibEfektifAnggota(a.id);
+
+            const belumBulanList = [];
+            for (let m = 1; m <= bulanBatas; m++) {
+                const st = window.evaluasiStatusBulanMatriks(a, tahun, m, 'WAJIB');
+                if (st === 'BELUM') {
+                    belumBulanList.push(`${window.NAMA_BULAN_PANJANG[m - 1]} ${tahun}`);
+                }
+            }
+            if (belumBulanList.length === 0) {
+                window.showToast(`Iuran Simpanan Wajib ${a.nama} sampai bulan berjalan sudah Lunas!`, 'info');
+                return;
+            }
+
+            const totalTagihan = belumBulanList.length * stdWajib;
+            const bankUtama = (appState.rekeningBank || []).find(b => b.isUtama && b.aktif !== false) || (appState.rekeningBank || []).find(b => b.aktif !== false);
+            const infoRek = bankUtama
+                ? `• *Transfer ke:* ${bankUtama.nama} — *${bankUtama.nomor}* (a.n ${bankUtama.pemilik})`
+                : `• *Metode:* Transfer Rekening Koperasi / Kas Bendahara`;
+
+            let phone = String(a.kontak || '').replace(/[^0-9]/g, '');
+            if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+
+            const pesan = `Assalamu'alaikum Wr. Wb. Bapak/Ibu/Sdr *${a.nama}* (${a.namaKeluarga}),
+
+Mengingatkan dengan hormat status *Kartu Kendali Iuran Simpanan Wajib* Koperasi Keluarga (Mulai Gabung: ${window.getTanggalGabungEfektifAnggota(a)}):
+• *Bulan Belum Tercatat Lunas (${belumBulanList.length} Bulan):* ${belumBulanList.join(', ')}
+• *Standar Iuran Wajib:* ${window.formatRupiah(stdWajib)} / bulan
+• *Total Kewajiban Berjalan:* *${window.formatRupiah(totalTagihan)}*
+${infoRek}
+
+Mohon dapat melakukan setoran dan mengunggah bukti transfer melalui menu *Buku Simpanan & Kas* agar Matriks Kartu Kendali 12 Bulan Anda otomatis berstatus *✓ LUNAS*. Terima kasih atas keberkahan dan kebersamaan kita. 🙏`;
+
+            const waUrl = phone
+                ? `https://wa.me/${phone}?text=${encodeURIComponent(pesan)}`
+                : `https://wa.me/?text=${encodeURIComponent(pesan)}`;
+            window.open(waUrl, '_blank', 'noopener,noreferrer');
+        };
+
+        window.kirimWaRekapBelumIuranBulanIni = () => {
+            const now = new Date();
+            const tahunIni = now.getFullYear();
+            const bulanIni = now.getMonth() + 1;
+            const namaBulanIni = `${window.NAMA_BULAN_PANJANG[bulanIni - 1]} ${tahunIni}`;
+            const anggotaAktif = (appState.anggota || []).filter(a => a.statusKeanggotaan !== 'Nonaktif');
+
+            const lunasList = [];
+            const belumList = [];
+            anggotaAktif.forEach(a => {
+                const st = window.evaluasiStatusBulanMatriks(a, tahunIni, bulanIni, 'WAJIB');
+                if (st === 'LUNAS') lunasList.push(a.nama);
+                else if (st === 'BELUM') belumList.push(a.nama);
+            });
+
+            const bankUtama = (appState.rekeningBank || []).find(b => b.isUtama && b.aktif !== false) || (appState.rekeningBank || []).find(b => b.aktif !== false);
+            const infoRek = bankUtama ? `\n🏦 *Rekening Setoran:* ${bankUtama.nama} ${bankUtama.nomor} a.n ${bankUtama.pemilik}` : '';
+
+            const pesan = `📢 *UPDATE MATRIKS KARTU KENDALI IURAN WAJIB (${namaBulanIni.toUpperCase()})*
+*Koperasi Keluarga Syariah*
+----------------------------------------
+✅ *Sudah Lunas Bulan Ini (${lunasList.length} Anggota):*
+${lunasList.length > 0 ? lunasList.map((n, i) => `${i + 1}. ${n}`).join('\n') : '- Belum ada'}
+
+⏳ *Belum Tercatat Setor Bulan Ini (${belumList.length} Anggota):*
+${belumList.length > 0 ? belumList.map((n, i) => `${i + 1}. ${n}`).join('\n') : 'Alhamdulillah 100% Anggota Lunas!'}
+----------------------------------------${infoRek}
+_Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan otomatis terisi. Terima kasih!_`;
+
+            window.open(`https://wa.me/?text=${encodeURIComponent(pesan)}`, '_blank', 'noopener,noreferrer');
+        };
+
+        window.isiMaksimalPlafonKeInput = () => {
+            const isKeuangan = window.isBendaharaOrSuper();
+            const editId = document.getElementById('editPinjamanId')?.value || '';
+            const targetId = (isKeuangan && document.getElementById('pinjamanAnggotaId')?.value) ? document.getElementById('pinjamanAnggotaId').value : currentUserSession.id;
+            const pf = window.hitungRincianPlafonKeluarga(targetId, editId);
+            const nomInput = document.getElementById('pinjamanNominal');
+            if (!nomInput) return;
+            if (pf.sisaPlafonTersedia <= 0) {
+                window.showToast('Sisa plafon keluarga saat ini Rp 0 (belum ada tabungan atau masih ada kewajiban berjalan).', 'error');
+                return;
+            }
+            nomInput.value = pf.sisaPlafonTersedia;
+            window.hitungSimulasiPinjamanModal();
+            window.showToast(`Nominal diisi otomatis sesuai Sisa Plafon Maksimal (${window.formatRupiah(pf.sisaPlafonTersedia)})!`, 'info');
         };
 
         window.bukaModalTransferP2P = () => {
@@ -6477,12 +7165,38 @@
         window.exportToExcel = () => {
             const isKeuangan = window.isBendaharaOrSuper();
             const role = window.getEffectiveRole();
-            const sourceTrx = isKeuangan
+            const filterAnggota = isKeuangan ? (document.getElementById('filterAnggotaSimpanan')?.value || 'ALL') : currentUserSession.id;
+            const filterBulan = document.getElementById('filterBulanSimpanan')?.value || 'ALL';
+            const kat = document.getElementById('filterKategoriSimpanan')?.value || 'ALL';
+            const filterTipe = document.getElementById('filterTipeSimpanan')?.value || 'ALL';
+            const filterStatus = document.getElementById('filterStatusSimpanan')?.value || 'ALL';
+            const q = (document.getElementById('searchSimpananInput')?.value || '').toLowerCase();
+
+            const baseTrx = isKeuangan
                 ? (appState.transaksi || [])
                 : (appState.transaksi || []).filter(t => t.anggotaId === currentUserSession.id);
-            const headers = ['Waktu', 'Nama Anggota', 'Tipe', 'Kategori', 'Bank Tujuan', 'Nominal', 'Status', 'Keterangan'];
+
+            const sourceTrx = baseTrx.filter(t => {
+                const matchAnggota = filterAnggota === 'ALL' || t.anggotaId === filterAnggota;
+                let matchBulan = true;
+                if (filterBulan !== 'ALL') {
+                    if (filterBulan.startsWith('YEAR_')) {
+                        const yTarget = filterBulan.replace('YEAR_', '');
+                        matchBulan = String(t.waktu || '').startsWith(yTarget) || (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.some(pm => String(pm).startsWith(yTarget)));
+                    } else {
+                        matchBulan = String(t.waktu || '').startsWith(filterBulan) || (Array.isArray(t.periodeWajibBulan) && t.periodeWajibBulan.includes(filterBulan));
+                    }
+                }
+                const matchKat = kat === 'ALL' || (kat === 'Transfer P2P' ? (t.keterangan || '').includes('[P2P]') : t.kategori === kat);
+                const matchTipe = filterTipe === 'ALL' || t.tipe === filterTipe;
+                const matchStatus = filterStatus === 'ALL' || t.status === filterStatus;
+                const matchQ = !q || (t.nama || '').toLowerCase().includes(q) || (t.kategori || '').toLowerCase().includes(q) || (t.keterangan || '').toLowerCase().includes(q) || (t.bankTujuan || '').toLowerCase().includes(q);
+                return matchAnggota && matchBulan && matchKat && matchTipe && matchStatus && matchQ;
+            });
+
+            const headers = ['Waktu', 'Nama Anggota', 'Tipe', 'Kategori', 'Periode Bulan Wajib', 'Bank Tujuan', 'Nominal', 'Status', 'Keterangan'];
             const rows = sourceTrx.map(t => [
-                t.waktu, `"${t.nama}"`, t.tipe, t.kategori, t.bankTujuan || '-', t.nominal, t.status, `"${t.keterangan || ''}"`
+                t.waktu, `"${t.nama}"`, t.tipe, t.kategori, `"${Array.isArray(t.periodeWajibBulan) ? t.periodeWajibBulan.join('; ') : '-'}"`, t.bankTujuan || '-', t.nominal, t.status, `"${t.keterangan || ''}"`
             ]);
             const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
             const encodedUri = encodeURI(csvContent);
@@ -6883,9 +7597,50 @@
             const elPlafon = document.getElementById('lblMaxPlafon');
             const elBunga = document.getElementById('lblBungaPinjaman');
             const elTenor = document.getElementById('lblMaxTenor');
-            if (elPlafon) elPlafon.textContent = `${mult}x Total Simpanan`;
+            if (elPlafon) elPlafon.textContent = `${mult}x Tabungan Pribadi (Dijamin Tabungan KK - Hutang KK)`;
             if (elBunga) elBunga.textContent = `Qardhul Hasan 0% • Margin/Nisbah ${bunga}%/bln`;
             if (elTenor) elTenor.textContent = `${maxT} Bulan`;
+
+            const boxPlafonTab = document.getElementById('boxInfoPlafonKeluargaTabPinjaman');
+            if (boxPlafonTab && currentUserSession) {
+                const pf = window.hitungRincianPlafonKeluarga(currentUserSession.id);
+                boxPlafonTab.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-300 block">👨‍👩‍👧‍👦 Rincian Plafon Pembiayaan Keluarga (${window.escapeHtml(pf.namaKeluarga)} • ${pf.jumlahAnggotaKK} Anggota)</span>
+                            <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                                Plafon maksimal adalah <strong>${pf.mult}x Tabungan Pribadi</strong> dengan syarat dijamin oleh <strong>Tabungan Gabungan Keluarga (KK)</strong> apabila mencukupi, dan dikurangi <strong>Sisa Hutang Berjalan Sekeluarga</strong>.
+                            </p>
+                        </div>
+                        <div class="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-blue-200 dark:border-slate-700 text-right shrink-0">
+                            <span class="text-[9px] font-bold uppercase text-slate-400 block">Sisa Plafon Dapat Anda Ambil</span>
+                            <strong class="text-sm sm:text-base font-black text-blue-600 dark:text-blue-400">${window.formatRupiah(pf.sisaPlafonTersedia)}</strong>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-blue-200/60 dark:border-slate-700/80 text-[10px]">
+                        <div class="p-2 rounded-lg bg-white/80 dark:bg-slate-900/70">
+                            <span class="text-slate-400 block">1. Tabungan Pribadi (${pf.mult}x)</span>
+                            <strong class="text-slate-800 dark:text-white">${window.formatRupiah(pf.saldoPribadi)}</strong>
+                            <span class="block text-[9px] text-emerald-600 font-bold">Maks ${pf.mult}x: ${window.formatRupiah(pf.plafon3xPribadi)}</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white/80 dark:bg-slate-900/70">
+                            <span class="text-slate-400 block">2. Tabungan Gabungan KK</span>
+                            <strong class="text-blue-700 dark:text-blue-300">${window.formatRupiah(pf.totalTabunganKeluarga)}</strong>
+                            <span class="block text-[9px] ${pf.isTabunganKeluargaMencukupi3x ? 'text-emerald-600' : 'text-amber-600'} font-bold">${pf.isTabunganKeluargaMencukupi3x ? '✓ Mencukupi 3x Pribadi' : '⚠️ Batas Jaminan KK'}</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white/80 dark:bg-slate-900/70">
+                            <span class="text-slate-400 block">3. Sisa Hutang Sekeluarga</span>
+                            <strong class="text-rose-600">-${window.formatRupiah(pf.sisaHutangKeluarga)}</strong>
+                            <span class="block text-[9px] text-slate-400">Anda: ${window.formatRupiah(pf.sisaHutangPribadi)} • KK Lain: ${window.formatRupiah(pf.sisaHutangAnggotaLainKK)}</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white/80 dark:bg-slate-900/70">
+                            <span class="text-slate-400 block">4. Sisa Jaminan KK Bersih</span>
+                            <strong class="text-emerald-600">${window.formatRupiah(pf.sisaTabunganKeluargaSetelahHutang)}</strong>
+                            <span class="block text-[9px] text-blue-600 font-bold">Plafon Aktif: ${window.formatRupiah(pf.sisaPlafonTersedia)}</span>
+                        </div>
+                    </div>
+                `;
+            }
 
             const role = window.getEffectiveRole();
 
@@ -7521,22 +8276,23 @@
 
         window.updatePlafonPemohonModal = () => {
             const isKeuangan = window.isBendaharaOrSuper();
+            const editId = document.getElementById('editPinjamanId')?.value || '';
             const targetId = (isKeuangan && document.getElementById('pinjamanAnggotaId')?.value) ? document.getElementById('pinjamanAnggotaId').value : currentUserSession.id;
 
-            const userSaldo = window.hitungSaldoAnggota(targetId);
-            const mult = Number(appState.pinjamanSetting?.maxPlafonMultiplier ?? 3);
-            const approvedLoans = (appState.pinjaman || []).filter(p => p.status === 'Disetujui' && p.anggotaId === targetId);
-            const defaultBunga = Number(appState.pinjamanSetting?.bungaPerBulan ?? 1);
-            const sisaPokokPinjaman = approvedLoans.reduce((acc, p) => {
-                const rate = (Number(p.bungaPersen ?? defaultBunga)) / 100;
-                const totalTagihan = (Number(p.nominal) || 0) + ((Number(p.nominal) || 0) * rate * (Number(p.tenor) || 1));
-                const terbayar = (p.riwayatCicilan || []).filter(c => c.status === 'Disetujui').reduce((s, c) => s + (Number(c.nominal) || 0), 0);
-                return acc + (totalTagihan > terbayar ? (Number(p.nominal) || 0) : 0);
-            }, 0);
-            const sisaPlafon = Math.max(0, (userSaldo * mult) - sisaPokokPinjaman);
-
+            const pf = window.hitungRincianPlafonKeluarga(targetId, editId);
             const infoEl = document.getElementById('infoSisaPlafonModal');
-            if (infoEl) infoEl.textContent = `${window.formatRupiah(sisaPlafon)} (Simpanan: ${window.formatRupiah(userSaldo)})`;
+            if (infoEl) {
+                infoEl.textContent = window.formatRupiah(pf.sisaPlafonTersedia);
+            }
+            const rincianEl = document.getElementById('infoRincianPlafonKeluargaModal');
+            if (rincianEl) {
+                rincianEl.innerHTML = `
+                    <div class="flex justify-between"><span>• Tabungan Pribadi (${pf.mult}x = ${window.formatRupiah(pf.plafon3xPribadi)}):</span><strong>${window.formatRupiah(pf.saldoPribadi)}</strong></div>
+                    <div class="flex justify-between"><span>• Tabungan Gabungan ${window.escapeHtml(pf.namaKeluarga)} (${pf.jumlahAnggotaKK} Agt):</span><strong>${window.formatRupiah(pf.totalTabunganKeluarga)}</strong></div>
+                    <div class="flex justify-between text-rose-600 dark:text-rose-400"><span>• Sisa Hutang Berjalan Sekeluarga (KK):</span><strong>-${window.formatRupiah(pf.sisaHutangKeluarga)}</strong></div>
+                    <div class="flex justify-between font-bold text-emerald-700 dark:text-emerald-400 pt-0.5"><span>• Status Syarat Jaminan Keluarga:</span><span>${pf.sisaPlafonTersedia <= 0 ? '⚠️ Plafon Keluarga Habis / Belum Ada Tabungan' : (pf.isTabunganKeluargaMencukupi3x ? '✓ Tabungan KK Mencukupi 3x' : 'ℹ️ Sesuai Sisa Tabungan Gabungan KK')}</span></div>
+                `;
+            }
         };
 
         window.hitungSimulasiPinjamanModal = () => {
@@ -7623,20 +8379,11 @@
                 return false;
             }
 
-            const userSaldo = window.hitungSaldoAnggota(pemohonId);
-            const mult = Number(appState.pinjamanSetting?.maxPlafonMultiplier ?? 3);
-            const approvedLoans = (appState.pinjaman || []).filter(p => p.status === 'Disetujui' && p.anggotaId === pemohonId);
-            const sisaPokokPinjaman = approvedLoans.reduce((acc, p) => {
-                const rate = p.jenisAkad === 'Qardhul Hasan' ? 0 : ((Number(p.bungaPersen ?? defaultBunga)) / 100);
-                const tMargin = typeof p.marginTotalNominal === 'number' ? p.marginTotalNominal : ((Number(p.nominal) || 0) * rate * (Number(p.tenor) || 1));
-                const totalTagihan = (Number(p.nominal) || 0) + tMargin;
-                const terbayar = (p.riwayatCicilan || []).filter(c => c.status === 'Disetujui').reduce((s, c) => s + (Number(c.nominal) || 0), 0);
-                return acc + (totalTagihan > terbayar ? (Number(p.nominal) || 0) : 0);
-            }, 0);
-            const sisaPlafon = Math.max(0, (userSaldo * mult) - sisaPokokPinjaman);
+            const infoPlafon = window.hitungRincianPlafonKeluarga(pemohonId, editId);
+            const sisaPlafon = infoPlafon.sisaPlafonTersedia;
 
-            if (nominal > sisaPlafon && !isKeuangan) {
-                window.showToast(`Nominal melebihi batas plafon pembiayaan Anda (${window.formatRupiah(sisaPlafon)})!`, 'error');
+            if (nominal > sisaPlafon) {
+                window.showToast(`Nominal (${window.formatRupiah(nominal)}) melebihi Sisa Plafon Keluarga ${infoPlafon.namaKeluarga} sebesar ${window.formatRupiah(sisaPlafon)} (3x Tabungan Pribadi: ${window.formatRupiah(infoPlafon.plafon3xPribadi)}, Tabungan Gabungan KK: ${window.formatRupiah(infoPlafon.totalTabunganKeluarga)}, Sisa Hutang KK: ${window.formatRupiah(infoPlafon.sisaHutangKeluarga)})!`, 'error');
                 return false;
             }
 
@@ -8568,7 +9315,7 @@
                                         ${a.statusAnggota === 'Nonaktif' ? `<span class="px-1.5 py-0.2 rounded bg-rose-100 text-rose-700 text-[9px] font-extrabold shrink-0">NONAKTIF / KELUAR</span>` : ''}
                                     </div>
                                     <p class="text-[10px] text-emerald-600 font-semibold truncate">${window.escapeHtml(a.namaKeluarga)}</p>
-                                    <span class="text-[9px] text-slate-400 block">📅 Gabung: ${window.escapeHtml(window.formatDurasiBergabung(a.tglGabung || '2026-01-01'))}</span>
+                                    <span class="text-[9px] text-slate-400 block">📅 Gabung: ${window.escapeHtml(window.formatDurasiBergabung(window.getTanggalGabungEfektifAnggota(a)))}</span>
                                 </div>
                             </div>
                             <span class="px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0 ${a.kontak === '082298688189' ? 'bg-amber-100 text-amber-800' : (a.role === 'bendahara' || a.role === 'admin') ? 'bg-emerald-100 text-emerald-800' : a.role === 'sekretaris' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${window.getLabelJabatanRole(a)}</span>
@@ -8920,7 +9667,7 @@
                 roleSel.disabled = !isSuper;
             }
             const tglEl = document.getElementById('anggotaTglGabung');
-            if (tglEl) tglEl.value = a.tglGabung || '2026-01-01';
+            if (tglEl) tglEl.value = window.getTanggalGabungEfektifAnggota(a);
             const boxOpsi = document.getElementById('boxOpsiAwalAnggotaBaru');
             if (boxOpsi) boxOpsi.classList.add('hidden');
             document.getElementById('modalAnggota').classList.remove('hidden');
@@ -9527,9 +10274,12 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 </div>
             `).join('');
 
-            // Render Panel Status Integritas 12 Menu Final Produksi
+            // Render Panel Status Integritas 12 Menu Final Produksi & Preview Tutup Buku Akhir Tahun
             if (typeof window.jalankanVerifikasiIntegritas12Menu === 'function') {
                 window.jalankanVerifikasiIntegritas12Menu(false);
+            }
+            if (typeof window.updatePreviewTutupBukuUI === 'function') {
+                window.updatePreviewTutupBukuUI();
             }
 
             // Hitung Statistik Kapasitas Foto Bukti Transfer (Simpanan, Cicilan, ZIS)
@@ -9800,6 +10550,302 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             );
         };
 
+        window.getTahunListTutupBuku = () => {
+            const currentYear = new Date().getFullYear();
+            const yearsSet = new Set([currentYear - 1, currentYear]);
+            (appState.transaksi || []).forEach(t => {
+                if (!t.isSaldoAwalRollover && /^\d{4}/.test(String(t.waktu || ''))) {
+                    yearsSet.add(parseInt(String(t.waktu).slice(0, 4), 10));
+                }
+            });
+            (appState.zis || []).forEach(z => {
+                if (!z.isSaldoAwalRollover && /^\d{4}/.test(String(z.tanggal || ''))) {
+                    yearsSet.add(parseInt(String(z.tanggal).slice(0, 4), 10));
+                }
+            });
+            return Array.from(yearsSet).filter(y => y >= 2020 && y <= currentYear).sort((a, b) => b - a);
+        };
+
+        window.hitungKandidatTutupBuku = (targetTahun) => {
+            const tahunNum = parseInt(targetTahun, 10) || (new Date().getFullYear() - 1);
+            const cutoffStr = `${tahunNum}-12-31`;
+            const isInOrBeforeTarget = (dateStr) => {
+                const d = String(dateStr || '').slice(0, 10);
+                return /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= cutoffStr;
+            };
+
+            const trxKandidat = (appState.transaksi || []).filter(t => !t.isSaldoAwalRollover && t.status !== 'Menunggu' && isInOrBeforeTarget(t.waktu));
+            const trxMenunggu = (appState.transaksi || []).filter(t => t.status === 'Menunggu' && isInOrBeforeTarget(t.waktu));
+            const zisKandidat = (appState.zis || []).filter(z => !z.isSaldoAwalRollover && (z.status || 'Disetujui') !== 'Menunggu' && isInOrBeforeTarget(z.tanggal));
+            const pendShuKandidat = (appState.pendapatanShuList || []).filter(p => isInOrBeforeTarget(p.tanggal));
+            const bebanShuKandidat = (appState.bebanOperasional || []).filter(b => isInOrBeforeTarget(b.tanggal));
+
+            const bungaDefault = Number(appState.pinjamanSetting?.bungaPerBulan ?? 1);
+            const pinjamanKandidat = (appState.pinjaman || []).filter(p => {
+                if (!isInOrBeforeTarget(p.tanggalPengajuan)) return false;
+                if (p.status === 'Ditolak') return true;
+                if (p.status !== 'Disetujui') return false;
+                const akadLabel = p.jenisAkad || 'Murabahah';
+                const rate = akadLabel === 'Qardhul Hasan' ? 0 : ((Number(p.bungaPersen ?? bungaDefault)) / 100);
+                const tMargin = typeof p.marginTotalNominal === 'number' ? p.marginTotalNominal : ((Number(p.nominal) || 0) * rate * (Number(p.tenor) || 1));
+                const totalTagihan = (Number(p.nominal) || 0) + tMargin;
+                const terbayar = (p.riwayatCicilan || []).filter(c => c.status === 'Disetujui').reduce((s, c) => s + (Number(c.nominal) || 0), 0);
+                return (totalTagihan - terbayar) <= 100; // Hanya arsipkan pinjaman yang sudah 100% lunas
+            });
+
+            const totalRecord = trxKandidat.length + zisKandidat.length + pinjamanKandidat.length + pendShuKandidat.length + bebanShuKandidat.length;
+            const estBytes = JSON.stringify({ trxKandidat, zisKandidat, pinjamanKandidat, pendShuKandidat, bebanShuKandidat }).length;
+            return {
+                tahunNum,
+                cutoffStr,
+                trxKandidat,
+                trxMenunggu,
+                zisKandidat,
+                pinjamanKandidat,
+                pendShuKandidat,
+                bebanShuKandidat,
+                totalRecord,
+                estKB: Math.round(estBytes / 1024)
+            };
+        };
+
+        window.updatePreviewTutupBukuUI = () => {
+            const sel = document.getElementById('tahunTutupBukuSelect');
+            const infoEl = document.getElementById('infoStatistikTutupBuku');
+            const histEl = document.getElementById('boxRiwayatArsipTutupBuku');
+            if (!sel || !infoEl) return;
+
+            const years = window.getTahunListTutupBuku();
+            const prevVal = parseInt(sel.value, 10);
+            const defaultYear = years.includes(new Date().getFullYear() - 1) ? (new Date().getFullYear() - 1) : years[0];
+            sel.innerHTML = years.map(y => `<option value="${y}">Tahun Buku s/d ${y}</option>`).join('');
+            sel.value = years.includes(prevVal) ? String(prevVal) : String(defaultYear);
+
+            const targetYear = parseInt(sel.value, 10) || defaultYear;
+            const k = window.hitungKandidatTutupBuku(targetYear);
+            if (k.totalRecord === 0) {
+                infoEl.innerHTML = `✅ Tidak ada transaksi lama s/d 31 Des ${targetYear} yang perlu diarsipkan. Database sudah ringkas.`;
+            } else {
+                infoEl.innerHTML = `📦 Siap Diarsipkan (s/d ${k.cutoffStr}): <strong>${k.trxKandidat.length} Simpanan</strong>, <strong>${k.pinjamanKandidat.length} Pinjaman Lunas</strong>, <strong>${k.zisKandidat.length} ZIS</strong>, <strong>${k.pendShuKandidat.length + k.bebanShuKandidat.length} SHU</strong> (~${k.estKB} KB).` +
+                    (k.trxMenunggu.length > 0 ? ` <span class="text-rose-600">(⚠️ ${k.trxMenunggu.length} transaksi Menunggu tetap dipertahankan)</span>` : '');
+            }
+
+            if (histEl) {
+                const arsipList = appState.arsipTutupBuku || [];
+                if (arsipList.length === 0) {
+                    histEl.innerHTML = `<span class="text-[10px] text-slate-400 italic">Belum ada riwayat Tutup Buku Akhir Tahun.</span>`;
+                } else {
+                    histEl.innerHTML = `<div class="space-y-1.5">
+                        <span class="text-[10px] font-extrabold uppercase text-slate-500 block">🗂️ Riwayat Arsip Tutup Buku Tersimpan:</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            ${arsipList.slice(0, 6).map(a => `
+                                <div class="p-2 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-indigo-100 dark:border-slate-700 text-[10px] flex justify-between items-center gap-2">
+                                    <div>
+                                        <strong class="text-indigo-800 dark:text-indigo-300 block">Tutup Buku s/d ${a.tahun} (${a.totalRecordDiarsip} Data)</strong>
+                                        <span class="text-slate-500">${window.escapeHtml(a.waktuTutupBuku)} • Oleh: ${window.escapeHtml(a.oleh)}</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold shrink-0">Saldo Awal: ${window.formatRupiah(a.totalSaldoRollover)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+            }
+        };
+
+        window.jalankanTutupBukuAkhirTahun = () => {
+            if (window.getEffectiveRole() !== 'admin') {
+                window.showToast('🔒 Hanya Super Admin yang berwenang menjalankan Tutup Buku Akhir Tahun!', 'error');
+                return;
+            }
+            const targetTahun = parseInt(document.getElementById('tahunTutupBukuSelect')?.value || (new Date().getFullYear() - 1), 10);
+            const k = window.hitungKandidatTutupBuku(targetTahun);
+
+            if (k.totalRecord === 0) {
+                window.showToast(`Tidak ada data transaksi tahun ${targetTahun} ke bawah yang perlu diarsipkan.`, 'info');
+                return;
+            }
+
+            window.showConfirmModal(
+                `Konfirmasi Tutup Buku Tahun ${targetTahun}`,
+                `Sistem akan otomatis mengunduh file Arsip JSON (${k.totalRecord} transaksi s/d ${k.cutoffStr}, ~${k.estKB} KB), lalu menggabungkan seluruh saldo Simpanan, Bank & ZISWAF menjadi Saldo Awal Tahun ${targetTahun + 1}. Pinjaman yang masih berjalan tetap dipertahankan. Lanjutkan?`,
+                () => {
+                    // 1. Unduh Arsip Lengkap Tahun Buku Target ke JSON terlebih dahulu (Pengaman Anti-Hilang)
+                    const arsipPayload = {
+                        _meta: {
+                            appVersion: window.APP_VERSION || 'v36.6 Pro',
+                            jenis: 'ARSIP_TUTUP_BUKU_AKHIR_TAHUN',
+                            tahunBukuDitutup: targetTahun,
+                            tanggalCutoff: k.cutoffStr,
+                            waktuArsip: window.getWaktuLokalSekarang(),
+                            oleh: currentUserSession ? currentUserSession.nama : 'Super Admin',
+                            integrityChecksum: window.buatKodeHashBukti(`${targetTahun}|${k.totalRecord}|${k.cutoffStr}`)
+                        },
+                        transaksiDiarsipkan: k.trxKandidat,
+                        pinjamanLunasDiarsipkan: k.pinjamanKandidat,
+                        zisDiarsipkan: k.zisKandidat,
+                        pendapatanShuDiarsipkan: k.pendShuKandidat,
+                        bebanOperasionalDiarsipkan: k.bebanShuKandidat
+                    };
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(arsipPayload, null, 2));
+                    const dl = document.createElement('a');
+                    dl.setAttribute('href', dataStr);
+                    dl.setAttribute('download', `Arsip_Tutup_Buku_Koperasi_${targetTahun}_${window.getTanggalLokalHariIni()}.json`);
+                    document.body.appendChild(dl);
+                    dl.click();
+                    dl.remove();
+
+                    // 2. Hitung & gabungkan Saldo Awal per Rekening Bank dari mutasi yang diarsipkan
+                    const arsipTrxIds = new Set(k.trxKandidat.map(t => t.id));
+                    const arsipPinjIds = new Set(k.pinjamanKandidat.map(p => p.id));
+                    const arsipZisIds = new Set(k.zisKandidat.map(z => z.id));
+                    const arsipPendIds = new Set(k.pendShuKandidat.map(p => p.id));
+                    const arsipBebanIds = new Set(k.bebanShuKandidat.map(b => b.id));
+
+                    (appState.rekeningBank || []).forEach(b => {
+                        let deltaBank = 0;
+                        k.trxKandidat.forEach(t => {
+                            if (t.status === 'Disetujui' && t.bankTujuan === b.nama) {
+                                deltaBank += (t.tipe === 'Setoran' ? (Number(t.nominal) || 0) : -(Number(t.nominal) || 0));
+                            }
+                        });
+                        k.pinjamanKandidat.forEach(p => {
+                            if (p.status === 'Disetujui' && p.bankSumber === b.nama) {
+                                deltaBank -= (Number(p.nominal) || 0);
+                            }
+                            (p.riwayatCicilan || []).forEach(c => {
+                                if (c.status === 'Disetujui' && (c.metodeBayar || 'TUNAI') === 'TUNAI' && c.bankTujuan === b.nama) {
+                                    deltaBank += (Number(c.nominal) || 0);
+                                }
+                            });
+                        });
+                        k.zisKandidat.forEach(z => {
+                            if ((z.status || 'Disetujui') === 'Disetujui' && z.bankTujuan === b.nama) {
+                                if (z.tipeMutasi === 'Penyaluran') deltaBank -= (Number(z.nominal) || 0);
+                                else if ((z.sumberDana || 'TUNAI') === 'TUNAI') deltaBank += (Number(z.nominal) || 0);
+                            }
+                        });
+                        k.pendShuKandidat.forEach(p => { if (p.bankTujuan === b.nama) deltaBank += (Number(p.nominal) || 0); });
+                        k.bebanShuKandidat.forEach(beb => { if (beb.bankTujuan === b.nama) deltaBank -= (Number(beb.nominal) || 0); });
+                        b.saldoAwal = (Number(b.saldoAwal) || 0) + deltaBank;
+                    });
+
+                    // 3. Hitung Saldo Awal Simpanan per Anggota dari transaksi Disetujui yang diarsipkan
+                    const saldoRolloverPerAnggota = {};
+                    k.trxKandidat.forEach(t => {
+                        if (t.status !== 'Disetujui') return;
+                        if (!saldoRolloverPerAnggota[t.anggotaId]) {
+                            saldoRolloverPerAnggota[t.anggotaId] = { nama: t.nama, pokok: 0, wajib: 0, sukarela: 0 };
+                        }
+                        const nom = Number(t.nominal) || 0;
+                        const delta = t.tipe === 'Setoran' ? nom : -nom;
+                        if (t.kategori === 'Simpanan Pokok') saldoRolloverPerAnggota[t.anggotaId].pokok += delta;
+                        else if (t.kategori === 'Simpanan Wajib') saldoRolloverPerAnggota[t.anggotaId].wajib += delta;
+                        else saldoRolloverPerAnggota[t.anggotaId].sukarela += delta;
+                    });
+
+                    // Tandai ID terhapus agar mergeArrayById tidak menarik ulang dari cache perangkat lain
+                    k.trxKandidat.forEach(t => window.markDeletedItemId(t.id));
+                    k.pinjamanKandidat.forEach(p => window.markDeletedItemId(p.id));
+                    k.zisKandidat.forEach(z => window.markDeletedItemId(z.id));
+
+                    // Hapus record lama dari array aktif
+                    appState.transaksi = (appState.transaksi || []).filter(t => !arsipTrxIds.has(t.id));
+                    appState.pinjaman = (appState.pinjaman || []).filter(p => !arsipPinjIds.has(p.id));
+                    appState.zis = (appState.zis || []).filter(z => !arsipZisIds.has(z.id));
+                    appState.pendapatanShuList = (appState.pendapatanShuList || []).filter(p => !arsipPendIds.has(p.id));
+                    appState.bebanOperasional = (appState.bebanOperasional || []).filter(b => !arsipBebanIds.has(b.id));
+
+                    // Sisipkan transaksi ringkas Saldo Awal Tahun Baru per Anggota
+                    const tglRollover = `${targetTahun + 1}-01-01 00:00`;
+                    let totalSaldoRollover = 0;
+                    Object.keys(saldoRolloverPerAnggota).forEach(anggotaId => {
+                        const r = saldoRolloverPerAnggota[anggotaId];
+                        const anggotaObj = (appState.anggota || []).find(a => a.id === anggotaId);
+                        const namaFix = anggotaObj ? anggotaObj.nama : r.nama;
+                        const cats = [
+                            { kat: 'Simpanan Pokok', val: Math.max(0, r.pokok) },
+                            { kat: 'Simpanan Wajib', val: Math.max(0, r.wajib) },
+                            { kat: 'Simpanan Sukarela', val: Math.max(0, r.sukarela) }
+                        ];
+                        cats.forEach((c, cIdx) => {
+                            if (c.val > 0) {
+                                totalSaldoRollover += c.val;
+                                appState.transaksi.unshift({
+                                    id: `t_rollover_${targetTahun}_${anggotaId}_${cIdx}_${Date.now()}`,
+                                    waktu: tglRollover,
+                                    anggotaId,
+                                    nama: namaFix,
+                                    tipe: 'Setoran',
+                                    kategori: c.kat,
+                                    nominal: c.val,
+                                    status: 'Disetujui',
+                                    bukti: '',
+                                    bankTujuan: 'Saldo Awal Tutup Buku',
+                                    isSaldoAwalRollover: true,
+                                    keterangan: `Saldo Awal Tutup Buku Tahun ${targetTahun} (${c.kat})`
+                                });
+                            }
+                        });
+                    });
+
+                    // Hitung Saldo Awal ZISWAF yang diarsipkan
+                    let zisIn = 0, zisOut = 0;
+                    k.zisKandidat.forEach(z => {
+                        if ((z.status || 'Disetujui') !== 'Disetujui') return;
+                        if (z.tipeMutasi === 'Penyaluran') zisOut += (Number(z.nominal) || 0);
+                        else zisIn += (Number(z.nominal) || 0);
+                    });
+                    const netZisRollover = Math.max(0, zisIn - zisOut);
+                    if (netZisRollover > 0) {
+                        appState.zis.unshift({
+                            id: `z_rollover_${targetTahun}_${Date.now()}`,
+                            tanggal: `${targetTahun + 1}-01-01`,
+                            anggotaId: currentUserSession ? currentUserSession.id : 'a1',
+                            nama: 'Kas Baitul Maal Koperasi',
+                            tipeMutasi: 'Pemasukan',
+                            jenis: 'Infaq',
+                            sumberDana: 'ROLLOVER_SALDO_AWAL',
+                            bankTujuan: 'Saldo Awal Tutup Buku',
+                            isAnonim: false,
+                            bukti: '',
+                            nominal: netZisRollover,
+                            keterangan: `Saldo Awal ZISWAF Tutup Buku Tahun ${targetTahun}`,
+                            status: 'Disetujui',
+                            isSaldoAwalRollover: true
+                        });
+                    }
+
+                    // Catat riwayat arsip Tutup Buku
+                    if (!Array.isArray(appState.arsipTutupBuku)) appState.arsipTutupBuku = [];
+                    appState.arsipTutupBuku.unshift({
+                        id: `arsip_${targetTahun}_${Date.now()}`,
+                        tahun: targetTahun,
+                        waktuTutupBuku: window.getWaktuLokalSekarang(),
+                        totalRecordDiarsip: k.totalRecord,
+                        totalSaldoRollover,
+                        netZisRollover,
+                        oleh: currentUserSession ? currentUserSession.nama : 'Super Admin',
+                        checksum: arsipPayload._meta.integrityChecksum
+                    });
+
+                    window.catatLogAuditSistem('BACKUP', `Tutup Buku Akhir Tahun ${targetTahun}`, `Mengarsipkan ${k.totalRecord} data lama (~${k.estKB} KB) menjadi Saldo Awal Tahun ${targetTahun + 1} (${window.formatRupiah(totalSaldoRollover)})`, 'Sukses');
+                    window.rebuildSaldoCache(true);
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: `Tutup Buku Tahun ${targetTahun} Selesai!`,
+                        nominal: totalSaldoRollover,
+                        nama: `${k.totalRecord} Data Diarsipkan (~${k.estKB} KB)`,
+                        kategori: `Saldo Awal Tahun Buku ${targetTahun + 1}`,
+                        kanal: 'Arsip JSON Terunduh & Cloud Tersinkron',
+                        status: 'Disetujui',
+                        waktu: window.getWaktuLokalSekarang()
+                    });
+                }
+            );
+        };
+
         window.bersihkanAuditLogSistem = () => {
             window.showConfirmModal('Bersihkan Riwayat Log Sistem', 'Yakin ingin menghapus riwayat log lama dan menyisakan log inisialisasi terbaru?', () => {
                 appState.systemAuditLogs = [];
@@ -9905,7 +10951,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                     <div class="flex justify-between"><span>Kas Likuid Koperasi Tersedia:</span><strong class="text-blue-600">${window.formatRupiah(kasLikuid)}</strong></div>
                     <div class="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-1.5"><span>SHU Bersih Tahun Berjalan:</span><strong class="text-purple-600">${window.formatRupiah(s.netShu)}</strong></div>
                 </div>
-                <p class="text-[11px] text-slate-500 italic text-center">Seluruh 12 menu inti, perhitungan buku kas, rekonsiliasi bank 7 alur, dan alokasi SHU 100% telah tervalidasi secara otomatis oleh sistem Koperasi Keluarga v36.0 Pro (Edisi Final Produksi).</p>
+                <p class="text-[11px] text-slate-500 italic text-center">Seluruh 12 menu inti, perhitungan buku kas, rekonsiliasi bank 7 alur, dan alokasi SHU 100% telah tervalidasi secara otomatis oleh sistem Koperasi Keluarga v36.6 Pro (Edisi Final Produksi).</p>
             `;
             document.getElementById('modalBeritaAcaraNotulensi').classList.remove('hidden');
         };
@@ -10083,7 +11129,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                         <td class="py-2.5 px-2.5">
                             <div class="font-bold text-slate-800 dark:text-white">${window.escapeHtml(a.nama)} ${a.id === currentUserSession.id ? '<span class="text-[9px] text-emerald-600 font-bold">(Anda)</span>' : ''}</div>
-                            <div class="text-[10px] text-slate-400">${window.escapeHtml(a.namaKeluarga)} • 📅 Gabung: ${window.escapeHtml(a.tglGabung || '2026-01-01')}</div>
+                            <div class="text-[10px] text-slate-400">${window.escapeHtml(a.namaKeluarga)} • 📅 Gabung: ${window.escapeHtml(window.getTanggalGabungEfektifAnggota(a))}</div>
                         </td>
                         <td class="py-2.5 px-2.5 text-[10px] text-slate-500 space-y-0.5">
                             <div>Pokok: <strong>${window.formatRupiah(rincian.pokok)}</strong> • Wajib: <strong>${window.formatRupiah(rincian.wajib)}</strong></div>
@@ -10592,7 +11638,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             if (pinBaruInput) {
                 currentUserSession.pin = window.encryptPinKoperasi(pinBaruInput);
             }
-            currentUserSession.tglGabung = document.getElementById('mandiriTglGabung')?.value || currentUserSession.tglGabung || '2026-01-01';
+            currentUserSession.tglGabung = document.getElementById('mandiriTglGabung')?.value || window.getTanggalGabungEfektifAnggota(currentUserSession);
             currentUserSession.ahliWaris = document.getElementById('mandiriAhliWaris')?.value.trim() || '';
             currentUserSession.rekeningPribadi = document.getElementById('mandiriRekening')?.value.trim() || '';
 
@@ -10812,24 +11858,17 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             }
         };
 
-        var _origRenderApp = window.renderApp;
-        var _renderTimer = null;
-        window.renderApp = function() {
-            if (_renderTimer) cancelAnimationFrame(_renderTimer);
-            _renderTimer = requestAnimationFrame(function() {
-                if (typeof _origRenderApp === 'function') {
-                    _origRenderApp();
-                }
-                if (typeof window.upgradeDOMBankModalDanTab === 'function') {
-                    window.upgradeDOMBankModalDanTab();
-                }
-                if ((appState.activeTab || 'dashboard') === 'bank' && typeof window.renderBankTabPro === 'function') {
-                    window.renderBankTabPro();
-                }
-                if (typeof window.pasangFooterVersiTerbaru === 'function') {
-                    window.pasangFooterVersiTerbaru();
-                }
-            });
+        // Sinkronisasi Bank Pro & Footer Versi dipanggil langsung secara terstruktur tanpa membungkus ulang window.renderApp
+        window._postRenderHooks = function() {
+            if (typeof window.upgradeDOMBankModalDanTab === 'function') {
+                window.upgradeDOMBankModalDanTab();
+            }
+            if ((appState.activeTab || 'dashboard') === 'bank' && typeof window.renderBankTabPro === 'function') {
+                window.renderBankTabPro();
+            }
+            if (typeof window.pasangFooterVersiTerbaru === 'function') {
+                window.pasangFooterVersiTerbaru();
+            }
         };
 
         window.addEventListener('beforeunload', function() {
@@ -11457,9 +12496,183 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         // =========================================================================
         // AUTO-VERSIONING & CHANGELOG FOOTER (v35.4 Pro)
         // =========================================================================
-        window.APP_VERSION = 'v36.0 Pro';
+        window.APP_VERSION = 'v36.6 Pro';
         window.APP_RELEASE_DATE = '16 Nov 2026';
+        // =========================================================================
+        // FITUR MODE PWA FULLSCREEN & INSTALLABLE WEB APP (v36.2 PRO)
+        // =========================================================================
+        window._deferredPwaPrompt = null;
+
+        window.toggleFullScreenMode = () => {
+            const docEl = document.documentElement;
+            const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+            if (!isFs) {
+                const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+                if (req) {
+                    req.call(docEl).then(() => {
+                        window.updateFullscreenButtonUI(true);
+                        window.showToast('⛶ Mode Layar Penuh (Fullscreen) diaktifkan!', 'info');
+                    }).catch(() => {
+                        window.showToast('Browser perangkat ini membatasi mode layar penuh otomatis.', 'info');
+                    });
+                }
+            } else {
+                const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+                if (exit) {
+                    exit.call(document).then(() => {
+                        window.updateFullscreenButtonUI(false);
+                        window.showToast('Keluar dari Mode Layar Penuh.', 'info');
+                    }).catch(() => {});
+                }
+            }
+        };
+
+        window.updateFullscreenButtonUI = (isFull) => {
+            const btn = document.getElementById('btnFullscreenHeader');
+            const lbl = document.getElementById('lblFullscreenHeader');
+            const icn = document.getElementById('iconFullscreenHeader');
+            if (!btn) return;
+            if (isFull) {
+                btn.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-600 text-white border border-emerald-500 transition cursor-pointer shrink-0 shadow-xs';
+                if (icn) icn.textContent = '🗗';
+                if (lbl) lbl.textContent = 'Exit Full';
+            } else {
+                btn.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 dark:bg-slate-800 dark:hover:bg-emerald-950 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition cursor-pointer shrink-0';
+                if (icn) icn.textContent = '⛶';
+                if (lbl) lbl.textContent = 'Fullscreen';
+            }
+        };
+
+        document.addEventListener('fullscreenchange', () => {
+            window.updateFullscreenButtonUI(Boolean(document.fullscreenElement));
+        });
+
+        window.installAplikasiPwa = async () => {
+            if (window._deferredPwaPrompt) {
+                window._deferredPwaPrompt.prompt();
+                const { outcome } = await window._deferredPwaPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    window.showToast('📲 Aplikasi Koperasi Keluarga berhasil di-install ke perangkat Anda!');
+                }
+                window._deferredPwaPrompt = null;
+                document.getElementById('btnInstallPwaHeader')?.classList.add('hidden');
+            } else {
+                window.showToast('📲 Untuk meng-install ke layar utama HP: klik menu titik tiga browser (⋮) lalu pilih "Tambahkan ke Layar Utama / Install Aplikasi".', 'info');
+            }
+        };
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            window._deferredPwaPrompt = e;
+            const btnInstall = document.getElementById('btnInstallPwaHeader');
+            if (btnInstall) {
+                btnInstall.classList.remove('hidden');
+                btnInstall.classList.add('inline-flex');
+            }
+        });
+
+        // Injeksi Dinamis Web App Manifest agar mendukung "Add to Home Screen" / Standalone PWA Fullscreen
+        (function pasangManifestPwaDinamis() {
+            try {
+                const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="42" fill="#0f172a"/><circle cx="96" cy="96" r="70" fill="#059669"/><path d="M62 100l22 22 48-48" stroke="#fbbf24" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                const iconDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(iconSvg);
+                const manifestObj = {
+                    name: 'Koperasi Keluarga Syariah v36.5 Pro',
+                    short_name: 'Koperasi Keluarga',
+                    description: 'Aplikasi Koperasi Keluarga Besar Syariah — Buku Simpanan, Matriks 12 Bulan, Pembiayaan 0% Riba, SHU & ZISWAF',
+                    start_url: window.location.href.split('#')[0],
+                    display: 'fullscreen',
+                    orientation: 'any',
+                    background_color: '#0f172a',
+                    theme_color: '#059669',
+                    icons: [
+                        { src: iconDataUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
+                        { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+                    ]
+                };
+                const blob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                const link = document.createElement('link');
+                link.rel = 'manifest';
+                link.href = URL.createObjectURL(blob);
+                document.head.appendChild(link);
+            } catch (e) {}
+        })();
+
         window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v36.6 Pro (Final Production)',
+                tanggal: '16 Nov 2026 (Terbaru - Tutup Buku Akhir Tahun / Year-End Rollover)',
+                judul: 'Fitur Tutup Buku Akhir Tahun (Year-End Rollover): Arsip Transaksi Tahunan & Saldo Awal Otomatis',
+                poin: [
+                    'Tutup Buku Akhir Tahun (jalankanTutupBukuAkhirTahun): Mengunduh arsip lengkap transaksi tahun buku sebelumnya ke file JSON ber-checksum, lalu menggabungkan saldo Simpanan Pokok, Wajib, Sukarela, ZISWAF, dan Saldo Awal Bank menjadi Saldo Awal Tahun Baru tanpa mengubah saldo akhir sedikit pun.',
+                    'Perlindungan Pinjaman Berjalan & Antrean Menunggu: Pinjaman yang masih memiliki sisa cicilan serta transaksi berstatus Menunggu tetap dipertahankan di buku aktif.',
+                    'Riwayat Arsip Tutup Buku & Penghematan Memori Cloud: Mencatat jejak tutup buku tahunan beserta penghematan ukuran database agar aplikasi tetap ringan hingga bertahun-tahun.'
+                ]
+            },
+            {
+                versi: 'v36.5 Pro (Final Production)',
+                tanggal: '16 Nov 2026 (Terbaru - Penyempurnaan UI/UX: Font Modern, Tombol Rapi & Kartu Seragam)',
+                judul: 'Penyempurnaan Menyeluruh Tipografi (Plus Jakarta Sans + Inter), Grid Tombol Responsif & Desain Kartu Modern',
+                poin: [
+                    'Tipografi Modern & Mudah Dibaca: Memadukan Plus Jakarta Sans untuk judul/header, Inter untuk teks isi dengan tabular-nums (angka sejajar rapi), serta JetBrains Mono untuk kode & nomor rekening.',
+                    'Tata Letak Tombol Pintasan Simetris & Anti-Potong: Mengubah bilah tombol aksi cepat Beranda menjadi grid 2-kolom seragam di layar HP (min-height 38px) agar tinggi tombol sama rata dan teks tidak terpotong ke bawah.',
+                    'Penyeragaman Kartu KPI & Efek Interaktif (.ui-card-polish): Menambahkan garis aksen warna di bagian atas kartu Beranda, radius seragam rounded-2xl, serta fokus input form yang lebih lembut dan ramah pengguna.'
+                ]
+            },
+            {
+                versi: 'v36.4 Pro (Final Production)',
+                tanggal: '16 Nov 2026 (Terbaru - Backup JSON Terenkripsi AES-256, Kirim Struk WA, Pengingat Iuran WA & PWA Fullscreen)',
+                judul: 'Paket Lengkap 4 Fitur Produksi: Backup JSON Terenkripsi AES-256-GCM, Kirim Struk WA, Pengingat Iuran WA & PWA Fullscreen',
+                poin: [
+                    'Backup & Restore JSON Terenkripsi (AES-256-GCM + PBKDF2 100.000 Iterasi): File backup JSON kini dapat dikunci dengan password melalui modal #modalBackupPassword agar data anggota dan transaksi tetap aman meski file jatuh ke pihak lain, serta tetap mendukung restore file JSON standar.',
+                    'Kirim Struk Kwitansi ke WhatsApp (kirimStrukTransaksiKeWA): Tombol 1-klik 💬 Kirim WA di tabel Buku Simpanan, Modal Struk, dan Pop-up Animasi Transaksi Berhasil.',
+                    'Pengingat Iuran Wajib WA dari Matriks 12 Bulan (kirimWaPengingatIuranMatriks): Pengingat tagihan otomatis sesuai bulan gabung anggota beserta info rekening transfer resmi.',
+                    'Mode PWA Fullscreen & Installable App: Tombol ⛶ Fullscreen di header atas, Web App Manifest dinamis, serta dukungan instalasi layar penuh di HP/Desktop.'
+                ]
+            },
+            {
+                versi: 'v36.3 Pro (Optimized Production)',
+                tanggal: '16 Nov 2026 (Terbaru - Optimasi Performa, Cache O(1) Matriks & Konsolidasi Kode Terstruktur)',
+                judul: 'Maksimalisasi Efisiensi Kode: Cache Matriks 12x Lebih Cepat, Debounce Pencarian & Konsolidasi Render Engine',
+                poin: [
+                    'Cache O(1) Matriks Kartu Kendali 12 Bulan (_matriksMapCache): Menghilangkan 12x pemindaian ulang transaksi per anggota sehingga halaman Beranda dan Buku Simpanan terbuka instan meski data transaksi ratusan hingga ribuan baris.',
+                    'Debounce Pintar di 9 Kolom Pencarian (window.debounceCall): Mencegah re-render DOM berlebihan saat mengetik cepat di HP maupun Desktop.',
+                    'Konsolidasi Render Engine (requestAnimationFrame Coalescing): Menyatukan pipeline renderApp() tanpa wrapper ganda serta menambahkan kunci anti-tabrakan sinkronisasi Cloud (_isSyncingCloud).',
+                    'Penyeragaman Utilitas & Versi v36.3 Pro: Penambahan helper UTF-8 BOM CSV Exporter (downloadCsvUtf8), setTextSafe, dan penyeragaman label versi di seluruh tampilan serta PWA Manifest.'
+                ]
+            },
+            {
+                versi: 'v36.2 Pro (Final Production)',
+                tanggal: '16 Nov 2026 (Terbaru - 5 Fitur Lengkap: WA Matriks, Plafon KK, Struk WA, Filter Bulan & PWA Fullscreen)',
+                judul: 'Pengingat WA Matriks 12 Bulan, Plafon Gabungan KK, Kirim Struk ke WA, Filter Periode Bulan & Mode PWA Fullscreen',
+                poin: [
+                    'WA Pengingat Iuran Matriks 12 Bulan: Tombol 💬 WA per anggota di Matriks Kartu Kendali 12 Bulan untuk mengingatkan rincian bulan yang belum lunas (sejak bulan gabung) serta tombol 💬 WA Rekap Iuran untuk grup keluarga.',
+                    'Plafon Gabungan Keluarga / KK (hitungRincianPlafonKeluarga & ⚡ Isi Maks): Perhitungan plafon 3x tabungan yang dijamin tabungan gabungan KK dikurangi sisa hutang keluarga, dilengkapi tombol ⚡ Isi Maks di form pengajuan.',
+                    'Kirim Struk Kwitansi Resmi ke WhatsApp (kirimStrukTransaksiKeWA): Kirim struk transaksi lengkap beserta rincian saldo terkini dan kode autentikasi AUTH-... langsung ke WhatsApp anggota dari tabel, modal struk, maupun pop-up animasi transaksi.',
+                    'Filter Periode Bulan di Buku Simpanan (#filterBulanSimpanan): Saring mutasi kas, kartu saldo bersih, dan export CSV/Excel berdasarkan Bulan Ini, Sepanjang Tahun, atau bulan spesifik (YYYY-MM).',
+                    'Mode PWA Fullscreen & Installable App: Tombol ⛶ Fullscreen di header atas, Web App Manifest dinamis, serta dukungan instalasi aplikasi layar penuh di HP/Desktop.'
+                ]
+            },
+            {
+                versi: 'v36.2 Pro (Final Production)',
+                tanggal: '16 Nov 2026 (Terbaru - Rumus Plafon 3x Jaminan Tabungan Gabungan Keluarga & Potong Sisa Hutang KK)',
+                judul: 'Plafon Pembiayaan 3x Tabungan Pribadi Berbasis Jaminan Tabungan Gabungan Keluarga (KK) & Pengurangan Sisa Hutang Sekeluarga',
+                poin: [
+                    'Rumus Plafon Keluarga Terpadu (hitungRincianPlafonKeluarga): Anggota dapat mengajukan pembiayaan hingga 3x dari tabungan pribadinya dengan syarat digabung dengan total tabungan di dalam keluarganya (KK) apabila mencukupi.',
+                    'Pengurangan Otomatis Sisa Hutang Sekeluarga (KK): Anggota keluarga lain di dalam KK yang sama hanya dapat mengambil plafon dari sisa plafon keluarga setelah dikurangi total hutang/pinjaman berjalan seluruh anggota di KK tersebut.',
+                    'Panel Transparansi Plafon Keluarga di Menu Pembiayaan, Modal Pengajuan & Pusat Persetujuan: Menampilkan rincian Tabungan Pribadi (3x), Tabungan Gabungan KK, Sisa Hutang KK, dan Sisa Plafon Bersih yang dapat diambil.'
+                ]
+            },
+            {
+                versi: 'v36.1 Pro (Final Production)',
+                tanggal: '16 Nov 2026 (Terbaru - Akurasi Kewajiban Iuran Wajib Sesuai Bulan Gabung Anggota)',
+                judul: 'Perhitungan Kewajiban Iuran Bulanan & Matriks 12 Bulan Ketat Sesuai Bulan Bergabung (Tanpa Tagihan Bulan Sebelum Gabung)',
+                poin: [
+                    'Evaluasi Ketat Mulai Bulan Gabung (getTanggalGabungEfektifAnggota): Perhitungan kewajiban Simpanan Wajib di Beranda dan Matriks Kartu Kendali 12 Bulan kini hanya menghitung sejak bulan anggota bergabung (atau bulan transaksi pertama), tidak pernah menagih bulan-bulan sebelumnya.',
+                    'Perbaikan Perbandingan Tipe Tahun Integer di evaluasiStatusBulanMatriks: Memastikan bulan sebelum tanggal bergabung selalu berstatus BELUM_GABUNG (—) dan tidak pernah masuk ke daftar tunggakan di Beranda.',
+                    'Auto-Koreksi Default Tanggal Gabung Lama (2026-01-01): Menyesuaikan otomatis tanggal bergabung anggota yang sebelumnya tercatat default 2026-01-01 ke tanggal transaksi perdana anggota tersebut.'
+                ]
+            },
             {
                 versi: 'v36.0 Pro (Final Production)',
                 tanggal: '16 Nov 2026 (Edisi Final Produksi — Audit Integritas Penuh 12 Menu & Fungsi)',
@@ -11713,7 +12926,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 f.innerHTML = '<div class="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto px-2">' +
                     '<p>&copy; 2026 aufah tech. All rights reserved.</p>' +
                     '<div class="flex flex-wrap items-center justify-center gap-2">' +
-                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Edisi Final Produksi (12 Menu Terverifikasi 100%), Auto-Sync Cloud Firebase, Captcha Anti-Bot & PIN SHA-256.") + ')</span>' +
+                        '<span class="text-[10px] text-slate-400">Update Terakhir: <strong>' + window.escapeHtml(window.APP_VERSION) + '</strong> (' + window.escapeHtml("Edisi Final Produksi v36.5 Pro: UI/UX Modern (Font, Tombol & Kartu Rapi), Backup AES-256 & Auto-Sync Cloud.") + ')</span>' +
                         '<button id="badgeFooterChangelog" type="button" onclick="window.bukaModalChangelog()" class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] hover:ring-2 hover:ring-emerald-400 transition cursor-pointer">📋 Lihat Detail Pembaruan ' + window.escapeHtml(window.APP_VERSION) + '</button>' +
                     '</div>' +
                 '</div>';
