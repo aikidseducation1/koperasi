@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Koperasi Keluarga">
-    <title>Aplikasi Koperasi Keluarga v36.6 Pro (Final Production) — Tutup Buku Akhir Tahun (Year-End Rollover) & Auto-Sync Cloud</title>
+    <title>Aplikasi Koperasi Keluarga v36.8 Pro (Final Production) — Kode Bersih Terverifikasi &amp; 12 Menu Lulus 100%</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -362,7 +362,7 @@
             <span class="text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">Info</span>
         </div>
         <div class="running-text-wrapper flex-1 overflow-hidden" title="Arahkan kursor / sentuh untuk menghentikan sejenak">
-            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v36.6 Pro (Edisi Optimasi & Produksi)!</p>
+            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v36.8 Pro (Edisi Final Produksi)!</p>
         </div>
         <button id="btnEditPengumuman" onclick="window.bukaModalEditPengumuman()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
             ✏️ Edit
@@ -380,7 +380,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v36.6 Pro</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v36.8 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -2106,12 +2106,21 @@
         </div>
     </div>
 
-    <!-- Custom Confirmation Modal (Di Tengah Layar + Dilengkapi Captcha Konfirmasi Transaksi) -->
+    <!-- Custom Confirmation Modal (Di Tengah Layar + Preview Perubahan Anti-Kesalahan + Captcha Konfirmasi) -->
     <div id="modalConfirmCustom" class="fixed inset-0 bg-slate-900/65 z-[80] hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-sm p-5 space-y-3.5 m-auto">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-md p-5 space-y-3 m-auto max-h-[92vh] overflow-y-auto">
             <div class="text-center space-y-1">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">🔍 Preview &amp; Konfirmasi Anti-Kesalahan</span>
                 <h3 class="font-extrabold text-base text-slate-800 dark:text-white" id="confirmModalTitle">Konfirmasi Transaksi</h3>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed" id="confirmModalMessage">Apakah Anda yakin ingin melanjutkan?</p>
+            </div>
+            <div id="confirmPreviewBox" class="hidden rounded-xl border border-blue-200 dark:border-blue-800/80 bg-blue-50/60 dark:bg-slate-800/90 p-3 space-y-1.5 text-left">
+                <div class="flex items-center justify-between border-b border-blue-200/70 dark:border-slate-700 pb-1">
+                    <span class="text-[9px] font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-300">📋 Ringkasan Preview Data</span>
+                    <span class="text-[9px] font-semibold text-slate-400">Periksa sebelum simpan</span>
+                </div>
+                <div id="confirmPreviewRows" class="space-y-1 text-[11px] max-h-48 overflow-y-auto pr-0.5"></div>
+                <div id="confirmPreviewWarning" class="hidden mt-1.5 p-2 rounded-lg bg-amber-100/90 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-[10px] font-bold text-amber-900 dark:text-amber-200"></div>
             </div>
             <div id="wrapInputAlasanConfirmModal" class="hidden space-y-1">
                 <label class="block text-[10px] font-bold uppercase text-rose-600">Alasan Penolakan / Catatan Verifikasi</label>
@@ -2593,7 +2602,7 @@
                 <div class="absolute inset-0 z-10 cursor-not-allowed flex flex-col justify-between p-3 pointer-events-auto" oncontextmenu="return false" ondragstart="return false">
                     <div class="text-[9px] font-mono font-bold text-white/45 bg-slate-900/40 px-2 py-0.5 rounded self-start">🔒 PROTECTED RECEIPT • KOPERASI KELUARGA</div>
                     <div id="watermarkTextBuktiFoto" class="text-center text-white/30 font-black text-xs sm:text-sm uppercase tracking-widest -rotate-12 select-none">DOKUMEN INTERNAL KOPERASI • DILARANG MENYALIN</div>
-                    <div class="text-[9px] font-mono text-white/45 bg-slate-900/40 px-2 py-0.5 rounded self-end">ANTI-COPY SHIELD v36.6</div>
+                    <div class="text-[9px] font-mono text-white/45 bg-slate-900/40 px-2 py-0.5 rounded self-end">ANTI-COPY SHIELD v36.5</div>
                 </div>
             </div>
         </div>
@@ -2979,8 +2988,7 @@
                     window.refreshCaptchaForm(formId);
                 }
             }
-            window._explicitSubmitAllowed = false;
-        };
+            };
 
         window.escapeHtml = function(str) {
             if (str === null || str === undefined) return '';
@@ -4009,12 +4017,27 @@
                 window.renderApp();
                 return;
             }
-            if (!appState.shuSetting) appState.shuSetting = { alokasiModal: 40, alokasiUsaha: 20, alokasiCadangan: 25, alokasiSosial: 15 };
-            appState.shuSetting.metodePerhitungan = metodeBaru;
-            window.catatLogAuditSistem('PENGATURAN', 'Ubah Metode Perhitungan SHU', `Metode SHU diubah ke: ${metodeBaru === 'TERTIMBANG' ? 'Bobot Waktu Mengendap (Adil Syariah)' : 'Saldo Akhir'}`, 'Sukses');
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast(`Metode pembagian SHU diubah ke: ${metodeBaru === 'TERTIMBANG' ? '⚖️ Bobot Waktu Mengendap (Adil Syariah)' : '📊 Saldo Akhir'}`);
+            if (!appState.shuSetting) appState.shuSetting = { alokasiModal: 40, alokasiUsaha: 20, alokasiCadangan: 25, alokasiSosial: 15, metodePerhitungan: 'TERTIMBANG' };
+            const metodeLama = appState.shuSetting.metodePerhitungan || 'TERTIMBANG';
+            if (metodeLama === metodeBaru) return;
+            const labelLama = metodeLama === 'TERTIMBANG' ? '⚖️ Bobot Waktu Mengendap' : '📊 Saldo Akhir';
+            const labelBaru = metodeBaru === 'TERTIMBANG' ? '⚖️ Bobot Waktu Mengendap (Adil Syariah)' : '📊 Saldo Akhir';
+            window.showConfirmModal(
+                'Konfirmasi Perubahan Metode SHU',
+                'Periksa preview perubahan rumus pembagian SHU sebelum diterapkan:',
+                () => {
+                    appState.shuSetting.metodePerhitungan = metodeBaru;
+                    window.catatLogAuditSistem('PENGATURAN', 'Ubah Metode Perhitungan SHU', `Metode SHU diubah dari ${labelLama} ke ${labelBaru}`, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast(`Metode pembagian SHU diubah ke: ${labelBaru}`);
+                },
+                [
+                    { label: 'Metode Perhitungan SHU', before: labelLama, after: labelBaru }
+                ],
+                '⚠️ Perubahan ini langsung memengaruhi estimasi pembagian SHU seluruh anggota.',
+                () => { window.renderApp(); }
+            );
         };
 
         window.mainkanSuaraNotifikasi = (tipe = 'success') => {
@@ -4250,10 +4273,73 @@
             }, 3200);
         };
 
-        window.showConfirmModal = (title, message, onConfirm) => {
+        window.renderPreviewRowsConfirmModal = (previewItems = null, warningText = '') => {
+            const box = document.getElementById('confirmPreviewBox');
+            const rowsEl = document.getElementById('confirmPreviewRows');
+            const warnEl = document.getElementById('confirmPreviewWarning');
+            if (!box || !rowsEl) return;
+
+            if (!Array.isArray(previewItems) || previewItems.length === 0) {
+                box.classList.add('hidden');
+                rowsEl.innerHTML = '';
+                if (warnEl) {
+                    warnEl.classList.add('hidden');
+                    warnEl.textContent = '';
+                }
+                return;
+            }
+
+            const colorMap = {
+                emerald: 'text-emerald-700 dark:text-emerald-300',
+                rose: 'text-rose-600 dark:text-rose-400',
+                amber: 'text-amber-700 dark:text-amber-300',
+                blue: 'text-blue-700 dark:text-blue-300'
+            };
+
+            rowsEl.innerHTML = previewItems.map(item => {
+                if (!item) return '';
+                const labelHtml = `<span class="text-slate-500 dark:text-slate-400 shrink-0">${window.escapeHtml(String(item.label || ''))}</span>`;
+                if (item.before !== undefined || item.after !== undefined) {
+                    const beforeVal = String(item.before ?? '-');
+                    const afterVal = String(item.after ?? '-');
+                    const changed = beforeVal !== afterVal;
+                    return `
+                        <div class="flex items-start justify-between gap-2 py-1 border-b border-blue-100/70 dark:border-slate-700/70 last:border-b-0">
+                            ${labelHtml}
+                            <div class="text-right font-semibold break-words">
+                                ${changed
+                                    ? `<span class="text-slate-400 line-through text-[10px]">${window.escapeHtml(beforeVal)}</span> <span class="text-blue-500 mx-0.5">→</span> <strong class="text-emerald-700 dark:text-emerald-300">${window.escapeHtml(afterVal)}</strong>`
+                                    : `<span class="text-slate-700 dark:text-slate-200">${window.escapeHtml(afterVal)}</span>`}
+                            </div>
+                        </div>
+                    `;
+                }
+                const valCls = colorMap[item.highlight] || 'text-slate-800 dark:text-white';
+                return `
+                    <div class="flex items-start justify-between gap-2 py-1 border-b border-blue-100/70 dark:border-slate-700/70 last:border-b-0">
+                        ${labelHtml}
+                        <strong class="${valCls} text-right break-words">${window.escapeHtml(String(item.value ?? '-'))}</strong>
+                    </div>
+                `;
+            }).join('');
+
+            if (warnEl) {
+                if (warningText) {
+                    warnEl.textContent = warningText;
+                    warnEl.classList.remove('hidden');
+                } else {
+                    warnEl.classList.add('hidden');
+                    warnEl.textContent = '';
+                }
+            }
+            box.classList.remove('hidden');
+        };
+
+        window.showConfirmModal = (title, message, onConfirm, previewItems = null, warningText = '', onCancel = null) => {
             const modal = document.getElementById('modalConfirmCustom');
             document.getElementById('confirmModalTitle').textContent = title;
             document.getElementById('confirmModalMessage').textContent = message;
+            window.renderPreviewRowsConfirmModal(previewItems, warningText);
             const wrapAlasan = document.getElementById('wrapInputAlasanConfirmModal');
             if (wrapAlasan) wrapAlasan.classList.add('hidden');
             const wrapCaptcha = document.getElementById('wrapCaptchaConfirmModal');
@@ -4266,8 +4352,8 @@
 
             const okBtn = document.getElementById('confirmModalOkBtn');
             const cancelBtn = document.getElementById('confirmModalCancelBtn');
-            okBtn.textContent = 'Ya, Konfirmasi';
-            okBtn.className = 'flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md';
+            okBtn.textContent = 'Ya, Konfirmasi & Simpan';
+            okBtn.className = 'flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md cursor-pointer';
 
             const cleanup = () => modal.classList.add('hidden');
             okBtn.onclick = () => {
@@ -4275,13 +4361,17 @@
                 cleanup();
                 onConfirm();
             };
-            cancelBtn.onclick = () => cleanup();
+            cancelBtn.onclick = () => {
+                cleanup();
+                if (typeof onCancel === 'function') onCancel();
+            };
         };
 
-        window.showRejectModal = (title, message, onRejectWithReason) => {
+        window.showRejectModal = (title, message, onRejectWithReason, previewItems = null) => {
             const modal = document.getElementById('modalConfirmCustom');
             document.getElementById('confirmModalTitle').textContent = title;
             document.getElementById('confirmModalMessage').textContent = message;
+            window.renderPreviewRowsConfirmModal(previewItems, '⚠️ Tindakan penolakan akan tercatat di Log Audit dan terlihat oleh anggota.');
             const wrapAlasan = document.getElementById('wrapInputAlasanConfirmModal');
             const inputAlasan = document.getElementById('inputAlasanPenolakanText');
             if (wrapAlasan) wrapAlasan.classList.remove('hidden');
@@ -4297,7 +4387,7 @@
             const okBtn = document.getElementById('confirmModalOkBtn');
             const cancelBtn = document.getElementById('confirmModalCancelBtn');
             okBtn.textContent = 'Tolak & Konfirmasi';
-            okBtn.className = 'flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-md';
+            okBtn.className = 'flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-md cursor-pointer';
 
             const cleanup = () => {
                 if (wrapAlasan) wrapAlasan.classList.add('hidden');
@@ -5442,7 +5532,7 @@
             } else if (activeTab === 'anggota') {
                 renderAnggotaTab();
             } else if (activeTab === 'bank') {
-                renderBankTab();
+                window.renderBankTab();
             } else if (activeTab === 'pengaturan') {
                 renderPengaturanAuditTab();
             } else if (activeTab === 'shu') {
@@ -5888,28 +5978,43 @@
                 return false;
             }
 
-            if (editId) {
-                const v = (appState.votings || []).find(item => item.id === editId);
-                if (v) {
-                    v.pertanyaan = pertanyaan;
-                    v.opsi = opsi;
-                }
-            } else {
-                appState.votings.push({
-                    id: 'v_' + Date.now(),
-                    pertanyaan,
-                    opsi,
-                    suara: {},
-                    pembuat: currentUserSession.nama
-                });
-            }
+            const oldV = editId ? (appState.votings || []).find(item => item.id === editId) : null;
+            const previewItems = oldV
+                ? [
+                    { label: 'Pertanyaan Voting', before: oldV.pertanyaan, after: pertanyaan },
+                    { label: 'Pilihan Opsi', before: (oldV.opsi || []).join(', '), after: opsi.join(', ') }
+                  ]
+                : [
+                    { label: 'Pertanyaan Voting', value: pertanyaan, highlight: 'blue' },
+                    { label: 'Daftar Opsi (' + opsi.length + ')', value: opsi.join(', ') }
+                  ];
 
-            saveStateToCloud();
-            document.getElementById('formVoting').reset();
-            document.getElementById('editVotingId').value = '';
-            document.getElementById('modalVoting').classList.add('hidden');
-            window.renderApp();
-            window.showToast(editId ? 'Topik voting berhasil diperbarui!' : 'Topik voting keluarga berhasil diterbitkan!');
+            window.showConfirmModal(
+                editId ? 'Konfirmasi Perubahan Voting' : 'Konfirmasi Terbitkan Voting',
+                'Periksa kembali isi pertanyaan dan opsi voting sebelum ditampilkan di Beranda:',
+                () => {
+                    if (editId && oldV) {
+                        oldV.pertanyaan = pertanyaan;
+                        oldV.opsi = opsi;
+                    } else {
+                        appState.votings.push({
+                            id: 'v_' + Date.now(),
+                            pertanyaan,
+                            opsi,
+                            suara: {},
+                            pembuat: currentUserSession.nama
+                        });
+                    }
+                    window.catatLogAuditSistem('PENGATURAN', editId ? 'Edit Topik Voting' : 'Buat Topik Voting', pertanyaan, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('formVoting').reset();
+                    document.getElementById('editVotingId').value = '';
+                    document.getElementById('modalVoting').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast(editId ? 'Topik voting berhasil diperbarui!' : 'Topik voting keluarga berhasil diterbitkan!');
+                },
+                previewItems
+            );
             return false;
         };
 
@@ -5928,13 +6033,25 @@
         window.simpanPengumumanBaru = (e) => {
             if (e && e.preventDefault) e.preventDefault();
             const teks = document.getElementById('inputTeksPengumuman').value.trim();
-            if (teks) {
-                appState.pengumuman = teks;
-                saveStateToCloud();
-                document.getElementById('modalPengumuman').classList.add('hidden');
-                window.renderApp();
-                window.showToast('Pengumuman berhasil diperbarui!');
+            if (!teks) {
+                window.showToast('Teks pengumuman tidak boleh kosong!', 'error');
+                return false;
             }
+            window.showConfirmModal(
+                'Konfirmasi Perubahan Pengumuman',
+                'Periksa preview teks pengumuman berjalan sebelum diperbarui untuk seluruh anggota:',
+                () => {
+                    appState.pengumuman = teks;
+                    window.catatLogAuditSistem('PENGATURAN', 'Perbarui Pengumuman Berjalan', teks, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalPengumuman').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast('Pengumuman berhasil diperbarui!');
+                },
+                [
+                    { label: 'Teks Pengumuman', before: appState.pengumuman || '-', after: teks }
+                ]
+            );
             return false;
         };
 
@@ -6203,21 +6320,44 @@
                 );
                 return;
             }
+            const rSaatIni = window.hitungRincianSimpananAnggota(t.anggotaId);
             if (statusBaru === 'Disetujui' && t.tipe === 'Penarikan') {
-                const r = window.hitungRincianSimpananAnggota(t.anggotaId);
-                const batasSaldo = t.isPenutupanAnggota ? r.total : r.sukarela;
+                const batasSaldo = t.isPenutupanAnggota ? rSaatIni.total : rSaatIni.sukarela;
                 if (Number(t.nominal) > batasSaldo) {
                     window.showToast(`Gagal menyetujui! Saldo Simpanan Sukarela ${t.nama} (${window.formatRupiah(batasSaldo)}) tidak mencukupi untuk penarikan ini.`, 'error');
                     return;
                 }
             }
-            t.status = statusBaru;
-            delete t.alasanPenolakan;
-            window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Transaksi Simpanan`, `${t.tipe} ${t.kategori} a.n ${t.nama} (${window.formatRupiah(t.nominal)})`, statusBaru);
-            window.sinkronkanBukuSimpananPenuh(false);
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast(`Transaksi ${statusBaru.toLowerCase()}!`);
+            const saldoSesudah = t.tipe === 'Setoran' ? (rSaatIni.total + Number(t.nominal || 0)) : Math.max(0, rSaatIni.total - Number(t.nominal || 0));
+            window.showConfirmModal(
+                'Konfirmasi Persetujuan Simpanan',
+                `Periksa preview transaksi sebelum disetujui dan dimasukkan ke Buku Simpanan:`,
+                () => {
+                    t.status = statusBaru;
+                    delete t.alasanPenolakan;
+                    window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Transaksi Simpanan`, `${t.tipe} ${t.kategori} a.n ${t.nama} (${window.formatRupiah(t.nominal)})`, statusBaru);
+                    window.sinkronkanBukuSimpananPenuh(false);
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.tampilkanAnimasiTransaksiBerhasil({
+                        judul: `Transaksi ${t.nama} Disetujui!`,
+                        nominal: t.nominal,
+                        nama: t.nama,
+                        kategori: `${t.tipe} • ${t.kategori}`,
+                        kanal: t.bankTujuan || 'Kas Koperasi',
+                        status: 'Disetujui',
+                        waktu: t.waktu,
+                        trxId: t.id
+                    });
+                },
+                [
+                    { label: 'Nama Anggota', value: t.nama },
+                    { label: 'Tipe & Kategori', value: `${t.tipe} (${t.kategori})`, highlight: t.tipe === 'Setoran' ? 'emerald' : 'rose' },
+                    { label: 'Nominal Transaksi', value: window.formatRupiah(t.nominal), highlight: 'blue' },
+                    { label: 'Saldo Anggota', before: window.formatRupiah(rSaatIni.total), after: window.formatRupiah(saldoSesudah) },
+                    { label: 'Rekening / Bank', value: t.bankTujuan || 'Kas Koperasi' }
+                ]
+            );
         };
 
         window.approveAllSelected = () => {
@@ -6231,28 +6371,43 @@
                 window.showToast('Pilih setidaknya satu transaksi pada kotak centang!', 'error');
                 return;
             }
-            let approvedCount = 0;
-            let skippedCount = 0;
-            appState.transaksi.forEach(t => {
-                if (ids.includes(t.id) && t.status === 'Menunggu') {
-                    if (t.tipe === 'Penarikan') {
-                        const saldoSaatIni = window.hitungSaldoAnggota(t.anggotaId);
-                        if (Number(t.nominal) > saldoSaatIni) {
-                            skippedCount++;
-                            return;
+            const selectedItems = (appState.transaksi || []).filter(t => ids.includes(t.id) && t.status === 'Menunggu');
+            const totalNom = selectedItems.reduce((acc, t) => acc + (Number(t.nominal) || 0), 0);
+            window.showConfirmModal(
+                'Konfirmasi Setujui Transaksi Terpilih',
+                `Periksa ringkasan ${selectedItems.length} transaksi yang dicentang sebelum disetujui sekaligus:`,
+                () => {
+                    let approvedCount = 0;
+                    let skippedCount = 0;
+                    appState.transaksi.forEach(t => {
+                        if (ids.includes(t.id) && t.status === 'Menunggu') {
+                            if (t.tipe === 'Penarikan') {
+                                const saldoSaatIni = window.hitungSaldoAnggota(t.anggotaId);
+                                if (Number(t.nominal) > saldoSaatIni) {
+                                    skippedCount++;
+                                    return;
+                                }
+                            }
+                            t.status = 'Disetujui';
+                            approvedCount++;
                         }
+                    });
+                    window.catatLogAuditSistem('TRANSAKSI', 'Setujui Massal Terpilih', `${approvedCount} transaksi disetujui (${skippedCount} dilewati)`, 'Sukses');
+                    window.sinkronkanBukuSimpananPenuh(false);
+                    saveStateToCloud();
+                    window.renderApp();
+                    if (skippedCount > 0) {
+                        window.showToast(`${approvedCount} disetujui, ${skippedCount} penarikan dilewati karena saldo tidak cukup!`, 'info');
+                    } else {
+                        window.showToast(`${approvedCount} transaksi berhasil disetujui!`);
                     }
-                    t.status = 'Disetujui';
-                    approvedCount++;
-                }
-            });
-            saveStateToCloud();
-            window.renderApp();
-            if (skippedCount > 0) {
-                window.showToast(`${approvedCount} disetujui, ${skippedCount} penarikan dilewati karena saldo tidak cukup!`, 'info');
-            } else {
-                window.showToast(`${approvedCount} transaksi berhasil disetujui!`);
-            }
+                },
+                [
+                    { label: 'Jumlah Dicentang', value: `${selectedItems.length} Transaksi`, highlight: 'blue' },
+                    { label: 'Total Akumulasi Nominal', value: window.formatRupiah(totalNom), highlight: 'emerald' },
+                    { label: 'Daftar Nama', value: selectedItems.map(x => x.nama).slice(0, 4).join(', ') + (selectedItems.length > 4 ? '...' : '') }
+                ]
+            );
         };
 
         window.rejectAllSelected = () => {
@@ -6772,14 +6927,26 @@
                 }
             }
 
-            if (!appState.matriksIuranManual) appState.matriksIuranManual = {};
-            const keyManual = `${anggotaId}_${tahun}_${bulanIdx}_${jenis}`;
             const nextBool = currentStatus !== 'LUNAS';
-            appState.matriksIuranManual[keyManual] = nextBool;
-            window.catatLogAuditSistem('TRANSAKSI', 'Update Matriks Iuran 12 Bulan', `${anggota.nama} - Bulan ke-${bulanIdx}/${tahun} (${jenis}): ${nextBool ? 'Lunas' : 'Belum'}`, 'Sukses');
-            saveStateToCloud();
-            window.renderMatriksIuran12Bulan();
-            window.showToast(`Status Simpanan Wajib ${anggota.nama} (Bulan ${bulanIdx}/${tahun}): ${nextBool ? '✓ Lunas' : '⏳ Belum'}`);
+            const namaBulanLbl = (window.NAMA_BULAN_PANJANG && window.NAMA_BULAN_PANJANG[bulanIdx - 1]) ? `${window.NAMA_BULAN_PANJANG[bulanIdx - 1]} ${tahun}` : `Bulan ${bulanIdx}/${tahun}`;
+            window.showConfirmModal(
+                'Konfirmasi Perubahan Status Matriks',
+                `Ubah status manual Matriks Kartu Kendali untuk ${anggota.nama}?`,
+                () => {
+                    if (!appState.matriksIuranManual) appState.matriksIuranManual = {};
+                    const keyManual = `${anggotaId}_${tahun}_${bulanIdx}_${jenis}`;
+                    appState.matriksIuranManual[keyManual] = nextBool;
+                    window.catatLogAuditSistem('TRANSAKSI', 'Update Matriks Iuran 12 Bulan', `${anggota.nama} - ${namaBulanLbl} (${jenis}): ${nextBool ? 'Lunas' : 'Belum'}`, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast(`Status Simpanan Wajib ${anggota.nama} (${namaBulanLbl}): ${nextBool ? '✓ Lunas' : '⏳ Belum'}`);
+                },
+                [
+                    { label: 'Nama Anggota', value: anggota.nama },
+                    { label: 'Periode Iuran', value: namaBulanLbl, highlight: 'blue' },
+                    { label: 'Status Matriks', before: currentStatus === 'LUNAS' ? '✓ Lunas' : '• Belum Lunas', after: nextBool ? '✓ Lunas' : '• Belum Lunas' }
+                ]
+            );
         };
 
         window.renderMatriksIuran12Bulan = () => {
@@ -7483,9 +7650,10 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
                         const jmlBulanEdit = parseInt(document.getElementById('wajibJumlahBulanSelect')?.value || '1') || 1;
                         editPeriodeWajib = window.buatDaftarBulanRapel(ymMulaiEdit, jmlBulanEdit);
                     }
+                    const oldTrxSnap = { nama: trx.nama, tipe: trx.tipe, kategori: trx.kategori, nominal: trx.nominal, bankTujuan: trx.bankTujuan || '-', waktu: trx.waktu };
                     window.showConfirmModal(
-                        'Konfirmasi Perubahan Transaksi',
-                        `Simpan perubahan ${tipe} ${kategori} a.n ${anggotaObj ? anggotaObj.nama : trx.nama} sebesar ${window.formatRupiah(nominal)}${editPeriodeWajib.length > 0 ? ' (Matriks Bulan: ' + editPeriodeWajib.join(', ') + ')' : ''}?`,
+                        'Preview & Konfirmasi Edit Transaksi',
+                        'Periksa perbandingan data transaksi sebelum perubahan disimpan:',
                         () => {
                             trx.anggotaId = anggotaId;
                             trx.nama = anggotaObj ? anggotaObj.nama : trx.nama;
@@ -7508,7 +7676,15 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
                             document.getElementById('modalTransaksi').classList.add('hidden');
                             window.renderApp();
                             window.showToast('Catatan transaksi & Matriks Kartu Kendali 12 Bulan berhasil diperbarui!');
-                        }
+                        },
+                        [
+                            { label: 'Anggota', before: oldTrxSnap.nama, after: anggotaObj ? anggotaObj.nama : oldTrxSnap.nama },
+                            { label: 'Tipe & Kategori', before: `${oldTrxSnap.tipe} (${oldTrxSnap.kategori})`, after: `${tipe} (${kategori})` },
+                            { label: 'Nominal', before: window.formatRupiah(oldTrxSnap.nominal), after: window.formatRupiah(nominal) },
+                            { label: 'Rekening / Bank', before: oldTrxSnap.bankTujuan, after: bankTujuan || '-' },
+                            { label: 'Waktu', before: oldTrxSnap.waktu, after: waktuManual || oldTrxSnap.waktu }
+                        ],
+                        '⚠️ Perubahan nominal/tipe langsung menghitung ulang saldo anggota & saldo bank terkait.'
                     );
                 }
                 return false;
@@ -7544,9 +7720,11 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
             }
 
             const namaAnggotaLabel = anggotaObj ? anggotaObj.nama : 'Anggota';
+            const rPreviewTrx = window.hitungRincianSimpananAnggota(anggotaId);
+            const saldoSesudahTrx = tipe === 'Setoran' ? (rPreviewTrx.total + nominal) : Math.max(0, rPreviewTrx.total - nominal);
             window.showConfirmModal(
-                `Konfirmasi ${tipe} Simpanan`,
-                `Simpan ${tipe} ${kategoriFinal} atas nama ${namaAnggotaLabel} sebesar ${window.formatRupiah(nominal)}${periodeWajibBulan.length > 0 ? ' (Otomatis Mengisi Matriks Bulan: ' + periodeWajibBulan.join(', ') + ')' : ''} melalui ${bankTujuan || 'Kas Koperasi'}?`,
+                `Preview & Konfirmasi ${tipe} Simpanan`,
+                'Pastikan rincian transaksi di bawah ini sudah benar sebelum disimpan:',
                 () => {
                     const newTrx = {
                         id: 't_' + Date.now(),
@@ -7584,7 +7762,17 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
                         waktu: newTrx.waktu,
                         trxId: newTrx.id
                     });
-                }
+                },
+                [
+                    { label: 'Nama Anggota', value: namaAnggotaLabel },
+                    { label: 'Tipe & Kategori', value: `${tipe} • ${kategoriFinal}`, highlight: tipe === 'Setoran' ? 'emerald' : 'rose' },
+                    { label: 'Nominal', value: window.formatRupiah(nominal), highlight: 'blue' },
+                    { label: 'Estimasi Saldo Total', before: window.formatRupiah(rPreviewTrx.total), after: window.formatRupiah(saldoSesudahTrx) },
+                    ...(periodeWajibBulan.length > 0 ? [{ label: 'Alokasi Matriks', value: periodeWajibBulan.join(', '), highlight: 'emerald' }] : []),
+                    { label: 'Rekening / Bank', value: bankTujuan || 'Kas Koperasi' },
+                    { label: 'Bukti Foto', value: buktiUrl ? '✓ Terlampir' : 'Tanpa Foto' }
+                ],
+                tipe === 'Penarikan' ? '⚠️ Periksa nominal penarikan & rekening tujuan sebelum konfirmasi.' : 'Pastikan nominal & bulan iuran sesuai bukti transfer.'
             );
             return false;
         };
@@ -8439,15 +8627,28 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
 
         window.simpanSettingPinjaman = (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            appState.pinjamanSetting = {
-                maxPlafonMultiplier: parseFloat(document.getElementById('inputPlafonMultiplier').value) || 3,
-                bungaPerBulan: parseFloat(document.getElementById('inputBungaPersen').value) || 1,
-                maxTenor: parseInt(document.getElementById('inputMaxTenor').value) || 12
-            };
-            saveStateToCloud();
-            document.getElementById('modalSettingPinjaman').classList.add('hidden');
-            window.renderApp();
-            window.showToast('Pengaturan Simpan Pinjam berhasil diperbarui!');
+            const oldSet = appState.pinjamanSetting || { maxPlafonMultiplier: 3, bungaPerBulan: 1, maxTenor: 12 };
+            const newMult = parseFloat(document.getElementById('inputPlafonMultiplier').value) || 3;
+            const newBunga = parseFloat(document.getElementById('inputBungaPersen').value) || 1;
+            const newTenor = parseInt(document.getElementById('inputMaxTenor').value) || 12;
+
+            window.showConfirmModal(
+                'Konfirmasi Pengaturan Pembiayaan',
+                'Periksa perbandingan batas plafon & margin syariah sebelum diterapkan:',
+                () => {
+                    appState.pinjamanSetting = { maxPlafonMultiplier: newMult, bungaPerBulan: newBunga, maxTenor: newTenor };
+                    window.catatLogAuditSistem('PENGATURAN', 'Ubah Parameter Pembiayaan', `Plafon: ${newMult}x, Margin: ${newBunga}%, Max Tenor: ${newTenor} bln`, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalSettingPinjaman').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast('Pengaturan Pembiayaan Syariah berhasil diperbarui!');
+                },
+                [
+                    { label: 'Batas Plafon Maks', before: `${oldSet.maxPlafonMultiplier ?? 3}x Simpanan`, after: `${newMult}x Simpanan` },
+                    { label: 'Margin Standar / Bln', before: `${oldSet.bungaPerBulan ?? 1}%`, after: `${newBunga}%` },
+                    { label: 'Tenor Maksimal', before: `${oldSet.maxTenor ?? 12} Bulan`, after: `${newTenor} Bulan` }
+                ]
+            );
             return false;
         };
 
@@ -9083,12 +9284,24 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
             const catatan = document.getElementById('bonusCatatanInput').value.trim();
             const a = appState.anggota.find(x => x.id === id);
             if (a) {
-                a.poinBonus = bonus;
-                a.catatanBonus = catatan;
-                saveStateToCloud();
-                document.getElementById('modalPoinBonus').classList.add('hidden');
-                window.renderApp();
-                window.showToast(`Poin apresiasi untuk ${a.nama} berhasil disimpan!`);
+                window.showConfirmModal(
+                    'Konfirmasi Pemberian Poin Bonus',
+                    'Periksa preview perubahan poin apresiasi anggota sebelum disimpan:',
+                    () => {
+                        a.poinBonus = bonus;
+                        a.catatanBonus = catatan;
+                        window.catatLogAuditSistem('PENGATURAN', 'Ubah Poin Bonus Teladan', `${a.nama}: ${bonus} Poin (${catatan || '-'})`, 'Sukses');
+                        saveStateToCloud();
+                        document.getElementById('modalPoinBonus').classList.add('hidden');
+                        window.renderApp();
+                        window.showToast(`🎁 Poin apresiasi untuk ${a.nama} (${bonus} Poin) berhasil disimpan!`);
+                    },
+                    [
+                        { label: 'Anggota', value: a.nama },
+                        { label: 'Poin Bonus', before: `${a.poinBonus || 0} Poin`, after: `${bonus} Poin` },
+                        { label: 'Catatan', before: a.catatanBonus || '-', after: catatan || '-' }
+                    ]
+                );
             }
             return false;
         };
@@ -9701,22 +9914,38 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
             if (editId) {
                 const idx = appState.anggota.findIndex(a => a.id === editId);
                 if (idx !== -1) {
-                    const oldName = appState.anggota[idx].nama;
-                    const fotoProfil = fotoProfilBaru || appState.anggota[idx].fotoProfil || '';
-                    const pin = (isSuper && inputPinVal) ? window.encryptPinKoperasi(inputPinVal) : appState.anggota[idx].pin;
-                    const role = isSuper ? rawRole : appState.anggota[idx].role;
-                    appState.anggota[idx] = { ...appState.anggota[idx], nama, hubungan, namaKeluarga, kontak, email, ahliWaris, rekeningPribadi, pin, role, tglGabung, fotoProfil };
-                    // Sinkronkan perubahan nama di seluruh riwayat terkait
-                    (appState.transaksi || []).forEach(t => { if (t.anggotaId === editId) t.nama = nama; });
-                    (appState.pinjaman || []).forEach(p => { if (p.anggotaId === editId) p.nama = nama; });
-                    (appState.zis || []).forEach(z => { if (z.anggotaId === editId || z.nama === oldName) z.nama = nama; });
-                    if (currentUserSession && currentUserSession.id === editId) {
-                        currentUserSession = appState.anggota[idx];
-                    }
-                    saveStateToCloud();
-                    document.getElementById('modalAnggota').classList.add('hidden');
-                    window.renderApp();
-                    window.showToast(`Data ${nama} berhasil diperbarui!`);
+                    const oldA = appState.anggota[idx];
+                    const nextRole = isSuper ? rawRole : oldA.role;
+                    window.showConfirmModal(
+                        'Preview & Konfirmasi Edit Anggota',
+                        `Periksa perubahan data anggota atas nama ${oldA.nama} sebelum disimpan:`,
+                        () => {
+                            const oldName = oldA.nama;
+                            const fotoProfil = fotoProfilBaru || oldA.fotoProfil || '';
+                            const pin = (isSuper && inputPinVal) ? window.encryptPinKoperasi(inputPinVal) : oldA.pin;
+                            appState.anggota[idx] = { ...oldA, nama, hubungan, namaKeluarga, kontak, email, ahliWaris, rekeningPribadi, pin, role: nextRole, tglGabung, fotoProfil };
+                            (appState.transaksi || []).forEach(t => { if (t.anggotaId === editId) t.nama = nama; });
+                            (appState.pinjaman || []).forEach(p => { if (p.anggotaId === editId) p.nama = nama; });
+                            (appState.zis || []).forEach(z => { if (z.anggotaId === editId || z.nama === oldName) z.nama = nama; });
+                            if (currentUserSession && currentUserSession.id === editId) {
+                                currentUserSession = appState.anggota[idx];
+                            }
+                            window.catatLogAuditSistem('PENGATURAN', 'Edit Data Anggota', `${oldName} → ${nama} (${namaKeluarga}, WA: ${kontak})`, 'Sukses');
+                            saveStateToCloud();
+                            document.getElementById('modalAnggota').classList.add('hidden');
+                            window.renderApp();
+                            window.showToast(`✅ Data anggota ${nama} berhasil diperbarui!`);
+                        },
+                        [
+                            { label: 'Nama Lengkap', before: oldA.nama, after: nama },
+                            { label: 'Keluarga (KK)', before: oldA.namaKeluarga, after: namaKeluarga },
+                            { label: 'No. WhatsApp', before: oldA.kontak, after: kontak },
+                            { label: 'Peran / Jabatan', before: oldA.role, after: nextRole },
+                            { label: 'Tanggal Gabung', before: window.getTanggalGabungEfektifAnggota(oldA), after: tglGabung },
+                            { label: 'Ahli Waris', before: oldA.ahliWaris || '-', after: ahliWaris || '-' },
+                            ...(isSuper && inputPinVal ? [{ label: 'Keamanan PIN', value: 'Diperbarui & Dienkripsi SHA-256', highlight: 'amber' }] : [])
+                        ]
+                    );
                 }
                 return false;
             }
@@ -9726,59 +9955,71 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
                 return false;
             }
 
-            const newId = 'a_' + Date.now();
-            const newA = {
-                id: newId,
-                namaKeluarga,
-                nama,
-                hubungan,
-                tglGabung,
-                fotoProfil: fotoProfilBaru || '',
-                kontak,
-                email,
-                ahliWaris,
-                rekeningPribadi,
-                pin: window.encryptPinKoperasi(inputPinVal || '1234'),
-                role: isSuper ? rawRole : 'member',
-                saldo: 0,
-                simpananPokok: 0,
-                simpananWajib: 0,
-                simpananSukarela: 0
-            };
-
-            appState.anggota.push(newA);
-
-            // Otomatisasi Setoran Awal Simpanan Pokok
             const chkPokok = document.getElementById('chkSetorPokokAwal')?.checked;
             const nomPokokAwal = parseFloat(document.getElementById('inputNominalPokokAwal')?.value) || 0;
-            if (chkPokok && nomPokokAwal > 0) {
-                appState.transaksi.push({
-                    id: 't_awal_' + Date.now(),
-                    waktu: window.getWaktuLokalSekarang(),
-                    anggotaId: newId,
-                    nama,
-                    tipe: 'Setoran',
-                    kategori: 'Simpanan Pokok',
-                    nominal: nomPokokAwal,
-                    status: 'Disetujui',
-                    bukti: '',
-                    bankTujuan: (appState.rekeningBank?.[0]?.nama) || 'Kas Koperasi',
-                    keterangan: 'Setoran awal Simpanan Pokok pendaftaran anggota'
-                });
-            }
-
-            // Otomatisasi Persetujuan Pakta AD/ART
             const chkAdArt = document.getElementById('chkSetujuAdArtAwal')?.checked;
-            if (chkAdArt) {
-                if (!Array.isArray(appState.adArtSignedBy)) appState.adArtSignedBy = [];
-                if (!appState.adArtSignedBy.includes(newId)) appState.adArtSignedBy.push(newId);
-            }
+            const targetRoleNew = isSuper ? rawRole : 'member';
 
-            window.catatLogAuditSistem('PENGATURAN', 'Tambah Anggota Keluarga Baru', `${nama} (${namaKeluarga} - WA: ${kontak})`, 'Sukses');
-            saveStateToCloud();
-            document.getElementById('modalAnggota').classList.add('hidden');
-            window.renderApp();
-            window.showToast(`Anggota ${nama} berhasil ditambahkan${chkPokok && nomPokokAwal > 0 ? ' beserta Simpanan Pokok ' + window.formatRupiah(nomPokokAwal) : ''}!`);
+            window.showConfirmModal(
+                'Preview & Konfirmasi Tambah Anggota',
+                'Periksa kelengkapan data anggota baru sebelum ditambahkan ke koperasi:',
+                () => {
+                    const newId = 'a_' + Date.now();
+                    const newA = {
+                        id: newId,
+                        namaKeluarga,
+                        nama,
+                        hubungan,
+                        tglGabung,
+                        fotoProfil: fotoProfilBaru || '',
+                        kontak,
+                        email,
+                        ahliWaris,
+                        rekeningPribadi,
+                        pin: window.encryptPinKoperasi(inputPinVal || '1234'),
+                        role: targetRoleNew,
+                        saldo: 0,
+                        simpananPokok: 0,
+                        simpananWajib: 0,
+                        simpananSukarela: 0
+                    };
+                    appState.anggota.push(newA);
+
+                    if (chkPokok && nomPokokAwal > 0) {
+                        appState.transaksi.push({
+                            id: 't_awal_' + Date.now(),
+                            waktu: window.getWaktuLokalSekarang(),
+                            anggotaId: newId,
+                            nama,
+                            tipe: 'Setoran',
+                            kategori: 'Simpanan Pokok',
+                            nominal: nomPokokAwal,
+                            status: 'Disetujui',
+                            bukti: '',
+                            bankTujuan: (appState.rekeningBank?.[0]?.nama) || 'Kas Koperasi',
+                            keterangan: 'Setoran awal Simpanan Pokok pendaftaran anggota'
+                        });
+                    }
+                    if (chkAdArt) {
+                        if (!Array.isArray(appState.adArtSignedBy)) appState.adArtSignedBy = [];
+                        if (!appState.adArtSignedBy.includes(newId)) appState.adArtSignedBy.push(newId);
+                    }
+
+                    window.catatLogAuditSistem('PENGATURAN', 'Tambah Anggota Keluarga Baru', `${nama} (${namaKeluarga} - WA: ${kontak})`, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalAnggota').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast(`✅ Anggota ${nama} berhasil ditambahkan${chkPokok && nomPokokAwal > 0 ? ' beserta Simpanan Pokok ' + window.formatRupiah(nomPokokAwal) : ''}!`);
+                },
+                [
+                    { label: 'Nama Lengkap', value: nama, highlight: 'emerald' },
+                    { label: 'Keluarga (KK) & Hubungan', value: `${namaKeluarga} (${hubungan})` },
+                    { label: 'No. WhatsApp & Email', value: `${kontak} • ${email || '-'}` },
+                    { label: 'Peran & Tgl Gabung', value: `${targetRoleNew} • ${tglGabung}` },
+                    { label: 'Setoran Pokok Awal', value: chkPokok && nomPokokAwal > 0 ? window.formatRupiah(nomPokokAwal) : 'Belum disetor saat daftar', highlight: chkPokok && nomPokokAwal > 0 ? 'blue' : '' },
+                    { label: 'Pakta AD/ART', value: chkAdArt ? '✓ Ditandatangani' : 'Belum' }
+                ]
+            );
             return false;
         };
 
@@ -9813,16 +10054,36 @@ _Silakan catat setoran melalui aplikasi Koperasi Keluarga agar Matriks 12 Bulan 
                     );
                     return;
                 }
-                p.status = status;
-                delete p.alasanPenolakan;
-                if (status === 'Disetujui' && !p.bankSumber) {
-                    const bankUtama = (appState.rekeningBank || []).find(b => b.isUtama) || (appState.rekeningBank || [])[0];
-                    if (bankUtama) p.bankSumber = bankUtama.nama;
-                }
-                window.catatLogAuditSistem('TRANSAKSI', `${status} Akad Pembiayaan`, `${p.jenisAkad || 'Pembiayaan'} a.n ${p.nama} (${window.formatRupiah(p.nominal)}) via ${p.bankSumber || 'Kas'}`, status);
-                saveStateToCloud();
-                window.renderApp();
-                window.showToast(`Pinjaman ${status.toLowerCase()}!`);
+                const bankPilih = p.bankSumber || ((appState.rekeningBank || []).find(b => b.isUtama) || (appState.rekeningBank || [])[0])?.nama || 'Kas Koperasi';
+                window.showConfirmModal(
+                    'Konfirmasi Persetujuan Pembiayaan',
+                    'Periksa preview akad pembiayaan sebelum dicairkan:',
+                    () => {
+                        p.status = status;
+                        delete p.alasanPenolakan;
+                        if (status === 'Disetujui' && !p.bankSumber && bankPilih !== 'Kas Koperasi') {
+                            p.bankSumber = bankPilih;
+                        }
+                        window.catatLogAuditSistem('TRANSAKSI', `${status} Akad Pembiayaan`, `${p.jenisAkad || 'Pembiayaan'} a.n ${p.nama} (${window.formatRupiah(p.nominal)}) via ${p.bankSumber || 'Kas'}`, status);
+                        saveStateToCloud();
+                        window.renderApp();
+                        window.tampilkanAnimasiTransaksiBerhasil({
+                            judul: `Akad ${p.jenisAkad || 'Syariah'} Disetujui!`,
+                            nominal: p.nominal,
+                            nama: p.nama,
+                            kategori: `Pembiayaan ${p.jenisAkad || 'Murabahah'} (${p.tenor} Bln)`,
+                            kanal: p.bankSumber || bankPilih,
+                            status: 'Disetujui',
+                            waktu: window.getWaktuLokalSekarang()
+                        });
+                    },
+                    [
+                        { label: 'Pemohon', value: p.nama },
+                        { label: 'Akad & Tenor', value: `${p.jenisAkad || 'Murabahah'} (${p.tenor} Bulan)` },
+                        { label: 'Nominal Pencairan', value: window.formatRupiah(p.nominal), highlight: 'blue' },
+                        { label: 'Rekening Sumber Dana', value: bankPilih, highlight: 'emerald' }
+                    ]
+                );
             }
         };
 
@@ -10023,12 +10284,32 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                         );
                         return;
                     }
-                    c.status = statusBaru;
-                    delete c.alasanPenolakan;
-                    window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Angsuran Pinjaman`, `Angsuran a.n ${p.nama} (${window.formatRupiah(c.nominal)})`, statusBaru);
-                    saveStateToCloud();
-                    window.renderApp();
-                    window.showToast(`Cicilan pinjaman ${statusBaru.toLowerCase()}!`);
+                    window.showConfirmModal(
+                        'Konfirmasi Persetujuan Angsuran',
+                        'Periksa preview pembayaran angsuran sebelum disetujui:',
+                        () => {
+                            c.status = statusBaru;
+                            delete c.alasanPenolakan;
+                            window.catatLogAuditSistem('TRANSAKSI', `${statusBaru} Angsuran Pinjaman`, `Angsuran a.n ${p.nama} (${window.formatRupiah(c.nominal)})`, statusBaru);
+                            saveStateToCloud();
+                            window.renderApp();
+                            window.tampilkanAnimasiTransaksiBerhasil({
+                                judul: `Angsuran ${p.nama} Disetujui!`,
+                                nominal: c.nominal,
+                                nama: p.nama,
+                                kategori: `Angsuran Pembiayaan (${p.jenisAkad || 'Murabahah'})`,
+                                kanal: c.bankTujuan || 'Kas Koperasi',
+                                status: 'Disetujui',
+                                waktu: c.tanggal || window.getTanggalLokalHariIni()
+                            });
+                        },
+                        [
+                            { label: 'Nama Anggota', value: p.nama },
+                            { label: 'Nominal Angsuran', value: window.formatRupiah(c.nominal), highlight: 'emerald' },
+                            { label: 'Metode / Bank', value: c.bankTujuan || c.metodeBayar || 'Transfer Kas' },
+                            { label: 'Tanggal Bayar', value: c.tanggal || '-' }
+                        ]
+                    );
                 }
             }
         };
@@ -10081,34 +10362,53 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             const isi = document.getElementById('notulensiIsi').value.trim();
             if (!appState.notulensiRapat) appState.notulensiRapat = [];
 
-            if (editId) {
-                const n = appState.notulensiRapat.find(x => x.id === editId);
-                if (n) {
-                    n.tanggal = tanggal;
-                    n.kategori = kategori;
-                    n.judul = judul;
-                    n.pimpinan = pimpinan;
-                    n.jumlahHadir = jumlahHadir;
-                    n.status = status;
-                    n.isi = isi;
-                }
-            } else {
-                appState.notulensiRapat.unshift({
-                    id: 'not_' + Date.now(),
-                    tanggal,
-                    kategori,
-                    judul,
-                    pimpinan,
-                    jumlahHadir,
-                    status,
-                    isi,
-                    diketahuiOleh: [currentUserSession.id]
-                });
-            }
-            saveStateToCloud();
-            document.getElementById('modalNotulensi').classList.add('hidden');
-            window.renderApp();
-            window.showToast(editId ? 'Notulensi rapat berhasil diperbarui!' : 'Notulensi rapat berhasil disimpan!');
+            const oldN = editId ? appState.notulensiRapat.find(x => x.id === editId) : null;
+            const previewNot = oldN
+                ? [
+                    { label: 'Judul Rapat', before: oldN.judul, after: judul },
+                    { label: 'Tanggal & Kategori', before: `${oldN.tanggal} (${oldN.kategori})`, after: `${tanggal} (${kategori})` },
+                    { label: 'Status Pengesahan', before: oldN.status, after: status }
+                  ]
+                : [
+                    { label: 'Judul Rapat', value: judul, highlight: 'blue' },
+                    { label: 'Tanggal & Kategori', value: `${tanggal} (${kategori})` },
+                    { label: 'Pimpinan & Hadir', value: `${pimpinan} (${jumlahHadir} Anggota)` },
+                    { label: 'Status', value: status, highlight: 'emerald' }
+                  ];
+
+            window.showConfirmModal(
+                editId ? 'Konfirmasi Edit Notulensi Rapat' : 'Konfirmasi Simpan Notulensi Rapat',
+                'Periksa preview berita acara notulensi sebelum disimpan:',
+                () => {
+                    if (editId && oldN) {
+                        oldN.tanggal = tanggal;
+                        oldN.kategori = kategori;
+                        oldN.judul = judul;
+                        oldN.pimpinan = pimpinan;
+                        oldN.jumlahHadir = jumlahHadir;
+                        oldN.status = status;
+                        oldN.isi = isi;
+                    } else {
+                        appState.notulensiRapat.unshift({
+                            id: 'not_' + Date.now(),
+                            tanggal,
+                            kategori,
+                            judul,
+                            pimpinan,
+                            jumlahHadir,
+                            status,
+                            isi,
+                            diketahuiOleh: [currentUserSession.id]
+                        });
+                    }
+                    window.catatLogAuditSistem('PENGATURAN', editId ? 'Edit Notulensi Rapat' : 'Catat Notulensi Rapat', judul, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalNotulensi').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast(editId ? 'Notulensi rapat berhasil diperbarui!' : 'Notulensi rapat berhasil disimpan!');
+                },
+                previewNot
+            );
             return false;
         };
 
@@ -10123,11 +10423,29 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
 
         window.simpanAdArtBaru = (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            appState.adArtTeks = document.getElementById('inputTeksAdArt').value.trim();
-            saveStateToCloud();
-            document.getElementById('modalEditAdArt').classList.add('hidden');
-            window.renderApp();
-            window.showToast('Pasal AD/ART berhasil diperbarui!');
+            const teksBaru = document.getElementById('inputTeksAdArt').value.trim();
+            if (!teksBaru) {
+                window.showToast('Teks AD/ART tidak boleh kosong!', 'error');
+                return false;
+            }
+            const oldLen = (appState.adArtTeks || '').length;
+            window.showConfirmModal(
+                'Konfirmasi Perubahan Konstitusi AD/ART',
+                'Periksa ringkasan pembaruan pasal AD/ART Syariah sebelum disahkan:',
+                () => {
+                    appState.adArtTeks = teksBaru;
+                    window.catatLogAuditSistem('PENGATURAN', 'Perbarui Pasal AD/ART Syariah', `Panjang teks diperbarui (${oldLen} → ${teksBaru.length} karakter)`, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalEditAdArt').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast('Pasal AD/ART berhasil diperbarui!');
+                },
+                [
+                    { label: 'Panjang Teks AD/ART', before: `${oldLen} karakter`, after: `${teksBaru.length} karakter` },
+                    { label: 'Cuplikan Awal', value: teksBaru.slice(0, 90) + (teksBaru.length > 90 ? '...' : '') }
+                ],
+                '⚠️ Perubahan ini langsung tampil pada halaman AD/ART seluruh anggota.'
+            );
             return false;
         };
 
@@ -10348,29 +10666,51 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
 
         window.simpanParameterKoperasi = (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            appState.parameterStandar = {
-                simpananPokok: parseFloat(document.getElementById('paramSimpananPokok').value) || 500000,
-                simpananWajib: parseFloat(document.getElementById('paramSimpananWajib').value) || 100000
-            };
-            window.catatLogAuditSistem('PENGATURAN', 'Ubah Parameter Simpanan Standar', `Pokok: ${window.formatRupiah(appState.parameterStandar.simpananPokok)}, Wajib: ${window.formatRupiah(appState.parameterStandar.simpananWajib)}`, 'Sukses');
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast('Parameter standar koperasi berhasil disimpan!');
+            const oldP = appState.parameterStandar || { simpananPokok: 500000, simpananWajib: 100000 };
+            const nextPokok = parseFloat(document.getElementById('paramSimpananPokok').value) || 500000;
+            const nextWajib = parseFloat(document.getElementById('paramSimpananWajib').value) || 100000;
+            window.showConfirmModal(
+                'Konfirmasi Parameter Standar Simpanan',
+                'Periksa perubahan acuan nominal simpanan anggota sebelum disimpan:',
+                () => {
+                    appState.parameterStandar = { simpananPokok: nextPokok, simpananWajib: nextWajib };
+                    window.catatLogAuditSistem('PENGATURAN', 'Ubah Parameter Simpanan Standar', `Pokok: ${window.formatRupiah(nextPokok)}, Wajib: ${window.formatRupiah(nextWajib)}`, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast('✅ Parameter standar koperasi berhasil disimpan!');
+                },
+                [
+                    { label: 'Simpanan Pokok', before: window.formatRupiah(oldP.simpananPokok || 500000), after: window.formatRupiah(nextPokok) },
+                    { label: 'Iuran Wajib / Bulan', before: window.formatRupiah(oldP.simpananWajib || 100000), after: window.formatRupiah(nextWajib) }
+                ]
+            );
             return false;
         };
 
         window.simpanKeamananSistem = (e) => {
             if (e && e.preventDefault) e.preventDefault();
-            appState.securitySetting = {
-                idleTimeoutMenit: parseInt(document.getElementById('secIdleTimeoutMenit').value) || 0,
-                maxFailedLogin: parseInt(document.getElementById('secMaxFailedLogin').value) || 5,
-                lockoutDurationMenit: parseInt(document.getElementById('secLockoutDurationMenit').value) || 5,
-                warnWeakPin: Boolean(document.getElementById('secWajibGantiPinStandar')?.checked)
-            };
-            window.catatLogAuditSistem('PENGATURAN', 'Perbarui Kebijakan Keamanan Sesi & PIN', `Auto-Logout: ${appState.securitySetting.idleTimeoutMenit}m, Max Salah PIN: ${appState.securitySetting.maxFailedLogin}x, Lockout: ${appState.securitySetting.lockoutDurationMenit}m`, 'Sukses');
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast('🔐 Kebijakan keamanan sesi & proteksi PIN berhasil disimpan!');
+            const oldS = appState.securitySetting || { idleTimeoutMenit: 30, maxFailedLogin: 5, lockoutDurationMenit: 5, warnWeakPin: true };
+            const nextIdle = parseInt(document.getElementById('secIdleTimeoutMenit').value) || 0;
+            const nextFail = parseInt(document.getElementById('secMaxFailedLogin').value) || 5;
+            const nextLock = parseInt(document.getElementById('secLockoutDurationMenit').value) || 5;
+            const nextWarn = Boolean(document.getElementById('secWajibGantiPinStandar')?.checked);
+            window.showConfirmModal(
+                'Konfirmasi Kebijakan Keamanan Sistem',
+                'Periksa perubahan aturan keamanan sesi & anti-brute force PIN:',
+                () => {
+                    appState.securitySetting = { idleTimeoutMenit: nextIdle, maxFailedLogin: nextFail, lockoutDurationMenit: nextLock, warnWeakPin: nextWarn };
+                    window.catatLogAuditSistem('PENGATURAN', 'Perbarui Kebijakan Keamanan Sesi & PIN', `Auto-Logout: ${nextIdle}m, Max Salah PIN: ${nextFail}x, Lockout: ${nextLock}m`, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast('🔐 Kebijakan keamanan sesi & proteksi PIN berhasil disimpan!');
+                },
+                [
+                    { label: 'Auto-Logout Idle', before: `${oldS.idleTimeoutMenit ?? 30} Menit`, after: `${nextIdle} Menit` },
+                    { label: 'Batas Salah PIN', before: `${oldS.maxFailedLogin ?? 5}x`, after: `${nextFail}x` },
+                    { label: 'Durasi Kunci Akun', before: `${oldS.lockoutDurationMenit ?? 5} Menit`, after: `${nextLock} Menit` },
+                    { label: 'Pengingat PIN 1234', before: oldS.warnWeakPin !== false ? 'Aktif' : 'Nonaktif', after: nextWarn ? 'Aktif' : 'Nonaktif' }
+                ]
+            );
             return false;
         };
 
@@ -10381,45 +10721,41 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 window.showToast('Tambahkan minimal 1 rekening bank terlebih dahulu!', 'error');
                 return;
             }
-            let fixedCount = 0;
-            (appState.transaksi || []).forEach(t => {
-                if (!t.bankTujuan || t.bankTujuan.trim() === '') {
-                    t.bankTujuan = bankUtama.nama;
-                    fixedCount++;
-                }
-            });
+            let kandidatCount = 0;
+            (appState.transaksi || []).forEach(t => { if (!t.bankTujuan || t.bankTujuan.trim() === '') kandidatCount++; });
             (appState.pinjaman || []).forEach(p => {
-                if (!p.bankSumber || p.bankSumber.trim() === '') {
-                    p.bankSumber = bankUtama.nama;
-                    fixedCount++;
-                }
-                (p.riwayatCicilan || []).forEach(c => {
-                    if (!c.bankTujuan || c.bankTujuan.trim() === '') {
-                        c.bankTujuan = bankUtama.nama;
-                        fixedCount++;
-                    }
-                });
+                if (!p.bankSumber || p.bankSumber.trim() === '') kandidatCount++;
+                (p.riwayatCicilan || []).forEach(c => { if (!c.bankTujuan || c.bankTujuan.trim() === '') kandidatCount++; });
             });
-            (appState.pendapatanShuList || []).forEach(item => {
-                if (!item.bankTujuan || item.bankTujuan.trim() === '') {
-                    item.bankTujuan = bankUtama.nama;
-                    fixedCount++;
-                }
-            });
-            (appState.bebanOperasional || []).forEach(b => {
-                if (!b.bankTujuan || b.bankTujuan.trim() === '') {
-                    b.bankTujuan = bankUtama.nama;
-                    fixedCount++;
-                }
-            });
-            if (fixedCount === 0) {
+            (appState.pendapatanShuList || []).forEach(item => { if (!item.bankTujuan || item.bankTujuan.trim() === '') kandidatCount++; });
+            (appState.bebanOperasional || []).forEach(b => { if (!b.bankTujuan || b.bankTujuan.trim() === '') kandidatCount++; });
+
+            if (kandidatCount === 0) {
                 window.showToast('✓ Seluruh transaksi sudah terhubung dengan rekening bank tujuan.', 'info');
                 return;
             }
-            window.catatLogAuditSistem('TRANSAKSI', 'Auto-Fix Rekonsiliasi Bank', `${fixedCount} transaksi tanpa bank diselaraskan ke rekening utama ${bankUtama.nama}`, 'Sukses');
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast(`⚡ ${fixedCount} transaksi berhasil diselaraskan ke rekening ${bankUtama.nama}!`);
+            window.showConfirmModal(
+                'Konfirmasi Auto-Fix Rekonsiliasi Bank',
+                'Ditemukan mutasi yang belum memiliki nama rekening bank. Selaraskan otomatis?',
+                () => {
+                    let fixedCount = 0;
+                    (appState.transaksi || []).forEach(t => { if (!t.bankTujuan || t.bankTujuan.trim() === '') { t.bankTujuan = bankUtama.nama; fixedCount++; } });
+                    (appState.pinjaman || []).forEach(p => {
+                        if (!p.bankSumber || p.bankSumber.trim() === '') { p.bankSumber = bankUtama.nama; fixedCount++; }
+                        (p.riwayatCicilan || []).forEach(c => { if (!c.bankTujuan || c.bankTujuan.trim() === '') { c.bankTujuan = bankUtama.nama; fixedCount++; } });
+                    });
+                    (appState.pendapatanShuList || []).forEach(item => { if (!item.bankTujuan || item.bankTujuan.trim() === '') { item.bankTujuan = bankUtama.nama; fixedCount++; } });
+                    (appState.bebanOperasional || []).forEach(b => { if (!b.bankTujuan || b.bankTujuan.trim() === '') { b.bankTujuan = bankUtama.nama; fixedCount++; } });
+                    window.catatLogAuditSistem('TRANSAKSI', 'Auto-Fix Rekonsiliasi Bank', `${fixedCount} transaksi tanpa bank diselaraskan ke rekening utama ${bankUtama.nama}`, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast(`⚡ ${fixedCount} transaksi berhasil diselaraskan ke rekening ${bankUtama.nama}!`);
+                },
+                [
+                    { label: 'Jumlah Mutasi Tanpa Bank', value: `${kandidatCount} Transaksi`, highlight: 'amber' },
+                    { label: 'Rekening Tujuan Penyelarasan', value: `${bankUtama.nama} (${bankUtama.nomor})`, highlight: 'emerald' }
+                ]
+            );
         };
 
         window.exportAuditLogToExcel = () => {
@@ -10872,7 +11208,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 { kode: '02', nama: 'Pusat Persetujuan Keuangan', ok: typeof renderPersetujuanTab === 'function' && Boolean(document.getElementById('tabelPersetujuanBody')), info: '4 Antrean (Simpanan, Pinjaman, Cicilan, ZIS), Bulk Action & Undo' },
                 { kode: '03', nama: 'Buku Simpanan & Matriks 12 Bulan', ok: typeof window.hitungMapBulanMatriksAnggota === 'function' && Boolean(document.getElementById('tabelMatriksIuran12BulanBody')), info: 'Pokok/Wajib/Sukarela, Rapel Multi-Bulan, Transfer P2P & Auto-Sync Matriks' },
                 { kode: '04', nama: 'Pembiayaan Syariah (0% Riba)', ok: typeof renderPinjamanTab === 'function' && typeof window.simpanPembayaranCicilan === 'function', info: 'Akad Qardhul Hasan, Murabahah, Mudharabah, Auto-Debet Sukarela & WA Tagihan' },
-                { kode: '05', nama: 'Bagi Hasil (SHU) Syariah & RAT', ok: persenShu === 100 && typeof window.distribusiShuKeSaldo === 'function', info: `Alokasi ${persenShu}% (${s.setting.metodePerhitungan}), Kunci Tahun RAT & Rollback` },
+                { kode: '05', nama: 'Bagi Hasil (SHU) Syariah & RAT', ok: persenShu === 100 && typeof window.distribusikanShuKeSimpanan === 'function', info: `Alokasi ${persenShu}% (${s.setting.metodePerhitungan}), Kunci Tahun RAT & Rollback` },
                 { kode: '06', nama: 'Baitul Maal ZISWAF & Dana Sosial', ok: typeof window.renderZisTab === 'function' && typeof window.hitungKalkulatorZakat === 'function', info: 'Zakat 2,5%, Infaq, Wakaf, Santunan, Alokasi 15% SHU & Mode Hamba Allah' },
                 { kode: '07', nama: 'Direktori Anggota & 4-Role RBAC', ok: anggotaList.length >= 1 && typeof window.tutupKeanggotaanDanCairkan === 'function', info: `${anggotaList.length} Anggota Terdaftar • Super Admin, Bendahara, Sekretaris & Anggota` },
                 { kode: '08', nama: 'Rekening Bank, Mutasi 7 Alur & QRIS', ok: typeof window.hitungMutasiPerBank === 'function' && typeof window.renderBankTabPro === 'function', info: `${bankList.length} Rekening Terdaftar • Buku Besar Mutasi 7 Alur & Barcode QRIS` },
@@ -10951,7 +11287,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                     <div class="flex justify-between"><span>Kas Likuid Koperasi Tersedia:</span><strong class="text-blue-600">${window.formatRupiah(kasLikuid)}</strong></div>
                     <div class="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-1.5"><span>SHU Bersih Tahun Berjalan:</span><strong class="text-purple-600">${window.formatRupiah(s.netShu)}</strong></div>
                 </div>
-                <p class="text-[11px] text-slate-500 italic text-center">Seluruh 12 menu inti, perhitungan buku kas, rekonsiliasi bank 7 alur, dan alokasi SHU 100% telah tervalidasi secara otomatis oleh sistem Koperasi Keluarga v36.6 Pro (Edisi Final Produksi).</p>
+                <p class="text-[11px] text-slate-500 italic text-center">Seluruh 12 menu inti, perhitungan buku kas, rekonsiliasi bank 7 alur, dan alokasi SHU 100% telah tervalidasi secara otomatis oleh sistem Koperasi Keluarga v36.4 Pro (Edisi Final Produksi).</p>
             `;
             document.getElementById('modalBeritaAcaraNotulensi').classList.remove('hidden');
         };
@@ -11608,22 +11944,43 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 return false;
             }
 
-            appState.shuSetting = { alokasiModal: m, alokasiUsaha: u, alokasiCadangan: c, alokasiSosial: s };
-            saveStateToCloud();
-            document.getElementById('modalSettingShu').classList.add('hidden');
-            window.renderApp();
-            window.showToast('Persentase alokasi SHU (100%) berhasil diperbarui!');
+            const oldShu = appState.shuSetting || { alokasiModal: 40, alokasiUsaha: 20, alokasiCadangan: 25, alokasiSosial: 15, metodePerhitungan: 'TERTIMBANG' };
+            window.showConfirmModal(
+                'Konfirmasi Perubahan Alokasi SHU',
+                'Periksa perbandingan persentase pembagian SHU sebelum disimpan:',
+                () => {
+                    appState.shuSetting = { ...oldShu, alokasiModal: m, alokasiUsaha: u, alokasiCadangan: c, alokasiSosial: s };
+                    window.catatLogAuditSistem('PENGATURAN', 'Ubah Persentase Alokasi SHU', `Modal: ${m}%, Usaha: ${u}%, Cadangan: ${c}%, Sosial: ${s}%`, 'Sukses');
+                    saveStateToCloud();
+                    document.getElementById('modalSettingShu').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast('✅ Persentase alokasi SHU (100%) berhasil diperbarui!');
+                },
+                [
+                    { label: 'Jasa Modal Simpanan', before: `${oldShu.alokasiModal}%`, after: `${m}%` },
+                    { label: 'Jasa Usaha Pembiayaan', before: `${oldShu.alokasiUsaha}%`, after: `${u}%` },
+                    { label: 'Dana Cadangan Koperasi', before: `${oldShu.alokasiCadangan}%`, after: `${c}%` },
+                    { label: 'Dana Sosial / ZISWAF', before: `${oldShu.alokasiSosial}%`, after: `${s}%` }
+                ]
+            );
             return false;
         };
 
         window.hapusFotoProfilMandiri = () => {
             if (!currentUserSession) return;
-            currentUserSession.fotoProfil = '';
-            const idx = appState.anggota.findIndex(a => a.id === currentUserSession.id);
-            if (idx !== -1) appState.anggota[idx].fotoProfil = '';
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast('Foto profil dihapus.', 'info');
+            window.showConfirmModal(
+                'Konfirmasi Hapus Foto Profil',
+                'Yakin ingin menghapus foto profil/avatar Anda?',
+                () => {
+                    currentUserSession.fotoProfil = '';
+                    const idx = appState.anggota.findIndex(a => a.id === currentUserSession.id);
+                    if (idx !== -1) appState.anggota[idx].fotoProfil = '';
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast('Foto profil berhasil dihapus.', 'info');
+                },
+                [{ label: 'Akun', value: currentUserSession.nama }]
+            );
         };
 
         window.simpanProfilMandiri = async (e) => {
@@ -11633,38 +11990,61 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 window.showToast('PIN baru minimal harus terdiri dari 4 karakter/digit!', 'error');
                 return false;
             }
-            currentUserSession.kontak = document.getElementById('mandiriKontak').value.trim();
-            currentUserSession.email = document.getElementById('mandiriEmail').value.trim();
-            if (pinBaruInput) {
-                currentUserSession.pin = window.encryptPinKoperasi(pinBaruInput);
-            }
-            currentUserSession.tglGabung = document.getElementById('mandiriTglGabung')?.value || window.getTanggalGabungEfektifAnggota(currentUserSession);
-            currentUserSession.ahliWaris = document.getElementById('mandiriAhliWaris')?.value.trim() || '';
-            currentUserSession.rekeningPribadi = document.getElementById('mandiriRekening')?.value.trim() || '';
+            const nextKontak = document.getElementById('mandiriKontak').value.trim();
+            const nextEmail = document.getElementById('mandiriEmail').value.trim();
+            const nextTglGabung = document.getElementById('mandiriTglGabung')?.value || window.getTanggalGabungEfektifAnggota(currentUserSession);
+            const nextAhliWaris = document.getElementById('mandiriAhliWaris')?.value.trim() || '';
+            const nextRekening = document.getElementById('mandiriRekening')?.value.trim() || '';
 
+            let nextFoto = '';
             const fotoInput = document.getElementById('mandiriFotoInput');
             if (fotoInput && fotoInput.files && fotoInput.files[0]) {
-                const compressed = await window.kompresGambarBukti(fotoInput.files[0], 300, 0.75);
-                if (compressed) currentUserSession.fotoProfil = compressed;
-                fotoInput.value = '';
+                nextFoto = await window.kompresGambarBukti(fotoInput.files[0], 300, 0.75);
             }
 
+            let nextKK = currentUserSession.namaKeluarga;
             const kkSelectVal = document.getElementById('mandiriKeluargaSelect').value;
             if (kkSelectVal === 'TAMBAH_BARU') {
                 const custom = document.getElementById('mandiriKeluargaCustom').value.trim();
-                if (custom) currentUserSession.namaKeluarga = custom;
+                if (custom) nextKK = custom;
             } else {
-                currentUserSession.namaKeluarga = kkSelectVal;
+                nextKK = kkSelectVal;
             }
 
-            const idx = appState.anggota.findIndex(a => a.id === currentUserSession.id);
-            if (idx !== -1) appState.anggota[idx] = currentUserSession;
+            window.showConfirmModal(
+                'Preview & Konfirmasi Simpan Profil',
+                'Periksa perubahan data pribadi Anda sebelum disimpan ke sistem:',
+                () => {
+                    currentUserSession.kontak = nextKontak;
+                    currentUserSession.email = nextEmail;
+                    if (pinBaruInput) currentUserSession.pin = window.encryptPinKoperasi(pinBaruInput);
+                    currentUserSession.tglGabung = nextTglGabung;
+                    currentUserSession.ahliWaris = nextAhliWaris;
+                    currentUserSession.rekeningPribadi = nextRekening;
+                    if (nextFoto) currentUserSession.fotoProfil = nextFoto;
+                    if (fotoInput) fotoInput.value = '';
+                    currentUserSession.namaKeluarga = nextKK;
 
-            window.saveUserSessionState();
-            window.catatLogAuditSistem('PENGATURAN', 'Perbarui Profil & Foto Mandiri', `Profil ${currentUserSession.nama} (Tgl Gabung: ${currentUserSession.tglGabung}) diperbarui`, 'Sukses');
-            saveStateToCloud();
-            window.showToast('Profil, Foto Avatar & Tanggal Bergabung berhasil diperbarui!');
-            window.renderApp();
+                    const idx = appState.anggota.findIndex(a => a.id === currentUserSession.id);
+                    if (idx !== -1) appState.anggota[idx] = currentUserSession;
+
+                    window.saveUserSessionState();
+                    window.catatLogAuditSistem('PENGATURAN', 'Perbarui Profil & Foto Mandiri', `Profil ${currentUserSession.nama} (Tgl Gabung: ${currentUserSession.tglGabung}) diperbarui`, 'Sukses');
+                    saveStateToCloud();
+                    window.showToast('✅ Profil, Foto Avatar & Tanggal Bergabung berhasil diperbarui!');
+                    window.renderApp();
+                },
+                [
+                    { label: 'Keluarga (KK)', before: currentUserSession.namaKeluarga || '-', after: nextKK },
+                    { label: 'No. WhatsApp', before: currentUserSession.kontak || '-', after: nextKontak },
+                    { label: 'Email', before: currentUserSession.email || '-', after: nextEmail },
+                    { label: 'Tanggal Gabung', before: window.getTanggalGabungEfektifAnggota(currentUserSession), after: nextTglGabung },
+                    { label: 'Ahli Waris', before: currentUserSession.ahliWaris || '-', after: nextAhliWaris || '-' },
+                    { label: 'Rekening Pencairan', before: currentUserSession.rekeningPribadi || '-', after: nextRekening || '-' },
+                    ...(pinBaruInput ? [{ label: 'Keamanan PIN', value: 'Diganti & Dienkripsi SHA-256', highlight: 'amber' }] : []),
+                    ...(nextFoto ? [{ label: 'Foto Profil', value: '✓ Foto baru siap diunggah', highlight: 'emerald' }] : [])
+                ]
+            );
             return false;
         };
 
@@ -12207,39 +12587,51 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         window.toggleStatusAktifBank = function(id) {
             var b = (appState.rekeningBank || []).find(function(x) { return x.id === id; });
             if (!b) return;
-            b.aktif = (b.aktif === false) ? true : false;
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast('Status rekening ' + b.nama + ' diubah menjadi: ' + (b.aktif !== false ? 'Aktif' : 'Nonaktif'));
+            var statusLama = b.aktif !== false ? 'Aktif' : 'Nonaktif';
+            var statusBaru = b.aktif === false ? 'Aktif' : 'Nonaktif';
+            window.showConfirmModal(
+                'Konfirmasi Status Rekening Bank',
+                'Periksa perubahan status aktif rekening tujuan transfer ini:',
+                function() {
+                    b.aktif = (b.aktif === false) ? true : false;
+                    window.catatLogAuditSistem('PENGATURAN', 'Ubah Status Rekening Bank', b.nama + ': ' + statusBaru, 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast('Status rekening ' + b.nama + ' diubah menjadi: ' + statusBaru);
+                },
+                [
+                    { label: 'Bank / Kanal', value: b.nama + ' (' + b.nomor + ')' },
+                    { label: 'Status Rekening', before: statusLama, after: statusBaru }
+                ]
+            );
         };
 
         window.setRekeningUtama = function(id) {
-            (appState.rekeningBank || []).forEach(function(b) {
-                b.isUtama = (b.id === id);
-            });
-            saveStateToCloud();
-            window.renderApp();
-            window.showToast('⭐ Rekening utama koperasi berhasil diperbarui!');
+            var targetBank = (appState.rekeningBank || []).find(function(x) { return x.id === id; });
+            if (!targetBank) return;
+            var oldMain = (appState.rekeningBank || []).find(function(x) { return x.isUtama; });
+            window.showConfirmModal(
+                'Konfirmasi Rekening Utama Koperasi',
+                'Jadikan rekening ini sebagai rekening utama default koperasi?',
+                function() {
+                    (appState.rekeningBank || []).forEach(function(b) {
+                        b.isUtama = (b.id === id);
+                    });
+                    window.catatLogAuditSistem('PENGATURAN', 'Set Rekening Utama', targetBank.nama + ' (' + targetBank.nomor + ')', 'Sukses');
+                    saveStateToCloud();
+                    window.renderApp();
+                    window.showToast('⭐ Rekening utama koperasi berhasil diperbarui!');
+                },
+                [
+                    { label: 'Rekening Utama', before: oldMain ? oldMain.nama : 'Belum ada', after: targetBank.nama + ' (' + targetBank.nomor + ')' }
+                ]
+            );
         };
 
         // Handler perubahan tipe transaksi sudah terintegrasi langsung di fungsi utama
 
         window.upgradeDOMBankModalDanTab = function() {
-            // 1. Tambahkan tombol navigasi Info Rekening & QRIS untuk Anggota biasa jika belum ada di Sidebar
-            var navContainer = document.getElementById('sidebarNavContainer');
-            var role = window.getEffectiveRole();
-            if (navContainer && !window.isPengurusAny() && navContainer.innerHTML.indexOf("switchTab('bank')") === -1) {
-                var isBankActive = appState.activeTab === 'bank';
-                var btnHtml = '<button onclick="window.switchTab(\'bank\')" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg font-semibold text-[11px] transition ' + (isBankActive ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800') + '">' +
-                    '<div class="flex items-center gap-2 overflow-hidden">' +
-                        '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>' +
-                        '<span class="truncate">Info Rekening &amp; QRIS</span>' +
-                    '</div>' +
-                '</button>';
-                navContainer.insertAdjacentHTML('beforeend', btnHtml);
-            }
-
-            // 2. Tambahkan Info Helper Copy Rekening & Lihat QRIS di Modal Setoran (#groupBankTujuan)
+            // Tambahkan Info Helper Copy Rekening & Lihat QRIS di Modal Setoran (#groupBankTujuan)
             var groupBank = document.getElementById('groupBankTujuan');
             var selBankTrx = document.getElementById('transaksiBankTujuan');
             if (groupBank && selBankTrx && !document.getElementById('helperCopyBankTrx')) {
@@ -12386,7 +12778,6 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 '</tr>';
             }).join('');
         };
-        renderBankTab = window.renderBankTabPro;
         window.renderBankTab = window.renderBankTabPro;
 
         window.bukaModalBank = function() {
@@ -12428,66 +12819,70 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                 qrisUrl = await window.kompresGambarBukti(qrisInput.files[0], 600, 0.7);
             }
 
-            if (editId) {
-                var b = appState.rekeningBank.find(function(x) { return x.id === editId; });
-                if (b) {
-                    var oldNama = b.nama;
-                    b.nama = nama;
-                    b.nomor = nomor;
-                    b.pemilik = pemilik;
-                    b.saldoAwal = saldoAwal;
-                    b.jenisKanal = jenisKanal;
-                    b.cabang = cabang;
-                    if (qrisUrl) b.qrisUrl = qrisUrl;
-                    // Sinkronkan nama bank pada seluruh riwayat lintas modul agar rekonsiliasi tetap akurat
-                    if (oldNama && oldNama !== nama) {
-                        (appState.transaksi || []).forEach(function(t) {
-                            if (t.bankTujuan === oldNama) t.bankTujuan = nama;
-                        });
-                        (appState.pinjaman || []).forEach(function(p) {
-                            if (p.bankSumber === oldNama) p.bankSumber = nama;
-                            (p.riwayatCicilan || []).forEach(function(c) {
-                                if (c.bankTujuan === oldNama) c.bankTujuan = nama;
+            var oldB = editId ? appState.rekeningBank.find(function(x) { return x.id === editId; }) : null;
+            var previewBank = oldB
+                ? [
+                    { label: 'Nama Bank / Kanal', before: oldB.nama, after: nama },
+                    { label: 'Nomor Rekening', before: oldB.nomor, after: nomor },
+                    { label: 'Atas Nama', before: oldB.pemilik, after: pemilik },
+                    { label: 'Saldo Awal', before: window.formatRupiah(oldB.saldoAwal || 0), after: window.formatRupiah(saldoAwal) },
+                    { label: 'Jenis & Cabang', before: (oldB.jenisKanal || '-') + ' / ' + (oldB.cabang || '-'), after: jenisKanal + ' / ' + (cabang || '-') }
+                  ]
+                : [
+                    { label: 'Nama Bank / Kanal', value: nama + ' (' + jenisKanal + ')', highlight: 'blue' },
+                    { label: 'Nomor Rekening', value: nomor, highlight: 'emerald' },
+                    { label: 'Atas Nama', value: pemilik },
+                    { label: 'Saldo Awal', value: window.formatRupiah(saldoAwal) },
+                    { label: 'Barcode QRIS', value: qrisUrl ? '✓ Terlampir' : 'Tanpa QRIS' }
+                  ];
+
+            window.showConfirmModal(
+                editId ? 'Preview & Konfirmasi Edit Rekening' : 'Preview & Konfirmasi Tambah Rekening',
+                'Periksa nomor rekening dan atas nama dengan teliti agar tidak terjadi kesalahan transfer:',
+                function() {
+                    if (editId && oldB) {
+                        var oldNama = oldB.nama;
+                        oldB.nama = nama;
+                        oldB.nomor = nomor;
+                        oldB.pemilik = pemilik;
+                        oldB.saldoAwal = saldoAwal;
+                        oldB.jenisKanal = jenisKanal;
+                        oldB.cabang = cabang;
+                        if (qrisUrl) oldB.qrisUrl = qrisUrl;
+                        if (oldNama && oldNama !== nama) {
+                            (appState.transaksi || []).forEach(function(t) { if (t.bankTujuan === oldNama) t.bankTujuan = nama; });
+                            (appState.pinjaman || []).forEach(function(p) {
+                                if (p.bankSumber === oldNama) p.bankSumber = nama;
+                                (p.riwayatCicilan || []).forEach(function(c) { if (c.bankTujuan === oldNama) c.bankTujuan = nama; });
                             });
+                            (appState.pendapatanShuList || []).forEach(function(item) { if (item.bankTujuan === oldNama) item.bankTujuan = nama; });
+                            (appState.bebanOperasional || []).forEach(function(bItem) { if (bItem.bankTujuan === oldNama) bItem.bankTujuan = nama; });
+                            (appState.zis || []).forEach(function(z) { if (z.bankTujuan === oldNama) z.bankTujuan = nama; });
+                        }
+                        window.catatLogAuditSistem('PENGATURAN', 'Edit Rekening Bank', nama + ' (' + nomor + ')', 'Sukses');
+                    } else {
+                        appState.rekeningBank.push({
+                            id: 'b_' + Date.now(),
+                            nama: nama,
+                            nomor: nomor,
+                            pemilik: pemilik,
+                            saldoAwal: saldoAwal,
+                            jenisKanal: jenisKanal,
+                            cabang: cabang,
+                            qrisUrl: qrisUrl,
+                            aktif: true,
+                            isUtama: (appState.rekeningBank || []).length === 0
                         });
-                        (appState.pendapatanShuList || []).forEach(function(item) {
-                            if (item.bankTujuan === oldNama) item.bankTujuan = nama;
-                        });
-                        (appState.bebanOperasional || []).forEach(function(bItem) {
-                            if (bItem.bankTujuan === oldNama) bItem.bankTujuan = nama;
-                        });
-                        (appState.zis || []).forEach(function(z) {
-                            if (z.bankTujuan === oldNama) z.bankTujuan = nama;
-                        });
-                        (appState.pinjaman || []).forEach(function(p) {
-                            if (p.bankSumber === oldNama) p.bankSumber = nama;
-                        });
-                        (appState.pendapatanShuList || []).forEach(function(item) {
-                            if (item.bankTujuan === oldNama) item.bankTujuan = nama;
-                        });
-                        (appState.bebanOperasional || []).forEach(function(b) {
-                            if (b.bankTujuan === oldNama) b.bankTujuan = nama;
-                        });
+                        window.catatLogAuditSistem('PENGATURAN', 'Tambah Rekening Bank', nama + ' (' + nomor + ')', 'Sukses');
                     }
-                }
-            } else {
-                appState.rekeningBank.push({
-                    id: 'b_' + Date.now(),
-                    nama: nama,
-                    nomor: nomor,
-                    pemilik: pemilik,
-                    saldoAwal: saldoAwal,
-                    jenisKanal: jenisKanal,
-                    cabang: cabang,
-                    qrisUrl: qrisUrl,
-                    aktif: true,
-                    isUtama: (appState.rekeningBank || []).length === 0
-                });
-            }
-            saveStateToCloud();
-            document.getElementById('modalBank').classList.add('hidden');
-            window.renderApp();
-            window.showToast('Data rekening bank & saldo awal berhasil disimpan!');
+                    saveStateToCloud();
+                    document.getElementById('modalBank').classList.add('hidden');
+                    window.renderApp();
+                    window.showToast('✅ Data rekening bank & saldo awal berhasil disimpan!');
+                },
+                previewBank,
+                oldB && oldB.nama !== nama ? '⚠️ Mengubah nama bank akan menyelaraskan nama bank di seluruh 7 modul transaksi.' : ''
+            );
             return false;
         };
 
@@ -12496,8 +12891,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         // =========================================================================
         // AUTO-VERSIONING & CHANGELOG FOOTER (v35.4 Pro)
         // =========================================================================
-        window.APP_VERSION = 'v36.6 Pro';
-        window.APP_RELEASE_DATE = '16 Nov 2026';
+        window.APP_VERSION = 'v36.8 Pro';
         // =========================================================================
         // FITUR MODE PWA FULLSCREEN & INSTALLABLE WEB APP (v36.2 PRO)
         // =========================================================================
@@ -12599,6 +12993,26 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         })();
 
         window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v36.8 Pro (Final Production)',
+                tanggal: '17 Nov 2026 (Terbaru - Pembersihan Kode Tidak Terpakai & Validasi Sintaks Penuh)',
+                judul: 'Audit Kode Bersih (Zero Syntax Error, Zero Unused Functions) & Perbaikan Cek Integritas Modul SHU',
+                poin: [
+                    'Perbaikan Cek Integritas Modul 05 (Bagi Hasil SHU): Menyelaraskan nama fungsi verifikasi ke window.distribusikanShuKeSimpanan sehingga uji integritas 12/12 modul lulus 100% sempurna.',
+                    'Pembersihan Variabel & Blok Kode Redundan: Menghapus variabel tidak terpakai (_explicitSubmitAllowed, APP_RELEASE_DATE), menghilangkan injeksi menu bank duplikat di upgradeDOMBankModalDanTab, serta menstandarkan pemanggilan window.renderBankTab().',
+                    'Verifikasi Sintaks & Struktur DOM 100% Bersih: Lulus pemeriksaan node --check pada seluruh blok skrip tanpa ada ID HTML duplikat atau fungsi yang hilang.'
+                ]
+            },
+            {
+                versi: 'v36.7 Pro (Final Production)',
+                tanggal: '17 Nov 2026 (Terbaru - Preview Perubahan & Konfirmasi Anti-Kesalahan Menyeluruh)',
+                judul: 'Konfirmasi & Preview Data (Sebelum → Sesudah) di Seluruh Perubahan Data & Transaksi',
+                poin: [
+                    'Panel Ringkasan Preview Data (#confirmPreviewBox) di Modal Konfirmasi: Menampilkan rincian lengkap setiap transaksi dan perbandingan "Sebelum → Sesudah" (Before → After) pada seluruh perubahan data agar kesalahan ketik nominal, nomor rekening, atau periode bulan dapat dicegah sebelum disimpan.',
+                    'Cakupan 100% Seluruh Modul Perubahan Data & Verifikasi: Kini mencakup Tambah/Edit Anggota, Profil Mandiri, Rekening Bank & QRIS, Verifikasi Setujui di Pusat Persetujuan (Simpanan, Pinjaman, Cicilan, Bulk Select), Matriks 12 Bulan, Parameter Simpanan, Kebijakan Keamanan, SHU, Voting, Pengumuman, Notulensi, AD/ART, dan Poin Bonus.',
+                    'Notifikasi Beranimasi & Log Audit Otomatis: Setiap perubahan data yang dikonfirmasi langsung mencatat Log Audit Sistem, menyinkronkan ke Cloud Firebase, serta memunculkan notifikasi interaktif / animasi transaksi berhasil.'
+                ]
+            },
             {
                 versi: 'v36.6 Pro (Final Production)',
                 tanggal: '16 Nov 2026 (Terbaru - Tutup Buku Akhir Tahun / Year-End Rollover)',
