@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Koperasi Keluarga">
-    <title>Aplikasi Koperasi Keluarga v36.2 Pro — Modul Arisan Lite Super-Ringan (Terisolasi SHU), 13 Menu & Auto-Sync Cloud</title>
+    <title>Aplikasi Koperasi Keluarga v36.3 Pro — Arisan Lite Meriah & Simpel, 13 Menu & Auto-Sync Cloud</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -207,6 +207,24 @@
         .anim-shimmer-card {
             background-size: 200% 100%;
         }
+        @keyframes arisanFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(4deg); }
+        }
+        .anim-arisan-float {
+            display: inline-block;
+            animation: arisanFloat 2.6s ease-in-out infinite;
+        }
+        @keyframes arisanShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .bg-arisan-festive {
+            background: linear-gradient(120deg, #059669, #0d9488, #d97706, #059669);
+            background-size: 260% 260%;
+            animation: arisanShimmer 9s ease infinite;
+        }
         @media print {
             body { background: white !important; color: black !important; }
             header, aside, button, .no-print { display: none !important; }
@@ -323,7 +341,7 @@
             <span class="text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">Info</span>
         </div>
         <div class="running-text-wrapper flex-1 overflow-hidden" title="Arahkan kursor / sentuh untuk menghentikan sejenak">
-            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v36.2 Pro — Kini Hadir Modul Arisan Lite Super-Ringan!</p>
+            <p id="teksPengumuman" class="running-text-slow text-[11px] font-medium text-amber-100">Selamat datang di Koperasi Keluarga v36.3 Pro — Arisan Lite Meriah, Simpel & Profesional!</p>
         </div>
         <button id="btnEditPengumuman" onclick="window.bukaModalEditPengumuman()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md transition shrink-0 flex items-center gap-1 cursor-pointer">
             ✏️ Edit
@@ -341,7 +359,7 @@
             </div>
             <div class="p-2.5 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 <div class="bg-blue-50/80 dark:bg-slate-800/60 rounded-xl p-2 border border-blue-100 dark:border-slate-700 space-y-0.5">
-                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v36.2 Pro</p>
+                    <p class="text-[10px] font-extrabold text-blue-900 dark:text-blue-300">Koperasi Keluarga v36.3 Pro</p>
                     <p id="sidebarCloudStatusText" class="text-[9px] text-blue-700 dark:text-blue-400 font-medium truncate">Admin: 082298688189</p>
                     <p id="sidebarLastSyncTime" class="text-[8px] text-slate-500 dark:text-slate-400 font-mono truncate">Siap digunakan</p>
                 </div>
@@ -1080,119 +1098,142 @@
                     </div>
                 </div>
 
-                <!-- TAB: ARISAN LITE (SUPER-RINGAN, TANPA FOTO BUKTI & TERISOLASI DARI SHU — v36.2 PRO) -->
-                <div id="tab-arisan-lite" class="space-y-4 w-full hidden print-container">
-                    <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-3">
-                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
-                            <div>
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <h2 class="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white">🎲 Arisan Keluarga Lite</h2>
-                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">⚡ Super-Ringan • Tanpa Foto Bukti</span>
-                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">🔒 Terisolasi dari SHU &amp; Kas Koperasi</span>
+                <!-- TAB: ARISAN LITE (SIMPEL, PROFESIONAL & MERIAH — v36.3 PRO) -->
+                <div id="tab-arisan-lite" class="space-y-3.5 w-full hidden print-container">
+                    <!-- Hero Banner Meriah & Ringkas -->
+                    <div class="relative overflow-hidden rounded-3xl bg-arisan-festive p-4 sm:p-5 text-white shadow-lg">
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-amber-300/25 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute -bottom-12 -left-8 w-44 h-44 bg-emerald-200/20 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                                    <span class="anim-arisan-float">🎲</span>
                                 </div>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Pencatatan arisan keluarga berbasis teks (hemat memori Cloud 100%), centang lunas 1-klik, kocok pemenang otomatis, dan rekap WA tanpa memengaruhi pembukuan SHU maupun kas simpanan.</p>
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-1.5">
+                                        <h2 class="text-base sm:text-xl font-black tracking-tight text-white">Arisan Keluarga</h2>
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-white/20 backdrop-blur-xs text-white border border-white/25">⚡ Lite</span>
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-black/20 text-amber-200">🔒 Non-SHU</span>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-2 mt-1">
+                                        <span id="badgeInfoArisanLite" class="text-[11px] font-bold text-white/90">0 Kelompok</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-start lg:justify-end no-print">
-                                <button type="button" id="btnBuatArisanLite" onclick="window.bukaModalArisanLite()" class="hidden flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl shadow-sm transition text-xs cursor-pointer">
-                                    <span>➕</span><span>Buat Kelompok Arisan</span>
+                            <div class="flex flex-wrap items-center gap-1.5 w-full lg:w-auto justify-start lg:justify-end no-print">
+                                <button type="button" id="btnBuatArisanLite" onclick="window.bukaModalArisanLite()" class="hidden flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-white text-emerald-700 hover:bg-emerald-50 font-extrabold px-3.5 py-2 rounded-xl shadow-md transition text-xs cursor-pointer">
+                                    <span>➕</span><span>Baru</span>
                                 </button>
-                                <button type="button" onclick="window.shareRekapArisanLiteWA()" class="inline-flex items-center justify-center gap-1 bg-green-50 hover:bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 font-bold px-3 py-2 rounded-xl transition text-xs cursor-pointer">
-                                    <span>📢</span><span>Share WA</span>
+                                <button type="button" onclick="window.shareRekapArisanLiteWA()" class="inline-flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white border border-white/30 font-bold px-3 py-2 rounded-xl transition text-xs cursor-pointer">
+                                    <span>📢</span><span>WA</span>
                                 </button>
-                                <button type="button" onclick="window.exportArisanLiteCSV()" class="inline-flex items-center justify-center gap-1 bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-bold px-3 py-2 rounded-xl transition text-xs cursor-pointer">
-                                    <span>📥</span><span>Export CSV</span>
+                                <button type="button" onclick="window.exportArisanLiteCSV()" class="inline-flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white border border-white/30 font-bold px-3 py-2 rounded-xl transition text-xs cursor-pointer">
+                                    <span>📥</span><span>CSV</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Bar Pemilih Kelompok & Aksi Putaran -->
-                        <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 no-print">
-                            <div class="flex flex-wrap items-center gap-2 flex-1">
-                                <label class="text-[10px] font-extrabold uppercase text-slate-400 shrink-0">Kelompok:</label>
-                                <select id="selectArisanLiteAktif" onchange="window.pilihArisanLiteAktif(this.value)" class="flex-1 sm:max-w-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
-                                    <option value="">-- Belum Ada Kelompok Arisan --</option>
-                                </select>
-                                <span id="badgeInfoArisanLite" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">-</span>
-                            </div>
+                        <!-- Pemilih Kelompok & Tombol Kocok -->
+                        <div class="relative z-10 mt-3.5 pt-3 border-t border-white/20 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 no-print">
+                            <select id="selectArisanLiteAktif" onchange="window.pilihArisanLiteAktif(this.value)" class="flex-1 sm:max-w-xs bg-white/95 dark:bg-slate-900/95 text-slate-800 dark:text-white border border-white/40 rounded-xl px-3 py-2 text-xs font-extrabold outline-none shadow-sm">
+                                <option value="">-- Pilih Kelompok --</option>
+                            </select>
                             <div id="toolbarArisanLiteAksi" class="hidden flex flex-wrap items-center gap-1.5">
-                                <button type="button" id="btnKocokArisanLite" onclick="window.kocokPemenangArisanLite()" class="inline-flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl shadow-sm transition text-xs cursor-pointer">
+                                <button type="button" id="btnKocokArisanLite" onclick="window.kocokPemenangArisanLite()" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2 rounded-xl shadow-md transition text-xs cursor-pointer">
                                     <span>🎲</span><span>Kocok Pemenang</span>
                                 </button>
-                                <button type="button" id="btnEditArisanLite" onclick="window.bukaModalArisanLite(true)" class="hidden inline-flex items-center justify-center gap-1 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer">
-                                    <span>✏️</span><span>Edit</span>
+                                <button type="button" id="btnEditArisanLite" onclick="window.bukaModalArisanLite(true)" class="hidden inline-flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white border border-white/30 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer" title="Edit">
+                                    <span>✏️</span>
                                 </button>
-                                <button type="button" id="btnHapusArisanLite" onclick="window.hapusArisanLiteAktif()" class="hidden inline-flex items-center justify-center gap-1 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer">
-                                    <span>🗑️</span><span>Hapus</span>
+                                <button type="button" id="btnHapusArisanLite" onclick="window.hapusArisanLiteAktif()" class="hidden inline-flex items-center justify-center gap-1 bg-rose-500/90 hover:bg-rose-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer" title="Hapus">
+                                    <span>🗑️</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- State Kosong -->
-                    <div id="emptyStateArisanLite" class="bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-8 text-center space-y-2.5">
-                        <div class="text-4xl">🎲</div>
-                        <h3 class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-white">Belum Ada Kelompok Arisan Lite</h3>
-                        <p class="text-xs text-slate-500 max-w-md mx-auto">Pengurus (Super Admin / Bendahara) dapat membuat kelompok arisan keluarga tanpa foto bukti dan terpisah sepenuhnya dari kas SHU koperasi.</p>
-                        <button type="button" id="btnBuatArisanLiteEmpty" onclick="window.bukaModalArisanLite()" class="hidden inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer">
-                            <span>➕</span><span>Buat Kelompok Arisan Pertama</span>
+                    <!-- State Kosong Meriah & Simpel -->
+                    <div id="emptyStateArisanLite" class="bg-gradient-to-br from-amber-50/70 via-white to-emerald-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 rounded-3xl border-2 border-dashed border-amber-300/80 dark:border-slate-700 p-8 text-center space-y-3">
+                        <div class="text-5xl anim-arisan-float">🎉</div>
+                        <h3 class="text-base font-black text-slate-800 dark:text-white">Belum Ada Arisan</h3>
+                        <button type="button" id="btnBuatArisanLiteEmpty" onclick="window.bukaModalArisanLite()" class="hidden inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-2.5 rounded-2xl text-xs shadow-md transition cursor-pointer">
+                            <span>➕</span><span>Buat Kelompok Arisan</span>
                         </button>
                     </div>
 
-                    <!-- Konten Aktif Arisan Lite -->
-                    <div id="contentArisanLite" class="hidden space-y-4">
-                        <!-- 4 Kartu Ringkasan -->
+                    <!-- Konten Aktif -->
+                    <div id="contentArisanLite" class="hidden space-y-3.5">
+                        <!-- 4 Kartu KPI Meriah & Ringkas -->
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                            <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">
-                                <span class="text-[10px] font-bold uppercase text-slate-400 block">Iuran per Putaran</span>
-                                <strong id="arlCardIuran" class="text-sm sm:text-base font-black text-emerald-600 block mt-0.5">Rp 0</strong>
-                                <span id="arlCardJadwal" class="text-[10px] text-slate-400 block truncate">Jadwal arisan</span>
+                            <div class="bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/30 dark:to-slate-900 p-3.5 rounded-2xl border border-emerald-200/80 dark:border-emerald-900/60 shadow-xs">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-extrabold uppercase text-emerald-700 dark:text-emerald-400">Iuran</span>
+                                    <span class="text-sm">💵</span>
+                                </div>
+                                <strong id="arlCardIuran" class="text-base sm:text-lg font-black text-emerald-600 block mt-1">Rp 0</strong>
+                                <span id="arlCardJadwal" class="text-[10px] font-semibold text-slate-400 block truncate">Bulanan</span>
                             </div>
-                            <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">
-                                <span class="text-[10px] font-bold uppercase text-slate-400 block">Total Pot Hadiah</span>
-                                <strong id="arlCardPotHadiah" class="text-sm sm:text-base font-black text-amber-600 block mt-0.5">Rp 0</strong>
-                                <span id="arlCardJumlahPeserta" class="text-[10px] text-slate-400 block">0 Peserta Terdaftar</span>
+                            <div class="bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/30 dark:to-slate-900 p-3.5 rounded-2xl border border-amber-200/80 dark:border-amber-900/60 shadow-xs">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-extrabold uppercase text-amber-700 dark:text-amber-400">Pot Hadiah</span>
+                                    <span class="text-sm">🏆</span>
+                                </div>
+                                <strong id="arlCardPotHadiah" class="text-base sm:text-lg font-black text-amber-600 block mt-1">Rp 0</strong>
+                                <span id="arlCardJumlahPeserta" class="text-[10px] font-semibold text-slate-400 block">0 Peserta</span>
                             </div>
-                            <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs">
-                                <span class="text-[10px] font-bold uppercase text-slate-400 block">Setoran Putaran Ini</span>
-                                <strong id="arlCardTerkumpul" class="text-sm sm:text-base font-black text-blue-600 block mt-0.5">Rp 0</strong>
-                                <span id="arlCardProgressBayar" class="text-[10px] text-slate-400 block">0 / 0 Peserta Lunas</span>
+                            <div class="bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/30 dark:to-slate-900 p-3.5 rounded-2xl border border-blue-200/80 dark:border-blue-900/60 shadow-xs">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-extrabold uppercase text-blue-700 dark:text-blue-400">Terkumpul</span>
+                                    <span class="text-sm">✨</span>
+                                </div>
+                                <strong id="arlCardTerkumpul" class="text-base sm:text-lg font-black text-blue-600 block mt-1">Rp 0</strong>
+                                <span id="arlCardProgressBayar" class="text-[10px] font-semibold text-slate-400 block">0/0 Lunas</span>
+                                <div class="w-full h-1.5 bg-blue-100 dark:bg-slate-800 rounded-full overflow-hidden mt-1.5">
+                                    <div id="arlBarBayar" class="h-full bg-blue-500 rounded-full transition-all duration-500" style="width:0%"></div>
+                                </div>
                             </div>
-                            <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-purple-200 dark:border-purple-900 shadow-xs bg-purple-50/30 dark:bg-purple-950/20">
-                                <span class="text-[10px] font-bold uppercase text-purple-700 dark:text-purple-400 block">Progres Undian</span>
-                                <strong id="arlCardProgresUndian" class="text-sm sm:text-base font-black text-purple-600 block mt-0.5">0 / 0 Menang</strong>
-                                <span id="arlCardSisaUndian" class="text-[10px] text-slate-500 block">Sisa 0 peserta belum dapat</span>
+                            <div class="bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/30 dark:to-slate-900 p-3.5 rounded-2xl border border-purple-200/80 dark:border-purple-900/60 shadow-xs">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-extrabold uppercase text-purple-700 dark:text-purple-400">Undian</span>
+                                    <span class="text-sm">🎉</span>
+                                </div>
+                                <strong id="arlCardProgresUndian" class="text-base sm:text-lg font-black text-purple-600 block mt-1">0/0</strong>
+                                <span id="arlCardSisaUndian" class="text-[10px] font-semibold text-slate-400 block">Sisa 0</span>
+                                <div class="w-full h-1.5 bg-purple-100 dark:bg-slate-800 rounded-full overflow-hidden mt-1.5">
+                                    <div id="arlBarUndian" class="h-full bg-purple-500 rounded-full transition-all duration-500" style="width:0%"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Banner Kocokan Animasi Live (Muncul saat tombol Kocok ditekan) -->
-                        <div id="boxAnimasiKocokArisanLite" class="hidden bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-600 text-white rounded-2xl p-5 text-center shadow-lg space-y-1.5">
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest bg-black/20 px-3 py-0.5 rounded-full">🎲 Mengundi Pemenang Arisan Lite...</span>
-                            <div id="teksRollingNamaArisanLite" class="text-xl sm:text-2xl font-black tracking-wide py-1">...</div>
+                        <!-- Panggung Kocokan Animasi Live -->
+                        <div id="boxAnimasiKocokArisanLite" class="hidden relative overflow-hidden bg-gradient-to-r from-amber-500 via-rose-500 to-emerald-500 text-white rounded-3xl p-6 text-center shadow-xl space-y-2 border-2 border-amber-200/70">
+                            <span class="inline-block text-[10px] font-black uppercase tracking-widest bg-black/25 px-3 py-1 rounded-full">🎲 Mengundi Pemenang</span>
+                            <div id="teksRollingNamaArisanLite" class="text-2xl sm:text-3xl font-black tracking-wide py-1 drop-shadow">...</div>
                         </div>
 
-                        <!-- Grid 2 Kolom: Daftar Peserta & Riwayat Pemenang -->
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                            <!-- Daftar Peserta & Centang Iuran 1-Klik -->
+                        <!-- Grid 2 Kolom: Peserta & Pemenang -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
+                            <!-- Daftar Peserta -->
                             <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 space-y-3">
-                                <div class="flex flex-wrap items-center justify-between gap-2">
-                                    <div>
-                                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">📋 Daftar Peserta &amp; Status Iuran (<span id="arlLabelPutaranAktif">Putaran ke-1</span>)</h3>
-                                        <p class="text-[11px] text-slate-500">Tanpa upload foto bukti. Bendahara/Admin cukup klik status untuk menandai Lunas/Belum.</p>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 no-print">
-                                        <button type="button" onclick="window.gantiPutaranArisanLite(-1)" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold text-xs cursor-pointer">◀</button>
-                                        <span id="arlBadgePutaran" class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-xs">Putaran 1</span>
-                                        <button type="button" onclick="window.gantiPutaranArisanLite(1)" class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold text-xs cursor-pointer">▶</button>
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="text-sm font-extrabold text-slate-800 dark:text-white flex items-center gap-1.5">
+                                        <span>👥</span><span>Peserta</span>
+                                        <span id="arlLabelPutaranAktif" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">P1</span>
+                                    </h3>
+                                    <div class="flex items-center gap-1 no-print">
+                                        <button type="button" onclick="window.gantiPutaranArisanLite(-1)" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold text-xs cursor-pointer">◀</button>
+                                        <span id="arlBadgePutaran" class="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-extrabold text-xs">Putaran 1</span>
+                                        <button type="button" onclick="window.gantiPutaranArisanLite(1)" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold text-xs cursor-pointer">▶</button>
                                     </div>
                                 </div>
                                 <div class="overflow-x-auto w-full">
-                                    <table class="w-full text-left border-collapse min-w-[460px]">
+                                    <table class="w-full text-left border-collapse min-w-[400px]">
                                         <thead>
-                                            <tr class="bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-500 uppercase">
-                                                <th class="py-2.5 px-3">No</th>
-                                                <th class="py-2.5 px-3">Nama Peserta &amp; KK</th>
-                                                <th class="py-2.5 px-3 text-center">Status Menang</th>
-                                                <th class="py-2.5 px-3 text-center">Iuran Putaran Ini</th>
+                                            <tr class="bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-400 uppercase">
+                                                <th class="py-2 px-2.5 w-8">#</th>
+                                                <th class="py-2 px-2.5">Peserta</th>
+                                                <th class="py-2 px-2.5 text-center">Undian</th>
+                                                <th class="py-2 px-2.5 text-center">Iuran</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tabelPesertaArisanLiteBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs"></tbody>
@@ -1202,10 +1243,9 @@
 
                             <!-- Riwayat Pemenang -->
                             <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 space-y-3">
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">🏆 Riwayat Pemenang Arisan</h3>
-                                    <p class="text-[11px] text-slate-500">Daftar penerima hadiah arisan per putaran (terpisah dari kas SHU).</p>
-                                </div>
+                                <h3 class="text-sm font-extrabold text-slate-800 dark:text-white flex items-center gap-1.5">
+                                    <span>🏆</span><span>Pemenang</span>
+                                </h3>
                                 <div id="listPemenangArisanLite" class="space-y-2 max-h-96 overflow-y-auto pr-1 text-xs"></div>
                             </div>
                         </div>
@@ -2182,10 +2222,7 @@
     <div id="modalArisanLite" class="fixed inset-0 bg-slate-900/60 z-[70] hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 w-full max-w-md p-5 space-y-3.5 max-h-[90vh] overflow-y-auto m-auto">
             <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2.5">
-                <div>
-                    <h3 id="modalArisanLiteTitle" class="font-extrabold text-base text-slate-800 dark:text-white">🎲 Buat Kelompok Arisan Lite</h3>
-                    <p class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Super-ringan tanpa foto bukti &amp; terisolasi dari SHU koperasi</p>
-                </div>
+                <h3 id="modalArisanLiteTitle" class="font-extrabold text-base text-slate-800 dark:text-white">🎲 Kelompok Arisan</h3>
                 <button type="button" onclick="document.getElementById('modalArisanLite').classList.add('hidden')" class="text-slate-400 hover:text-rose-500 font-bold text-sm px-2 cursor-pointer">✕</button>
             </div>
             <form id="formArisanLite" onsubmit="return window.simpanKelompokArisanLite(event)" class="space-y-3">
@@ -5381,7 +5418,7 @@
             }
             grupTataKelola.push({ id: 'bank', label: window.isBendaharaOrSuper() ? 'Rekening Bank Koperasi' : 'Info Rekening & QRIS', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' });
             grupTataKelola.push({ id: 'ad-art', label: 'AD/ART & Notulensi', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' });
-            grupTataKelola.push({ id: 'arisan-lite', label: 'Arisan Lite (Ringan)', badge: (appState.arisanLite || []).length > 0 ? (appState.arisanLite || []).length : 0, icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' });
+            grupTataKelola.push({ id: 'arisan-lite', label: 'Arisan Lite', badge: (appState.arisanLite || []).length > 0 ? (appState.arisanLite || []).length : 0, icon: 'M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7' });
             grupTataKelola.push({ id: 'gamifikasi', label: 'Lencana & Klasemen', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z' });
 
             const grupAkunSistem = [
@@ -10759,19 +10796,25 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
             const sisaBelumMenang = pesertaIds.filter(id => !winnerIdSet.has(id)).length;
 
             if (badgeInfo) {
-                badgeInfo.textContent = `Putaran ke-${putaran} dari ${Math.max(1, pesertaIds.length)}`;
+                badgeInfo.textContent = `Putaran ${putaran} / ${Math.max(1, pesertaIds.length)} • ${pesertaIds.length} Peserta`;
             }
             const setT = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            const pctBayar = pesertaIds.length > 0 ? Math.round((paidIds.length / pesertaIds.length) * 100) : 0;
+            const pctUndi = pesertaIds.length > 0 ? Math.round((winners.length / pesertaIds.length) * 100) : 0;
             setT('arlCardIuran', window.formatRupiah(nominal));
             setT('arlCardJadwal', g.jadwal || 'Bulanan');
             setT('arlCardPotHadiah', window.formatRupiah(totalPot));
-            setT('arlCardJumlahPeserta', `${pesertaIds.length} Peserta Terdaftar`);
+            setT('arlCardJumlahPeserta', `${pesertaIds.length} Peserta`);
             setT('arlCardTerkumpul', window.formatRupiah(terkumpul));
-            setT('arlCardProgressBayar', `${paidIds.length} / ${pesertaIds.length} Peserta Lunas`);
-            setT('arlCardProgresUndian', `${winners.length} / ${pesertaIds.length} Menang`);
-            setT('arlCardSisaUndian', sisaBelumMenang > 0 ? `Sisa ${sisaBelumMenang} peserta belum dapat` : '✓ Semua peserta sudah menang');
-            setT('arlLabelPutaranAktif', `Putaran ke-${putaran}`);
+            setT('arlCardProgressBayar', `${paidIds.length}/${pesertaIds.length} Lunas (${pctBayar}%)`);
+            setT('arlCardProgresUndian', `${winners.length}/${pesertaIds.length}`);
+            setT('arlCardSisaUndian', sisaBelumMenang > 0 ? `Sisa ${sisaBelumMenang}` : '✓ Selesai');
+            setT('arlLabelPutaranAktif', `P${putaran}`);
             setT('arlBadgePutaran', `Putaran ${putaran}`);
+            const barB = document.getElementById('arlBarBayar');
+            const barU = document.getElementById('arlBarUndian');
+            if (barB) barB.style.width = `${pctBayar}%`;
+            if (barU) barU.style.width = `${pctUndi}%`;
 
             const tbody = document.getElementById('tabelPesertaArisanLiteBody');
             if (tbody) {
@@ -10785,20 +10828,25 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                         const isMe = currentUserSession && currentUserSession.id === aid;
                         return `
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 ${isMe ? 'bg-emerald-50/40 dark:bg-emerald-950/20' : ''}">
-                                <td class="py-2.5 px-3 font-mono text-slate-400">${idx + 1}</td>
-                                <td class="py-2.5 px-3">
-                                    <strong class="text-slate-800 dark:text-white block">${window.escapeHtml(a.nama)} ${isMe ? '<span class="text-[9px] text-emerald-600">(Anda)</span>' : ''}</strong>
-                                    <span class="text-[10px] text-slate-400">${window.escapeHtml(a.namaKeluarga || '-')}</span>
+                                <td class="py-2.5 px-2.5 font-mono text-slate-400">${idx + 1}</td>
+                                <td class="py-2.5 px-2.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-6 h-6 rounded-full ${menangObj ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'} font-black text-[10px] flex items-center justify-center shrink-0">${(a.nama || 'A').charAt(0).toUpperCase()}</span>
+                                        <div class="min-w-0">
+                                            <strong class="text-slate-800 dark:text-white block truncate">${window.escapeHtml(a.nama)}${isMe ? ' <span class="text-[9px] text-emerald-600">★</span>' : ''}</strong>
+                                            <span class="text-[10px] text-slate-400 block truncate">${window.escapeHtml(a.namaKeluarga || '-')}</span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td class="py-2.5 px-3 text-center">
+                                <td class="py-2.5 px-2.5 text-center">
                                     ${menangObj
-                                        ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">🏆 Putaran ${menangObj.periode}</span>`
-                                        : `<span class="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500">Belum Dapat</span>`}
+                                        ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">🏆 P${menangObj.periode}</span>`
+                                        : `<span class="text-[10px] text-slate-400">—</span>`}
                                 </td>
-                                <td class="py-2.5 px-3 text-center">
+                                <td class="py-2.5 px-2.5 text-center">
                                     ${isKeuangan
-                                        ? `<button type="button" onclick="window.toggleBayarArisanLite('${g.id}', '${aid}')" class="px-3 py-1 rounded-xl text-[10px] font-extrabold transition cursor-pointer ${sudahBayar ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200 dark:border-rose-800'}">${sudahBayar ? '✓ Lunas' : '• Belum Bayar'}</button>`
-                                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${sudahBayar ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700'}">${sudahBayar ? '✓ Lunas' : '⏳ Belum'}</span>`}
+                                        ? `<button type="button" onclick="window.toggleBayarArisanLite('${g.id}', '${aid}')" class="px-3 py-1 rounded-xl text-[10px] font-extrabold transition cursor-pointer ${sudahBayar ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200 dark:border-rose-800'}">${sudahBayar ? '✓ Lunas' : 'Belum'}</button>`
+                                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${sudahBayar ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700'}">${sudahBayar ? '✓ Lunas' : 'Belum'}</span>`}
                                 </td>
                             </tr>
                         `;
@@ -10812,18 +10860,18 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
                     listWin.innerHTML = '<p class="text-slate-400 italic py-4 text-center">Belum ada pemenang yang dikocok.</p>';
                 } else {
                     listWin.innerHTML = winners.slice().reverse().map(w => `
-                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1.5">
+                        <div class="p-3 rounded-2xl bg-gradient-to-br from-amber-50/80 to-white dark:from-amber-950/25 dark:to-slate-800 border border-amber-200/80 dark:border-amber-900/60 space-y-1.5 shadow-2xs">
                             <div class="flex items-center justify-between gap-2">
-                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">🏆 Putaran ke-${w.periode}</span>
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-400/90 text-slate-950">🏆 Putaran ${w.periode}</span>
                                 <span class="text-[9px] font-mono text-slate-400">${window.escapeHtml(w.tanggal || '-')}</span>
                             </div>
                             <div class="flex items-center justify-between gap-2">
                                 <strong class="text-slate-800 dark:text-white text-xs truncate">${window.escapeHtml(w.nama)}</strong>
-                                <strong class="text-emerald-600 text-xs shrink-0">${window.formatRupiah(w.nominalHadiah)}</strong>
+                                <strong class="text-emerald-600 text-xs font-black shrink-0">${window.formatRupiah(w.nominalHadiah)}</strong>
                             </div>
-                            <div class="flex items-center justify-between pt-1 border-t border-slate-200/70 dark:border-slate-700/70">
-                                <span class="text-[10px] font-bold ${w.sudahDiserahkan ? 'text-emerald-600' : 'text-amber-600'}">${w.sudahDiserahkan ? '✓ Hadiah Diserahkan' : '⏳ Belum Diserahkan'}</span>
-                                ${isKeuangan ? `<button type="button" onclick="window.toggleSerahHadiahArisanLite('${g.id}', ${w.periode})" class="text-[10px] font-bold text-blue-600 hover:underline cursor-pointer">${w.sudahDiserahkan ? 'Batal Serah' : 'Tandai Diserahkan'}</button>` : ''}
+                            <div class="flex items-center justify-between pt-1 border-t border-amber-200/50 dark:border-slate-700">
+                                <span class="text-[10px] font-extrabold ${w.sudahDiserahkan ? 'text-emerald-600' : 'text-amber-600'}">${w.sudahDiserahkan ? '✓ Diserahkan' : '⏳ Menunggu'}</span>
+                                ${isKeuangan ? `<button type="button" onclick="window.toggleSerahHadiahArisanLite('${g.id}', ${w.periode})" class="text-[10px] font-bold text-blue-600 hover:underline cursor-pointer">${w.sudahDiserahkan ? 'Batal' : 'Serahkan'}</button>` : ''}
                             </div>
                         </div>
                     `).join('');
@@ -12740,7 +12788,7 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         // =========================================================================
         // AUTO-VERSIONING & CHANGELOG FOOTER (v35.4 Pro)
         // =========================================================================
-        window.APP_VERSION = 'v36.2 Pro';
+        window.APP_VERSION = 'v36.3 Pro';
         window.APP_RELEASE_DATE = '16 Nov 2026';
         // =========================================================================
         // FITUR MODE PWA FULLSCREEN & INSTALLABLE WEB APP (v36.2 PRO)
@@ -12843,6 +12891,15 @@ Pembayaran dapat dilakukan melalui Transfer Rekening Koperasi atau fitur *Potong
         })();
 
         window.APP_CHANGELOG_LIST = [
+            {
+                versi: 'v36.3 Pro (Arisan Lite Festive UI)',
+                tanggal: '22 Nov 2026 (Terbaru - Desain Arisan Lite Meriah, Simpel & Profesional)',
+                judul: 'Penyegaran Tampilan Arisan Lite: Minimal Kata-Kata, Hero Gradien Meriah & Progress Bar Interaktif',
+                poin: [
+                    'Desain Simpel & Profesional (Minim Teks): Menghilangkan paragraf penjelasan panjang agar halaman fokus pada nominal pot hadiah, status lunas peserta, dan tombol kocok pemenang.',
+                    'Tampilan Halaman Meriah: Hero banner dengan gradien animasi emerald-emas, ikon dadu melayang, 4 kartu KPI berwarna dengan progress bar lunas/undian, serta kartu pemenang bergaya piala.'
+                ]
+            },
             {
                 versi: 'v36.2 Pro (Arisan Lite Edition)',
                 tanggal: '22 Nov 2026 (Terbaru - Modul Arisan Lite Super-Ringan & Terisolasi SHU)',
